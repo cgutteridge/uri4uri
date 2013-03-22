@@ -1,0 +1,1472 @@
+{
+   "itms" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "itms",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/itms",
+      "id" : "itms",
+      "type" : "provisional"
+   },
+   "gg" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "gg",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/gg",
+      "id" : "gg",
+      "type" : "provisional"
+   },
+   "smb" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "smb",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/smb",
+      "id" : "smb",
+      "type" : "provisional"
+   },
+   "iris.xpcs" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4992.txt" : "RFC4992"
+      },
+      "name" : "iris.xpcs",
+      "id" : "iris.xpcs",
+      "type" : "permenent"
+   },
+   "chrome" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "chrome",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/chrome",
+      "id" : "chrome",
+      "type" : "provisional"
+   },
+   "file" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc1738.txt" : "RFC1738"
+      },
+      "name" : "Host-specific file names",
+      "id" : "file",
+      "type" : "permenent"
+   },
+   "gtalk" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "gtalk",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/gtalk",
+      "id" : "gtalk",
+      "type" : "provisional"
+   },
+   "aaas" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6733.txt" : "RFC6733"
+      },
+      "name" : "Diameter Protocol with Secure Transport",
+      "id" : "aaas",
+      "type" : "permenent"
+   },
+   "crid" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4078.txt" : "RFC4078"
+      },
+      "name" : "TV-Anytime Content Reference Identifier",
+      "id" : "crid",
+      "type" : "permenent"
+   },
+   "tel" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3966.txt" : "RFC3966"
+      },
+      "name" : "telephone",
+      "id" : "tel",
+      "type" : "permenent"
+   },
+   "ldaps" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "ldaps",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/ldaps",
+      "id" : "ldaps",
+      "type" : "provisional"
+   },
+   "spotify" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "spotify",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/spotify",
+      "id" : "spotify",
+      "type" : "provisional"
+   },
+   "teamspeak" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "teamspeak",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/teamspeak",
+      "id" : "teamspeak",
+      "type" : "provisional"
+   },
+   "finger" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "finger",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/finger",
+      "id" : "finger",
+      "type" : "provisional"
+   },
+   "tftp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3617.txt" : "RFC3617"
+      },
+      "name" : "Trivial File Transfer Protocol",
+      "id" : "tftp",
+      "type" : "permenent"
+   },
+   "geo" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5870.txt" : "RFC5870"
+      },
+      "name" : "Geographic Locations",
+      "id" : "geo",
+      "type" : "permenent"
+   },
+   "mtqp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3887.txt" : "RFC3887"
+      },
+      "name" : "Message Tracking Query Protocol",
+      "id" : "mtqp",
+      "type" : "permenent"
+   },
+   "urn" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2141.txt" : "RFC2141"
+      },
+      "name" : "Uniform Resource Names (click for registry)",
+      "id" : "urn",
+      "type" : "permenent"
+   },
+   "skype" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Melnikov" : "Melnikov"
+      },
+      "name" : "skype",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/skype",
+      "id" : "skype",
+      "type" : "provisional"
+   },
+   "sips" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3261.txt" : "RFC3261"
+      },
+      "name" : "secure session initiation protocol",
+      "id" : "sips",
+      "type" : "permenent"
+   },
+   "xri" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "xri",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/xri",
+      "id" : "xri",
+      "type" : "provisional"
+   },
+   "wtai" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "wtai",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/wtai",
+      "id" : "wtai",
+      "type" : "provisional"
+   },
+   "soap.beeps" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4227.txt" : "RFC4227"
+      },
+      "name" : "soap.beeps",
+      "id" : "soap.beeps",
+      "type" : "permenent"
+   },
+   "iax" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5456.txt" : "RFC5456"
+      },
+      "name" : "Inter-Asterisk eXchange Version 2",
+      "id" : "iax",
+      "type" : "permenent"
+   },
+   "sms" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5724.txt" : "RFC5724"
+      },
+      "name" : "Short Message Service",
+      "id" : "sms",
+      "type" : "permenent"
+   },
+   "https" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2818.txt" : "RFC2818"
+      },
+      "name" : "Hypertext Transfer Protocol Secure",
+      "id" : "https",
+      "type" : "permenent"
+   },
+   "soap.beep" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4227.txt" : "RFC4227"
+      },
+      "name" : "soap.beep",
+      "id" : "soap.beep",
+      "type" : "permenent"
+   },
+   "nfs" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2224.txt" : "RFC2224"
+      },
+      "name" : "network file system protocol",
+      "id" : "nfs",
+      "type" : "permenent"
+   },
+   "svn" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "svn",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/svn",
+      "id" : "svn",
+      "type" : "provisional"
+   },
+   "z39.50r" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2056.txt" : "RFC2056"
+      },
+      "name" : "Z39.50 Retrieval",
+      "id" : "z39.50r",
+      "type" : "permenent"
+   },
+   "afp" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "afp",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/afp",
+      "id" : "afp",
+      "type" : "provisional"
+   },
+   "ventrilo" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "ventrilo",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/ventrilo",
+      "id" : "ventrilo",
+      "type" : "provisional"
+   },
+   "iris.lwz" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4993.txt" : "RFC4993"
+      },
+      "name" : "iris.lwz",
+      "id" : "iris.lwz",
+      "type" : "permenent"
+   },
+   "irc6" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "irc6",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/irc6",
+      "id" : "irc6",
+      "type" : "provisional"
+   },
+   "fax" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2806.txt" : "RFC2806",
+         "http://www.rfc-editor.org/rfc/rfc3966.txt" : "RFC3966"
+      },
+      "name" : "fax",
+      "id" : "fax",
+      "type" : "historical"
+   },
+   "platform" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "platform",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/platform",
+      "id" : "platform",
+      "type" : "provisional"
+   },
+   "mvn" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "mvn",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/mvn",
+      "id" : "mvn",
+      "type" : "provisional"
+   },
+   "attachment" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "attachment",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/attachment",
+      "id" : "attachment",
+      "type" : "provisional"
+   },
+   "ymsgr" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler\n\n\n\n\n\n\n\n\n<font size=\""
+      },
+      "name" : "ymsgr",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/ymsgr",
+      "id" : "ymsgr",
+      "type" : "provisional"
+   },
+   "view-source" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Yevstifeyev" : "Yevstifeyev"
+      },
+      "name" : "view-source",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/view-source",
+      "id" : "view-source",
+      "type" : "provisional"
+   },
+   "aim" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "aim",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/aim",
+      "id" : "aim",
+      "type" : "provisional"
+   },
+   "magnet" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "magnet",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/magnet",
+      "id" : "magnet",
+      "type" : "provisional"
+   },
+   "prospero" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4157.txt" : "RFC4157"
+      },
+      "name" : "Prospero Directory Service",
+      "id" : "prospero",
+      "type" : "historical"
+   },
+   "notes" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "notes",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/notes",
+      "id" : "notes",
+      "type" : "provisional"
+   },
+   "unreal" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "unreal",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/unreal",
+      "id" : "unreal",
+      "type" : "provisional"
+   },
+   "nih" : {
+      "refs" : {
+         "http://tools.ietf.org/html/draft-farrell-decade-ni" : "RFC-farrell-decade-ni-10"
+      },
+      "name" : "nih",
+      "id" : "nih",
+      "type" : "permenent"
+   },
+   "wss" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6455.txt" : "RFC6455"
+      },
+      "name" : "Encrypted WebSocket connections",
+      "id" : "wss",
+      "type" : "permenent"
+   },
+   "z39.50s" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2056.txt" : "RFC2056\n\n\n\n\n\n\n\n\n\n<font size=\""
+      },
+      "name" : "Z39.50 Session",
+      "id" : "z39.50s",
+      "type" : "permenent"
+   },
+   "res" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Melnikov" : "Melnikov"
+      },
+      "name" : "res",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/res",
+      "id" : "res",
+      "type" : "provisional"
+   },
+   "sip" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3261.txt" : "RFC3261"
+      },
+      "name" : "session initiation protocol",
+      "id" : "sip",
+      "type" : "permenent"
+   },
+   "irc" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "irc",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/irc",
+      "id" : "irc",
+      "type" : "provisional"
+   },
+   "http" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2616.txt" : "RFC2616"
+      },
+      "name" : "Hypertext Transfer Protocol",
+      "id" : "http",
+      "type" : "permenent"
+   },
+   "gizmoproject" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "gizmoproject",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/gizmoproject",
+      "id" : "gizmoproject",
+      "type" : "provisional"
+   },
+   "tag" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4151.txt" : "RFC4151"
+      },
+      "name" : "tag",
+      "id" : "tag",
+      "type" : "permenent"
+   },
+   "wais" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4156.txt" : "RFC4156"
+      },
+      "name" : "Wide Area Information Servers",
+      "id" : "wais",
+      "type" : "historical"
+   },
+   "data" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2397.txt" : "RFC2397"
+      },
+      "name" : "data",
+      "id" : "data",
+      "type" : "permenent"
+   },
+   "ed2k" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "ed2k",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/ed2k",
+      "id" : "ed2k",
+      "type" : "provisional"
+   },
+   "snews" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5538.txt" : "RFC5538"
+      },
+      "name" : "NNTP over SSL/TLS",
+      "id" : "snews",
+      "type" : "historical"
+   },
+   "soldat" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "soldat",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/soldat",
+      "id" : "soldat",
+      "type" : "provisional"
+   },
+   "xcon-userid" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6501.txt" : "RFC6501"
+      },
+      "name" : "xcon-userid",
+      "id" : "xcon-userid",
+      "type" : "permenent"
+   },
+   "pack" : {
+      "refs" : {
+         "http://tools.ietf.org/id/draft-shur-pack-uri-scheme" : "draft-shur-pack-uri-scheme"
+      },
+      "name" : "pack",
+      "url" : "http://www.iana.org/assignments/uri-schemes/historic/pack",
+      "id" : "pack",
+      "type" : "historical"
+   },
+   "icon" : {
+      "refs" : {
+         "http://tools.ietf.org/html/draft-lafayette-icon-uri-scheme" : "draft-lafayette-icon-uri-scheme"
+      },
+      "name" : "icon",
+      "id" : "icon",
+      "type" : "provisional"
+   },
+   "xcon" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6501.txt" : "RFC6501"
+      },
+      "name" : "xcon",
+      "id" : "xcon",
+      "type" : "permenent"
+   },
+   "maps" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "maps",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/maps",
+      "id" : "maps",
+      "type" : "provisional"
+   },
+   "ipn" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6260.txt" : "RFC6260"
+      },
+      "name" : "ipn",
+      "id" : "ipn",
+      "type" : "provisional"
+   },
+   "nntp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5538.txt" : "RFC5538"
+      },
+      "name" : "USENET news using NNTP access",
+      "id" : "nntp",
+      "type" : "permenent"
+   },
+   "mid" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2392.txt" : "RFC2392"
+      },
+      "name" : "message identifier",
+      "id" : "mid",
+      "type" : "permenent"
+   },
+   "reload" : {
+      "refs" : {
+         "http://tools.ietf.org/html/draft-ietf-p2psip-base" : "RFC-ietf-p2psip-base-26"
+      },
+      "name" : "reload",
+      "id" : "reload",
+      "type" : "permenent"
+   },
+   "xfire" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "xfire",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/xfire",
+      "id" : "xfire",
+      "type" : "provisional"
+   },
+   "tv" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2838.txt" : "RFC2838"
+      },
+      "name" : "TV Broadcasts",
+      "id" : "tv",
+      "type" : "permenent"
+   },
+   "ipp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3510.txt" : "RFC3510"
+      },
+      "name" : "Internet Printing Protocol",
+      "id" : "ipp",
+      "type" : "permenent"
+   },
+   "cvs" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "cvs",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/cvs",
+      "id" : "cvs",
+      "type" : "provisional"
+   },
+   "adiumxtra" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "adiumxtra",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/adiumxtra",
+      "id" : "adiumxtra",
+      "type" : "provisional"
+   },
+   "mumble" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "mumble",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/mumble",
+      "id" : "mumble",
+      "type" : "provisional"
+   },
+   "query" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "query",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/query",
+      "id" : "query",
+      "type" : "provisional"
+   },
+   "message" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "message",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/message",
+      "id" : "message",
+      "type" : "provisional"
+   },
+   "go" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3368.txt" : "RFC3368"
+      },
+      "name" : "go",
+      "id" : "go",
+      "type" : "permenent"
+   },
+   "rtmp" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "rtmp",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/rtmp",
+      "id" : "rtmp",
+      "type" : "provisional"
+   },
+   "callto" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Melnikov" : "Melnikov"
+      },
+      "name" : "callto",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/callto",
+      "id" : "callto",
+      "type" : "provisional"
+   },
+   "palm" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "palm",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/palm",
+      "id" : "palm",
+      "type" : "provisional"
+   },
+   "mupdate" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3656.txt" : "RFC3656"
+      },
+      "name" : "Mailbox Update (MUPDATE) Protocol",
+      "id" : "mupdate",
+      "type" : "permenent"
+   },
+   "tn3270" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6270.txt" : "RFC6270"
+      },
+      "name" : "Interactive 3270 emulation sessions",
+      "id" : "tn3270",
+      "type" : "permenent"
+   },
+   "jabber" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Saint-Andre" : "Saint-Andre"
+      },
+      "name" : "jabber",
+      "url" : "http://www.iana.org/assignments/uri-schemes/perm/jabber",
+      "id" : "jabber",
+      "type" : "permenent"
+   },
+   "telnet" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4248.txt" : "RFC4248"
+      },
+      "name" : "Reference to interactive sessions",
+      "id" : "telnet",
+      "type" : "permenent"
+   },
+   "news" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5538.txt" : "RFC5538"
+      },
+      "name" : "USENET news",
+      "id" : "news",
+      "type" : "permenent"
+   },
+   "acap" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2244.txt" : "RFC2244"
+      },
+      "name" : "application configuration access protocol",
+      "id" : "acap",
+      "type" : "permenent"
+   },
+   "sieve" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5804.txt" : "RFC5804"
+      },
+      "name" : "ManageSieve Protocol",
+      "id" : "sieve",
+      "type" : "permenent"
+   },
+   "webcal" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "webcal",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/webcal",
+      "id" : "webcal",
+      "type" : "provisional"
+   },
+   "market" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "market",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/market",
+      "id" : "market",
+      "type" : "provisional"
+   },
+   "rmi" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "rmi",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/rmi",
+      "id" : "rmi",
+      "type" : "provisional"
+   },
+   "com-eventbrite-attendee" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#VanZant" : "Van Zant"
+      },
+      "name" : "com-eventbrite-attendee",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/com-eventbrite-attendee",
+      "id" : "com-eventbrite-attendee",
+      "type" : "provisional"
+   },
+   "mailserver" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6196.txt" : "RFC6196"
+      },
+      "name" : "Access to data available from mail servers",
+      "id" : "mailserver",
+      "type" : "historical"
+   },
+   "sgn" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "sgn",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/sgn",
+      "id" : "sgn",
+      "type" : "provisional"
+   },
+   "content" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "content",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/content",
+      "id" : "content",
+      "type" : "provisional"
+   },
+   "modem" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2806.txt" : "RFC2806",
+         "http://www.rfc-editor.org/rfc/rfc3966.txt" : "RFC3966"
+      },
+      "name" : "modem",
+      "id" : "modem",
+      "type" : "historical"
+   },
+   "imap" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5092.txt" : "RFC5092"
+      },
+      "name" : "internet message access protocol",
+      "id" : "imap",
+      "type" : "permenent"
+   },
+   "tip" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2371.txt" : "RFC2371"
+      },
+      "name" : "Transaction Internet Protocol",
+      "id" : "tip",
+      "type" : "permenent"
+   },
+   "xmlrpc.beeps" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3529.txt" : "RFC3529"
+      },
+      "name" : "xmlrpc.beeps",
+      "id" : "xmlrpc.beeps",
+      "type" : "permenent"
+   },
+   "apt" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "apt",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/apt",
+      "id" : "apt",
+      "type" : "provisional"
+   },
+   "session" : {
+      "refs" : {
+         "http://www.ietf.org/rfc/rfc6787.txt" : "RFC6787"
+      },
+      "name" : "session",
+      "id" : "session",
+      "type" : "permenent"
+   },
+   "cap" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4324.txt" : "RFC4324"
+      },
+      "name" : "Calendar Access Protocol",
+      "id" : "cap",
+      "type" : "permenent"
+   },
+   "afs" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc1738.txt" : "RFC1738"
+      },
+      "name" : "Andrew File System global file names",
+      "id" : "afs",
+      "type" : "provisional"
+   },
+   "iris.xpc" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4992.txt" : "RFC4992"
+      },
+      "name" : "iris.xpc",
+      "id" : "iris.xpc",
+      "type" : "permenent"
+   },
+   "ldap" : {
+      "refs" : {
+         "http://www.ietf.org/rfc/rfc4516.txt" : "RFC4516"
+      },
+      "name" : "Lightweight Directory Access Protocol",
+      "id" : "ldap",
+      "type" : "permenent"
+   },
+   "msnim" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Melnikov" : "Melnikov"
+      },
+      "name" : "msnim",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/msnim",
+      "id" : "msnim",
+      "type" : "provisional"
+   },
+   "secondlife" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "query",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/secondlife",
+      "id" : "secondlife",
+      "type" : "provisional"
+   },
+   "cid" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2392.txt" : "RFC2392"
+      },
+      "name" : "content identifier",
+      "id" : "cid",
+      "type" : "permenent"
+   },
+   "gopher" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4266.txt" : "RFC4266"
+      },
+      "name" : "The Gopher Protocol",
+      "id" : "gopher",
+      "type" : "permenent"
+   },
+   "rtsp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2326.txt" : "RFC2326"
+      },
+      "name" : "real time streaming protocol",
+      "id" : "rtsp",
+      "type" : "permenent"
+   },
+   "facetime" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "facetime",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/facetime",
+      "id" : "facetime",
+      "type" : "provisional"
+   },
+   "ut2004" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "ut2004",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/ut2004",
+      "id" : "ut2004",
+      "type" : "provisional"
+   },
+   "opaquelocktoken" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4918.txt" : "RFC4918"
+      },
+      "name" : "opaquelocktokent",
+      "id" : "opaquelocktoken",
+      "type" : "permenent"
+   },
+   "iris.beep" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3983.txt" : "RFC3983"
+      },
+      "name" : "iris.beep",
+      "id" : "iris.beep",
+      "type" : "permenent"
+   },
+   "dav" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4918.txt" : "RFC4918"
+      },
+      "name" : "dav",
+      "id" : "dav",
+      "type" : "permenent"
+   },
+   "bolo" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "bolo",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/bolo",
+      "id" : "bolo",
+      "type" : "provisional"
+   },
+   "pres" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3859.txt" : "RFC3859"
+      },
+      "name" : "Presence",
+      "id" : "pres",
+      "type" : "permenent"
+   },
+   "ircs" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "ircs",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/ircs",
+      "id" : "ircs",
+      "type" : "provisional"
+   },
+   "ni" : {
+      "refs" : {
+         "http://tools.ietf.org/html/draft-farrell-decade-ni" : "RFC-farrell-decade-ni-10"
+      },
+      "name" : "ni",
+      "id" : "ni",
+      "type" : "permenent"
+   },
+   "info" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4452.txt" : "RFC4452"
+      },
+      "name" : "Information Assets with Identifiers in Public Namespaces",
+      "id" : "info",
+      "type" : "permenent"
+   },
+   "psyc" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "psyc",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/psyc",
+      "id" : "psyc",
+      "type" : "provisional"
+   },
+   "icap" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3507.txt" : "RFC3507"
+      },
+      "name" : "Internet Content Adaptation Protocol",
+      "id" : "icap",
+      "type" : "permenent"
+   },
+   "aw" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "aw",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/aw",
+      "id" : "aw",
+      "type" : "provisional"
+   },
+   "vemmi" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2122.txt" : "RFC2122"
+      },
+      "name" : "versatile multimedia interface",
+      "id" : "vemmi",
+      "type" : "permenent"
+   },
+   "dlna-playsingle" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#DLNA" : "DLNA"
+      },
+      "name" : "dlna-playsingle",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/dlna-playsingle",
+      "id" : "dlna-playsingle",
+      "type" : "provisional"
+   },
+   "keyparc" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "keyparc",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/keyparc",
+      "id" : "keyparc",
+      "type" : "provisional"
+   },
+   "dict" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2229.txt" : "RFC2229"
+      },
+      "name" : "dictionary service protocol",
+      "id" : "dict",
+      "type" : "permenent"
+   },
+   "fish" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "fish",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/fish",
+      "id" : "fish",
+      "type" : "provisional"
+   },
+   "resource" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "resource",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/resource",
+      "id" : "resource",
+      "type" : "provisional"
+   },
+   "things" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "things",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/things",
+      "id" : "things",
+      "type" : "provisional"
+   },
+   "bitcoin" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "bitcoin",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/bitcoin",
+      "id" : "bitcoin",
+      "type" : "provisional"
+   },
+   "URIScheme" : {
+      "refs" : {},
+      "name" : "Description",
+      "id" : "URIScheme",
+      "type" : "historical"
+   },
+   "pop" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2384.txt" : "RFC2384"
+      },
+      "name" : "Post Office Protocol v3",
+      "id" : "pop",
+      "type" : "permenent"
+   },
+   "dns" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4501.txt" : "RFC4501"
+      },
+      "name" : "Domain Name System",
+      "id" : "dns",
+      "type" : "permenent"
+   },
+   "ms-help" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Melnikov" : "Melnikov"
+      },
+      "name" : "ms-help",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/ms-help",
+      "id" : "ms-help",
+      "type" : "provisional"
+   },
+   "ssh" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "ssh",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/ssh",
+      "id" : "ssh",
+      "type" : "provisional"
+   },
+   "iris" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3981.txt" : "RFC3981"
+      },
+      "name" : "Internet Registry Information Service",
+      "id" : "iris",
+      "type" : "permenent"
+   },
+   "thismessage" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2557.txt" : "RFC2557"
+      },
+      "name" : "multipart/related relative reference resolution",
+      "url" : "http://www.iana.org/assignments/uri-schemes/perm/thismessage",
+      "id" : "thismessage",
+      "type" : "permenent"
+   },
+   "dtn" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5050.txt" : "RFC5050"
+      },
+      "name" : "DTNRG research and development",
+      "id" : "dtn",
+      "type" : "provisional"
+   },
+   "rsync" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5781.txt" : "RFC5781"
+      },
+      "name" : "rsync",
+      "id" : "rsync",
+      "type" : "provisional"
+   },
+   "chrome-extension" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "chrome-extension",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/chrome-extension",
+      "id" : "chrome-extension",
+      "type" : "provisional"
+   },
+   "about" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6694.txt" : "RFC6694"
+      },
+      "name" : "about",
+      "id" : "about",
+      "type" : "permenent"
+   },
+   "z39.50" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc1738.txt" : "RFC1738",
+         "http://www.rfc-editor.org/rfc/rfc2056.txt" : "RFC2056\n\n\n\n\n\n\n\n\n\n\n\n\nComments concerning the layout, construction and functionality of this site \nshould be sent to webmaster&iana.org.\n\n\n\nPage updated 2013-03-01\n(c) 2006 The Internet Corporation for Assigned Names and Numbers.&nbsp;&nbsp;&nbsp;&nbsp;All rights reserved."
+      },
+      "name" : "Z39.50 information access",
+      "id" : "z39.50",
+      "type" : "historical"
+   },
+   "mailto" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6068.txt" : "RFC6068"
+      },
+      "name" : "Electronic mail address",
+      "id" : "mailto",
+      "type" : "permenent"
+   },
+   "dlna-playcontainer" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#DLNA" : "DLNA"
+      },
+      "name" : "dlna-playcontainer",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/dlna-playcontainer",
+      "id" : "dlna-playcontainer",
+      "type" : "provisional"
+   },
+   "msrp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4975.txt" : "RFC4975"
+      },
+      "name" : "Message Session Relay Protocol",
+      "id" : "msrp",
+      "type" : "permenent"
+   },
+   "im" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3860.txt" : "RFC3860"
+      },
+      "name" : "Instant Messaging",
+      "id" : "im",
+      "type" : "permenent"
+   },
+   "steam" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "steam",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/steam",
+      "id" : "steam",
+      "type" : "provisional"
+   },
+   "service" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2609.txt" : "RFC2609"
+      },
+      "name" : "service location",
+      "id" : "service",
+      "type" : "permenent"
+   },
+   "xmlrpc.beep" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3529.txt" : "RFC3529"
+      },
+      "name" : "xmlrpc.beep",
+      "id" : "xmlrpc.beep",
+      "type" : "permenent"
+   },
+   "proxy" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "proxy",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/proxy",
+      "id" : "proxy",
+      "type" : "provisional"
+   },
+   "msrps" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4975.txt" : "RFC4975"
+      },
+      "name" : "Message Session Relay Protocol Secure",
+      "id" : "msrps",
+      "type" : "permenent"
+   },
+   "sftp" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "query",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/sftp",
+      "id" : "sftp",
+      "type" : "provisional"
+   },
+   "mms" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Melnikov" : "Melnikov"
+      },
+      "name" : "mms",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/mms",
+      "id" : "mms",
+      "type" : "provisional"
+   },
+   "dvb" : {
+      "refs" : {
+         "http://tools.ietf.org/id/draft-mcroberts-uri-dvb" : "draft-mcroberts-uri-dvb"
+      },
+      "name" : "dvb",
+      "id" : "dvb",
+      "type" : "provisional"
+   },
+   "oid" : {
+      "refs" : {
+         "http://tools.ietf.org/id/draft-larmouth-oid-iri" : "draft-larmouth-oid-iri"
+      },
+      "name" : "oid",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/oid",
+      "id" : "oid",
+      "type" : "provisional"
+   },
+   "wyciwyg" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "wyciwyg",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/wyciwyg",
+      "id" : "wyciwyg",
+      "type" : "provisional"
+   },
+   "ws" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6455.txt" : "RFC6455"
+      },
+      "name" : "WebSocket connections",
+      "id" : "ws",
+      "type" : "permenent"
+   },
+   "videotex" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3986.txt" : "RFC3986",
+         "http://www.rfc-editor.org/rfc/rfc2122.txt" : "RFC2122",
+         "http://esw.w3.org/topic/UriSchemes/videotex" : "draft-mavrakis-videotex-url-spec"
+      },
+      "name" : "videotex",
+      "url" : "http://www.iana.org/assignments/uri-schemes/historic/videotex",
+      "id" : "videotex",
+      "type" : "historical"
+   },
+   "git" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "git",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/git",
+      "id" : "git",
+      "type" : "provisional"
+   },
+   "ftp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc1738.txt" : "RFC1738"
+      },
+      "name" : "File Transfer Protocol",
+      "id" : "ftp",
+      "type" : "permenent"
+   },
+   "udp" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "udp",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/udp",
+      "id" : "udp",
+      "type" : "provisional"
+   },
+   "aaa" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6733.txt" : "RFC6733"
+      },
+      "name" : "Diameter Protocol",
+      "id" : "aaa",
+      "type" : "permenent"
+   },
+   "hcp" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Melnikov" : "Melnikov"
+      },
+      "name" : "hcp",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/hcp",
+      "id" : "hcp",
+      "type" : "provisional"
+   },
+   "shttp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc2660.txt" : "RFC2660"
+      },
+      "name" : "Secure Hypertext Transfer Protocol",
+      "id" : "shttp",
+      "type" : "permenent"
+   },
+   "jms" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc6167.txt" : "RFC6167"
+      },
+      "name" : "Java Message Service",
+      "id" : "jms",
+      "type" : "provisional"
+   },
+   "beshare" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "beshare",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/beshare",
+      "id" : "beshare",
+      "type" : "provisional"
+   },
+   "xmpp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc5122.txt" : "RFC5122"
+      },
+      "name" : "Extensible Messaging and Presence Protocol",
+      "id" : "xmpp",
+      "type" : "permenent"
+   },
+   "feed" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "feed",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/feed",
+      "id" : "feed",
+      "type" : "provisional"
+   },
+   "paparazzi" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "paparazzi",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/paparazzi",
+      "id" : "paparazzi",
+      "type" : "provisional"
+   },
+   "h323" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc3508.txt" : "RFC3508"
+      },
+      "name" : "H.323",
+      "id" : "h323",
+      "type" : "permenent"
+   },
+   "snmp" : {
+      "refs" : {
+         "http://www.rfc-editor.org/rfc/rfc4088.txt" : "RFC4088"
+      },
+      "name" : "Simple Network Management Protocol",
+      "id" : "snmp",
+      "type" : "permenent"
+   },
+   "jar" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "jar",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/jar",
+      "id" : "jar",
+      "type" : "provisional"
+   },
+   "lastfm" : {
+      "refs" : {
+         "http://www.iana.org/assignments/contact-people.html#Thaler" : "Thaler"
+      },
+      "name" : "lastfm",
+      "url" : "http://www.iana.org/assignments/uri-schemes/prov/lastfm",
+      "id" : "lastfm",
+      "type" : "provisional"
+   }
+}
