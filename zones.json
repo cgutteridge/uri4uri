@@ -1,0 +1,2305 @@
+{
+   "ne" : {
+      "url" : "/domains/root/db/ne.html",
+      "name" : ".ne",
+      "type" : "country-code",
+      "id" : "ne",
+      "sponsor" : "SONITEL"
+   },
+   "gg" : {
+      "url" : "/domains/root/db/gg.html",
+      "name" : ".gg",
+      "type" : "country-code",
+      "id" : "gg",
+      "sponsor" : "Island Networks Ltd."
+   },
+   "tr" : {
+      "url" : "/domains/root/db/tr.html",
+      "name" : ".tr",
+      "type" : "country-code",
+      "id" : "tr",
+      "sponsor" : "Middle East Technical University\nDepartment of Computer Engineering"
+   },
+   "mm" : {
+      "url" : "/domains/root/db/mm.html",
+      "name" : ".mm",
+      "type" : "country-code",
+      "id" : "mm",
+      "sponsor" : "Ministry of Communications, Posts & Telegraphs"
+   },
+   "ki" : {
+      "url" : "/domains/root/db/ki.html",
+      "name" : ".ki",
+      "type" : "country-code",
+      "id" : "ki",
+      "sponsor" : "Ministry of Communications, Transport, and Tourism Development"
+   },
+   "sj" : {
+      "url" : "/domains/root/db/sj.html",
+      "name" : ".sj",
+      "type" : "country-code",
+      "id" : "sj",
+      "sponsor" : "UNINETT Norid A/S"
+   },
+   "biz" : {
+      "url" : "/domains/root/db/biz.html",
+      "name" : ".biz",
+      "type" : "generic-restricted",
+      "id" : "biz",
+      "sponsor" : "NeuStar, Inc."
+   },
+   "my" : {
+      "url" : "/domains/root/db/my.html",
+      "name" : ".my",
+      "type" : "country-code",
+      "id" : "my",
+      "sponsor" : "MYNIC Berhad"
+   },
+   "hn" : {
+      "url" : "/domains/root/db/hn.html",
+      "name" : ".hn",
+      "type" : "country-code",
+      "id" : "hn",
+      "sponsor" : "Red de Desarrollo Sostenible Honduras"
+   },
+   "gl" : {
+      "url" : "/domains/root/db/gl.html",
+      "name" : ".gl",
+      "type" : "country-code",
+      "id" : "gl",
+      "sponsor" : "TELE Greenland A/S"
+   },
+   "tel" : {
+      "url" : "/domains/root/db/tel.html",
+      "name" : ".tel",
+      "type" : "sponsored",
+      "id" : "tel",
+      "sponsor" : "Telnic Ltd."
+   },
+   "ro" : {
+      "url" : "/domains/root/db/ro.html",
+      "name" : ".ro",
+      "type" : "country-code",
+      "id" : "ro",
+      "sponsor" : "National Institute for R&D in Informatics"
+   },
+   "tn" : {
+      "url" : "/domains/root/db/tn.html",
+      "name" : ".tn",
+      "type" : "country-code",
+      "id" : "tn",
+      "sponsor" : "Agence Tunisienne d'Internet"
+   },
+   "co" : {
+      "url" : "/domains/root/db/co.html",
+      "name" : ".co",
+      "type" : "country-code",
+      "id" : "co",
+      "sponsor" : ".CO Internet S.A.S."
+   },
+   "br" : {
+      "url" : "/domains/root/db/br.html",
+      "name" : ".br",
+      "type" : "country-code",
+      "id" : "br",
+      "sponsor" : "Comite Gestor da Internet no Brasil"
+   },
+   "xn--fiqz9s" : {
+      "url" : "/domains/root/db/xn--fiqz9s.html",
+      "name" : ".中國",
+      "type" : "country-code",
+      "id" : "xn--fiqz9s",
+      "sponsor" : "China Internet Network Information Center"
+   },
+   "cy" : {
+      "url" : "/domains/root/db/cy.html",
+      "name" : ".cy",
+      "type" : "country-code",
+      "id" : "cy",
+      "sponsor" : "University of Cyprus"
+   },
+   "coop" : {
+      "url" : "/domains/root/db/coop.html",
+      "name" : ".coop",
+      "type" : "sponsored",
+      "id" : "coop",
+      "sponsor" : "DotCooperation LLC"
+   },
+   "bo" : {
+      "url" : "/domains/root/db/bo.html",
+      "name" : ".bo",
+      "type" : "country-code",
+      "id" : "bo",
+      "sponsor" : "Agencia para el Desarrollo de la Información de la Sociedad en Bolivia"
+   },
+   "xn--node" : {
+      "url" : "/domains/root/db/xn--node.html",
+      "name" : ".გე",
+      "type" : "country-code",
+      "id" : "xn--node",
+      "sponsor" : "Not assigned"
+   },
+   "ck" : {
+      "url" : "/domains/root/db/ck.html",
+      "name" : ".ck",
+      "type" : "country-code",
+      "id" : "ck",
+      "sponsor" : "Telecom Cook Islands Ltd."
+   },
+   "tc" : {
+      "url" : "/domains/root/db/tc.html",
+      "name" : ".tc",
+      "type" : "country-code",
+      "id" : "tc",
+      "sponsor" : "Melrex TC"
+   },
+   "bv" : {
+      "url" : "/domains/root/db/bv.html",
+      "name" : ".bv",
+      "type" : "country-code",
+      "id" : "bv",
+      "sponsor" : "UNINETT Norid A/S"
+   },
+   "ke" : {
+      "url" : "/domains/root/db/ke.html",
+      "name" : ".ke",
+      "type" : "country-code",
+      "id" : "ke",
+      "sponsor" : "Kenya Network Information Center (KeNIC)"
+   },
+   "aero" : {
+      "url" : "/domains/root/db/aero.html",
+      "name" : ".aero",
+      "type" : "sponsored",
+      "id" : "aero",
+      "sponsor" : "Societe Internationale de Telecommunications Aeronautique (SITA INC USA)"
+   },
+   "asia" : {
+      "url" : "/domains/root/db/asia.html",
+      "name" : ".asia",
+      "type" : "sponsored",
+      "id" : "asia",
+      "sponsor" : "DotAsia Organisation Ltd."
+   },
+   "dm" : {
+      "url" : "/domains/root/db/dm.html",
+      "name" : ".dm",
+      "type" : "country-code",
+      "id" : "dm",
+      "sponsor" : "DotDM Corporation"
+   },
+   "km" : {
+      "url" : "/domains/root/db/km.html",
+      "name" : ".km",
+      "type" : "country-code",
+      "id" : "km",
+      "sponsor" : "Comores Telecom"
+   },
+   "bf" : {
+      "url" : "/domains/root/db/bf.html",
+      "name" : ".bf",
+      "type" : "country-code",
+      "id" : "bf",
+      "sponsor" : "ARCE-AutoritÈ de RÈgulation des Communications Electroniques"
+   },
+   "af" : {
+      "url" : "/domains/root/db/af.html",
+      "name" : ".af",
+      "type" : "country-code",
+      "id" : "af",
+      "sponsor" : "Ministry of Communications and IT"
+   },
+   "mv" : {
+      "url" : "/domains/root/db/mv.html",
+      "name" : ".mv",
+      "type" : "country-code",
+      "id" : "mv",
+      "sponsor" : "Dhiraagu Pvt. Ltd. (DHIVEHINET)"
+   },
+   "ls" : {
+      "url" : "/domains/root/db/ls.html",
+      "name" : ".ls",
+      "type" : "country-code",
+      "id" : "ls",
+      "sponsor" : "National University of Lesotho"
+   },
+   "tm" : {
+      "url" : "/domains/root/db/tm.html",
+      "name" : ".tm",
+      "type" : "country-code",
+      "id" : "tm",
+      "sponsor" : "TM Domain Registry Ltd"
+   },
+   "jm" : {
+      "url" : "/domains/root/db/jm.html",
+      "name" : ".jm",
+      "type" : "country-code",
+      "id" : "jm",
+      "sponsor" : "University of West Indies"
+   },
+   "pg" : {
+      "url" : "/domains/root/db/pg.html",
+      "name" : ".pg",
+      "type" : "country-code",
+      "id" : "pg",
+      "sponsor" : "PNG DNS Administration\nVice Chancellors Office\nThe Papua New Guinea University of Technology"
+   },
+   "ky" : {
+      "url" : "/domains/root/db/ky.html",
+      "name" : ".ky",
+      "type" : "country-code",
+      "id" : "ky",
+      "sponsor" : "The Information and Communications Technology Authority"
+   },
+   "ga" : {
+      "url" : "/domains/root/db/ga.html",
+      "name" : ".ga",
+      "type" : "country-code",
+      "id" : "ga",
+      "sponsor" : "Gabon Telecom"
+   },
+   "xn--mgb9awbf" : {
+      "url" : "/domains/root/db/xn--mgb9awbf.html",
+      "name" : ".عمان",
+      "type" : "country-code",
+      "id" : "xn--mgb9awbf",
+      "sponsor" : "Telecommunications Regulatory Authority (TRA)"
+   },
+   "pn" : {
+      "url" : "/domains/root/db/pn.html",
+      "name" : ".pn",
+      "type" : "country-code",
+      "id" : "pn",
+      "sponsor" : "Pitcairn Island Administration"
+   },
+   "sv" : {
+      "url" : "/domains/root/db/sv.html",
+      "name" : ".sv",
+      "type" : "country-code",
+      "id" : "sv",
+      "sponsor" : "SVNet"
+   },
+   "xn--kprw13d" : {
+      "url" : "/domains/root/db/xn--kprw13d.html",
+      "name" : ".台湾",
+      "type" : "country-code",
+      "id" : "xn--kprw13d",
+      "sponsor" : "Taiwan Network Information Center (TWNIC)"
+   },
+   "mq" : {
+      "url" : "/domains/root/db/mq.html",
+      "name" : ".mq",
+      "type" : "country-code",
+      "id" : "mq",
+      "sponsor" : "MEDIASERV"
+   },
+   "hu" : {
+      "url" : "/domains/root/db/hu.html",
+      "name" : ".hu",
+      "type" : "country-code",
+      "id" : "hu",
+      "sponsor" : "Council of Hungarian Internet Providers (CHIP)"
+   },
+   "za" : {
+      "url" : "/domains/root/db/za.html",
+      "name" : ".za",
+      "type" : "country-code",
+      "id" : "za",
+      "sponsor" : "ZA Domain Name Authority"
+   },
+   "se" : {
+      "url" : "/domains/root/db/se.html",
+      "name" : ".se",
+      "type" : "country-code",
+      "id" : "se",
+      "sponsor" : "The Internet Infrastructure Foundation"
+   },
+   "uy" : {
+      "url" : "/domains/root/db/uy.html",
+      "name" : ".uy",
+      "type" : "country-code",
+      "id" : "uy",
+      "sponsor" : "SeCIU - Universidad de la Republica"
+   },
+   "iq" : {
+      "url" : "/domains/root/db/iq.html",
+      "name" : ".iq",
+      "type" : "country-code",
+      "id" : "iq",
+      "sponsor" : "Communications and Media Commission (CMC)"
+   },
+   "ai" : {
+      "url" : "/domains/root/db/ai.html",
+      "name" : ".ai",
+      "type" : "country-code",
+      "id" : "ai",
+      "sponsor" : "Government of Anguilla"
+   },
+   "ve" : {
+      "url" : "/domains/root/db/ve.html",
+      "name" : ".ve",
+      "type" : "country-code",
+      "id" : "ve",
+      "sponsor" : "Comisión Nacional de Telecomunicaciones (CONATEL)"
+   },
+   "na" : {
+      "url" : "/domains/root/db/na.html",
+      "name" : ".na",
+      "type" : "country-code",
+      "id" : "na",
+      "sponsor" : "Namibian Network Information Center"
+   },
+   "com" : {
+      "url" : "/domains/root/db/com.html",
+      "name" : ".com",
+      "type" : "generic",
+      "id" : "com",
+      "sponsor" : "VeriSign Global Registry Services"
+   },
+   "ba" : {
+      "url" : "/domains/root/db/ba.html",
+      "name" : ".ba",
+      "type" : "country-code",
+      "id" : "ba",
+      "sponsor" : "Universtiy Telinformatic Centre (UTIC)"
+   },
+   "ph" : {
+      "url" : "/domains/root/db/ph.html",
+      "name" : ".ph",
+      "type" : "country-code",
+      "id" : "ph",
+      "sponsor" : "PH Domain Foundation"
+   },
+   "xxx" : {
+      "url" : "/domains/root/db/xxx.html",
+      "name" : ".xxx",
+      "type" : "sponsored",
+      "id" : "xxx",
+      "sponsor" : "ICM Registry LLC"
+   },
+   "no" : {
+      "url" : "/domains/root/db/no.html",
+      "name" : ".no",
+      "type" : "country-code",
+      "id" : "no",
+      "sponsor" : "UNINETT Norid A/S"
+   },
+   "lv" : {
+      "url" : "/domains/root/db/lv.html",
+      "name" : ".lv",
+      "type" : "country-code",
+      "id" : "lv",
+      "sponsor" : "University of Latvia\nInstitute of Mathematics and Computer Science\nDepartment of Network Solutions (DNS)"
+   },
+   "tf" : {
+      "url" : "/domains/root/db/tf.html",
+      "name" : ".tf",
+      "type" : "country-code",
+      "id" : "tf",
+      "sponsor" : "AFNIC (NIC France) - Immeuble International"
+   },
+   "xn--hlcj6aya9esc7a" : {
+      "url" : "/domains/root/db/xn--hlcj6aya9esc7a.html",
+      "name" : ".பரிட்சை",
+      "type" : "test",
+      "id" : "xn--hlcj6aya9esc7a",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "kz" : {
+      "url" : "/domains/root/db/kz.html",
+      "name" : ".kz",
+      "type" : "country-code",
+      "id" : "kz",
+      "sponsor" : "Association of IT Companies of Kazakhstan"
+   },
+   "ma" : {
+      "url" : "/domains/root/db/ma.html",
+      "name" : ".ma",
+      "type" : "country-code",
+      "id" : "ma",
+      "sponsor" : "Agence Nationale de Réglementation des Télécommunications (ANRT)"
+   },
+   "in" : {
+      "url" : "/domains/root/db/in.html",
+      "name" : ".in",
+      "type" : "country-code",
+      "id" : "in",
+      "sponsor" : "National Internet Exchange of India"
+   },
+   "id" : {
+      "url" : "/domains/root/db/id.html",
+      "name" : ".id",
+      "type" : "country-code",
+      "id" : "id",
+      "sponsor" : "IDNIC-PPAU Mikroelektronika"
+   },
+   "si" : {
+      "url" : "/domains/root/db/si.html",
+      "name" : ".si",
+      "type" : "country-code",
+      "id" : "si",
+      "sponsor" : "Academic and Research Network of Slovenia (ARNES)"
+   },
+   "xn--yfro4i67o" : {
+      "url" : "/domains/root/db/xn--yfro4i67o.html",
+      "name" : ".新加坡",
+      "type" : "country-code",
+      "id" : "xn--yfro4i67o",
+      "sponsor" : "Singapore Network Information Centre (SGNIC) Pte Ltd"
+   },
+   "re" : {
+      "url" : "/domains/root/db/re.html",
+      "name" : ".re",
+      "type" : "country-code",
+      "id" : "re",
+      "sponsor" : "AFNIC (NIC France) - Immeuble International"
+   },
+   "me" : {
+      "url" : "/domains/root/db/me.html",
+      "name" : ".me",
+      "type" : "country-code",
+      "id" : "me",
+      "sponsor" : "Government of Montenegro"
+   },
+   "om" : {
+      "url" : "/domains/root/db/om.html",
+      "name" : ".om",
+      "type" : "country-code",
+      "id" : "om",
+      "sponsor" : "Telecommunications Regulatory Authority (TRA)"
+   },
+   "by" : {
+      "url" : "/domains/root/db/by.html",
+      "name" : ".by",
+      "type" : "country-code",
+      "id" : "by",
+      "sponsor" : "Reliable Software Inc."
+   },
+   "fi" : {
+      "url" : "/domains/root/db/fi.html",
+      "name" : ".fi",
+      "type" : "country-code",
+      "id" : "fi",
+      "sponsor" : "Finnish Communications Regulatory Authority"
+   },
+   "gs" : {
+      "url" : "/domains/root/db/gs.html",
+      "name" : ".gs",
+      "type" : "country-code",
+      "id" : "gs",
+      "sponsor" : "Government of South Georgia and South Sandwich Islands (GSGSSI)"
+   },
+   "ir" : {
+      "url" : "/domains/root/db/ir.html",
+      "name" : ".ir",
+      "type" : "country-code",
+      "id" : "ir",
+      "sponsor" : "Institute for Research in Fundamental Sciences"
+   },
+   "li" : {
+      "url" : "/domains/root/db/li.html",
+      "name" : ".li",
+      "type" : "country-code",
+      "id" : "li",
+      "sponsor" : "Universitaet Liechtenstein"
+   },
+   "xn--h2brj9c" : {
+      "url" : "/domains/root/db/xn--h2brj9c.html",
+      "name" : ".भारत",
+      "type" : "country-code",
+      "id" : "xn--h2brj9c",
+      "sponsor" : "National Internet Exchange of India"
+   },
+   "tz" : {
+      "url" : "/domains/root/db/tz.html",
+      "name" : ".tz",
+      "type" : "country-code",
+      "id" : "tz",
+      "sponsor" : "Tanzania Network Information Centre (tzNIC)"
+   },
+   "td" : {
+      "url" : "/domains/root/db/td.html",
+      "name" : ".td",
+      "type" : "country-code",
+      "id" : "td",
+      "sponsor" : "Société des télécommunications du Tchad (SOTEL TCHAD)"
+   },
+   "cg" : {
+      "url" : "/domains/root/db/cg.html",
+      "name" : ".cg",
+      "type" : "country-code",
+      "id" : "cg",
+      "sponsor" : "ONPT Congo and Interpoint Switzerland"
+   },
+   "xn--mgbaam7a8h" : {
+      "url" : "/domains/root/db/xn--mgbaam7a8h.html",
+      "name" : ".امارات",
+      "type" : "country-code",
+      "id" : "xn--mgbaam7a8h",
+      "sponsor" : "Telecommunications Regulatory Authority (TRA)"
+   },
+   "pa" : {
+      "url" : "/domains/root/db/pa.html",
+      "name" : ".pa",
+      "type" : "country-code",
+      "id" : "pa",
+      "sponsor" : "Universidad Tecnologica de Panama"
+   },
+   "am" : {
+      "url" : "/domains/root/db/am.html",
+      "name" : ".am",
+      "type" : "country-code",
+      "id" : "am",
+      "sponsor" : "Internet Society"
+   },
+   "tv" : {
+      "url" : "/domains/root/db/tv.html",
+      "name" : ".tv",
+      "type" : "country-code",
+      "id" : "tv",
+      "sponsor" : "Ministry of Finance and Tourism"
+   },
+   "jo" : {
+      "url" : "/domains/root/db/jo.html",
+      "name" : ".jo",
+      "type" : "country-code",
+      "id" : "jo",
+      "sponsor" : "National Information Technology Center (NITC)"
+   },
+   "bi" : {
+      "url" : "/domains/root/db/bi.html",
+      "name" : ".bi",
+      "type" : "country-code",
+      "id" : "bi",
+      "sponsor" : "Centre National de l'Informatique"
+   },
+   "ee" : {
+      "url" : "/domains/root/db/ee.html",
+      "name" : ".ee",
+      "type" : "country-code",
+      "id" : "ee",
+      "sponsor" : "National Institute of Chemical Physics and Biophysics"
+   },
+   "cd" : {
+      "url" : "/domains/root/db/cd.html",
+      "name" : ".cd",
+      "type" : "country-code",
+      "id" : "cd",
+      "sponsor" : "Office Congolais des Postes et Télécommunications - OCPT"
+   },
+   "xn--hgbk6aj7f53bba" : {
+      "url" : "/domains/root/db/xn--hgbk6aj7f53bba.html",
+      "name" : ".آزمایشی",
+      "type" : "test",
+      "id" : "xn--hgbk6aj7f53bba",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "pk" : {
+      "url" : "/domains/root/db/pk.html",
+      "name" : ".pk",
+      "type" : "country-code",
+      "id" : "pk",
+      "sponsor" : "PKNIC"
+   },
+   "mn" : {
+      "url" : "/domains/root/db/mn.html",
+      "name" : ".mn",
+      "type" : "country-code",
+      "id" : "mn",
+      "sponsor" : "Datacom Co., Ltd."
+   },
+   "gd" : {
+      "url" : "/domains/root/db/gd.html",
+      "name" : ".gd",
+      "type" : "country-code",
+      "id" : "gd",
+      "sponsor" : "The National Telecommunications Regulatory Commission (NTRC)"
+   },
+   "nz" : {
+      "url" : "/domains/root/db/nz.html",
+      "name" : ".nz",
+      "type" : "country-code",
+      "id" : "nz",
+      "sponsor" : "InternetNZ"
+   },
+   "as" : {
+      "url" : "/domains/root/db/as.html",
+      "name" : ".as",
+      "type" : "country-code",
+      "id" : "as",
+      "sponsor" : "AS Domain Registry"
+   },
+   "lc" : {
+      "url" : "/domains/root/db/lc.html",
+      "name" : ".lc",
+      "type" : "country-code",
+      "id" : "lc",
+      "sponsor" : "University of Puerto Rico"
+   },
+   "ae" : {
+      "url" : "/domains/root/db/ae.html",
+      "name" : ".ae",
+      "type" : "country-code",
+      "id" : "ae",
+      "sponsor" : "Telecommunication Regulatory Authority (TRA)"
+   },
+   "xn--kpry57d" : {
+      "url" : "/domains/root/db/xn--kpry57d.html",
+      "name" : ".台灣",
+      "type" : "country-code",
+      "id" : "xn--kpry57d",
+      "sponsor" : "Taiwan Network Information Center (TWNIC)"
+   },
+   "rs" : {
+      "url" : "/domains/root/db/rs.html",
+      "name" : ".rs",
+      "type" : "country-code",
+      "id" : "rs",
+      "sponsor" : "Serbian National Register of\nInternet Domain Names (RNIDS)"
+   },
+   "cn" : {
+      "url" : "/domains/root/db/cn.html",
+      "name" : ".cn",
+      "type" : "country-code",
+      "id" : "cn",
+      "sponsor" : "Computer Network Information Center, Chinese Academy of Sciences"
+   },
+   "ag" : {
+      "url" : "/domains/root/db/ag.html",
+      "name" : ".ag",
+      "type" : "country-code",
+      "id" : "ag",
+      "sponsor" : "UHSA School of Medicine"
+   },
+   "mx" : {
+      "url" : "/domains/root/db/mx.html",
+      "name" : ".mx",
+      "type" : "country-code",
+      "id" : "mx",
+      "sponsor" : "NIC-Mexico\nITESM - Campus Monterrey"
+   },
+   "sy" : {
+      "url" : "/domains/root/db/sy.html",
+      "name" : ".sy",
+      "type" : "country-code",
+      "id" : "sy",
+      "sponsor" : "National Agency for Network Services (NANS)"
+   },
+   "cx" : {
+      "url" : "/domains/root/db/cx.html",
+      "name" : ".cx",
+      "type" : "country-code",
+      "id" : "cx",
+      "sponsor" : "Christmas Island Internet Administration Limited"
+   },
+   "cr" : {
+      "url" : "/domains/root/db/cr.html",
+      "name" : ".cr",
+      "type" : "country-code",
+      "id" : "cr",
+      "sponsor" : "National Academy of Sciences\nAcademia Nacional de Ciencias"
+   },
+   "vi" : {
+      "url" : "/domains/root/db/vi.html",
+      "name" : ".vi",
+      "type" : "country-code",
+      "id" : "vi",
+      "sponsor" : "Virgin Islands Public Telcommunications System\nc/o COBEX Internet Services"
+   },
+   "sg" : {
+      "url" : "/domains/root/db/sg.html",
+      "name" : ".sg",
+      "type" : "country-code",
+      "id" : "sg",
+      "sponsor" : "Singapore Network Information Centre (SGNIC) Pte Ltd"
+   },
+   "kh" : {
+      "url" : "/domains/root/db/kh.html",
+      "name" : ".kh",
+      "type" : "country-code",
+      "id" : "kh",
+      "sponsor" : "Ministry of Post and Telecommunications"
+   },
+   "bm" : {
+      "url" : "/domains/root/db/bm.html",
+      "name" : ".bm",
+      "type" : "country-code",
+      "id" : "bm",
+      "sponsor" : "Registry General\nMinistry of Labour and Immigration"
+   },
+   "nr" : {
+      "url" : "/domains/root/db/nr.html",
+      "name" : ".nr",
+      "type" : "country-code",
+      "id" : "nr",
+      "sponsor" : "CENPAC NET"
+   },
+   "bz" : {
+      "url" : "/domains/root/db/bz.html",
+      "name" : ".bz",
+      "type" : "country-code",
+      "id" : "bz",
+      "sponsor" : "University of Belize"
+   },
+   "vu" : {
+      "url" : "/domains/root/db/vu.html",
+      "name" : ".vu",
+      "type" : "country-code",
+      "id" : "vu",
+      "sponsor" : "Telecom Vanuatu Limited"
+   },
+   "kw" : {
+      "url" : "/domains/root/db/kw.html",
+      "name" : ".kw",
+      "type" : "country-code",
+      "id" : "kw",
+      "sponsor" : "Ministry of Communications"
+   },
+   "gf" : {
+      "url" : "/domains/root/db/gf.html",
+      "name" : ".gf",
+      "type" : "country-code",
+      "id" : "gf",
+      "sponsor" : "Net Plus"
+   },
+   "al" : {
+      "url" : "/domains/root/db/al.html",
+      "name" : ".al",
+      "type" : "country-code",
+      "id" : "al",
+      "sponsor" : "Electronic and Postal Communications Authority - AKEP"
+   },
+   "uz" : {
+      "url" : "/domains/root/db/uz.html",
+      "name" : ".uz",
+      "type" : "country-code",
+      "id" : "uz",
+      "sponsor" : "Computerization and Information Technologies Developing Center\nUZINFOCOM"
+   },
+   "eh" : {
+      "url" : "/domains/root/db/eh.html",
+      "name" : ".eh",
+      "type" : "country-code",
+      "id" : "eh",
+      "sponsor" : "Not assigned"
+   },
+   "cw" : {
+      "url" : "/domains/root/db/cw.html",
+      "name" : ".cw",
+      "type" : "country-code",
+      "id" : "cw",
+      "sponsor" : "University of the Netherlands Antilles"
+   },
+   "int" : {
+      "url" : "/domains/root/db/int.html",
+      "name" : ".int",
+      "type" : "sponsored",
+      "id" : "int",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "xn--mgbx4cd0ab" : {
+      "url" : "/domains/root/db/xn--mgbx4cd0ab.html",
+      "name" : ".مليسيا",
+      "type" : "country-code",
+      "id" : "xn--mgbx4cd0ab",
+      "sponsor" : "MYNIC Berhad"
+   },
+   "ht" : {
+      "url" : "/domains/root/db/ht.html",
+      "name" : ".ht",
+      "type" : "country-code",
+      "id" : "ht",
+      "sponsor" : "Consortium FDS/RDDH"
+   },
+   "mw" : {
+      "url" : "/domains/root/db/mw.html",
+      "name" : ".mw",
+      "type" : "country-code",
+      "id" : "mw",
+      "sponsor" : "Malawi Sustainable Development Network Programme\n(Malawi SDNP)"
+   },
+   "gm" : {
+      "url" : "/domains/root/db/gm.html",
+      "name" : ".gm",
+      "type" : "country-code",
+      "id" : "gm",
+      "sponsor" : "GM-NIC"
+   },
+   "xn--0zwm56d" : {
+      "url" : "/domains/root/db/xn--0zwm56d.html",
+      "name" : ".测试",
+      "type" : "test",
+      "id" : "xn--0zwm56d",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "xn--80akhbyknj4f" : {
+      "url" : "/domains/root/db/xn--80akhbyknj4f.html",
+      "name" : ".испытание",
+      "type" : "test",
+      "id" : "xn--80akhbyknj4f",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "xn--o3cw4h" : {
+      "url" : "/domains/root/db/xn--o3cw4h.html",
+      "name" : ".ไทย",
+      "type" : "country-code",
+      "id" : "xn--o3cw4h",
+      "sponsor" : "Thai Network Information Center Foundation"
+   },
+   "bg" : {
+      "url" : "/domains/root/db/bg.html",
+      "name" : ".bg",
+      "type" : "country-code",
+      "id" : "bg",
+      "sponsor" : "Register.BG"
+   },
+   "gu" : {
+      "url" : "/domains/root/db/gu.html",
+      "name" : ".gu",
+      "type" : "country-code",
+      "id" : "gu",
+      "sponsor" : "University of Guam\nComputer Center"
+   },
+   "info" : {
+      "url" : "/domains/root/db/info.html",
+      "name" : ".info",
+      "type" : "generic",
+      "id" : "info",
+      "sponsor" : "Afilias Limited"
+   },
+   "aw" : {
+      "url" : "/domains/root/db/aw.html",
+      "name" : ".aw",
+      "type" : "country-code",
+      "id" : "aw",
+      "sponsor" : "SETAR"
+   },
+   "gy" : {
+      "url" : "/domains/root/db/gy.html",
+      "name" : ".gy",
+      "type" : "country-code",
+      "id" : "gy",
+      "sponsor" : "University of Guyana"
+   },
+   "ac" : {
+      "url" : "/domains/root/db/ac.html",
+      "name" : ".ac",
+      "type" : "country-code",
+      "id" : "ac",
+      "sponsor" : "Network Information Center (AC Domain Registry)\nc/o Cable and Wireless (Ascension Island)"
+   },
+   "ca" : {
+      "url" : "/domains/root/db/ca.html",
+      "name" : ".ca",
+      "type" : "country-code",
+      "id" : "ca",
+      "sponsor" : "Canadian Internet Registration Authority (CIRA)\nAutorite Canadienne pour les Enregistrements Internet (ACEI)"
+   },
+   "sk" : {
+      "url" : "/domains/root/db/sk.html",
+      "name" : ".sk",
+      "type" : "country-code",
+      "id" : "sk",
+      "sponsor" : "SK-NIC, a.s."
+   },
+   "museum" : {
+      "url" : "/domains/root/db/museum.html",
+      "name" : ".museum",
+      "type" : "sponsored",
+      "id" : "museum",
+      "sponsor" : "Museum Domain Management Association"
+   },
+   "ax" : {
+      "url" : "/domains/root/db/ax.html",
+      "name" : ".ax",
+      "type" : "country-code",
+      "id" : "ax",
+      "sponsor" : "Ålands landskapsregering"
+   },
+   "es" : {
+      "url" : "/domains/root/db/es.html",
+      "name" : ".es",
+      "type" : "country-code",
+      "id" : "es",
+      "sponsor" : "Red.es"
+   },
+   "xn--lgbbat1ad8j" : {
+      "url" : "/domains/root/db/xn--lgbbat1ad8j.html",
+      "name" : ".الجزائر",
+      "type" : "country-code",
+      "id" : "xn--lgbbat1ad8j",
+      "sponsor" : "CERIST"
+   },
+   "kp" : {
+      "url" : "/domains/root/db/kp.html",
+      "name" : ".kp",
+      "type" : "country-code",
+      "id" : "kp",
+      "sponsor" : "Star Joint Venture Company"
+   },
+   "bb" : {
+      "url" : "/domains/root/db/bb.html",
+      "name" : ".bb",
+      "type" : "country-code",
+      "id" : "bb",
+      "sponsor" : "Government of Barbados\nMinistry of Economic Affairs and Development\nTelecommunications Unit"
+   },
+   "sa" : {
+      "url" : "/domains/root/db/sa.html",
+      "name" : ".sa",
+      "type" : "country-code",
+      "id" : "sa",
+      "sponsor" : "Communications and Information Technology Commission"
+   },
+   "et" : {
+      "url" : "/domains/root/db/et.html",
+      "name" : ".et",
+      "type" : "country-code",
+      "id" : "et",
+      "sponsor" : "Ethio telecom"
+   },
+   "ie" : {
+      "url" : "/domains/root/db/ie.html",
+      "name" : ".ie",
+      "type" : "country-code",
+      "id" : "ie",
+      "sponsor" : "University College Dublin\nComputing Services\nComputer Centre"
+   },
+   "tl" : {
+      "url" : "/domains/root/db/tl.html",
+      "name" : ".tl",
+      "type" : "country-code",
+      "id" : "tl",
+      "sponsor" : "Ministry of Infrastructure\nInformation and Technology Division"
+   },
+   "org" : {
+      "url" : "/domains/root/db/org.html",
+      "name" : ".org",
+      "type" : "generic",
+      "id" : "org",
+      "sponsor" : "Public Interest Registry (PIR)"
+   },
+   "tj" : {
+      "url" : "/domains/root/db/tj.html",
+      "name" : ".tj",
+      "type" : "country-code",
+      "id" : "tj",
+      "sponsor" : "Information Technology Center"
+   },
+   "cf" : {
+      "url" : "/domains/root/db/cf.html",
+      "name" : ".cf",
+      "type" : "country-code",
+      "id" : "cf",
+      "sponsor" : "Societe Centrafricaine de Telecommunications (SOCATEL)"
+   },
+   "im" : {
+      "url" : "/domains/root/db/im.html",
+      "name" : ".im",
+      "type" : "country-code",
+      "id" : "im",
+      "sponsor" : "Isle of Man Government"
+   },
+   "mk" : {
+      "url" : "/domains/root/db/mk.html",
+      "name" : ".mk",
+      "type" : "country-code",
+      "id" : "mk",
+      "sponsor" : "Ministry of Foreign Affairs"
+   },
+   "de" : {
+      "url" : "/domains/root/db/de.html",
+      "name" : ".de",
+      "type" : "country-code",
+      "id" : "de",
+      "sponsor" : "DENIC eG"
+   },
+   "xn--gecrj9c" : {
+      "url" : "/domains/root/db/xn--gecrj9c.html",
+      "name" : ".ભારત",
+      "type" : "country-code",
+      "id" : "xn--gecrj9c",
+      "sponsor" : "National Internet Exchange of India"
+   },
+   "pro" : {
+      "url" : "/domains/root/db/pro.html",
+      "name" : ".pro",
+      "type" : "generic-restricted",
+      "id" : "pro",
+      "sponsor" : "Registry Services Corporation\ndba RegistryPro"
+   },
+   "xn--j1amh" : {
+      "url" : "/domains/root/db/xn--j1amh.html",
+      "name" : ".укр",
+      "type" : "country-code",
+      "id" : "xn--j1amh",
+      "sponsor" : "Ukrainian Network Information Centre (UANIC), Inc."
+   },
+   "md" : {
+      "url" : "/domains/root/db/md.html",
+      "name" : ".md",
+      "type" : "country-code",
+      "id" : "md",
+      "sponsor" : "MoldData S.E."
+   },
+   "fm" : {
+      "url" : "/domains/root/db/fm.html",
+      "name" : ".fm",
+      "type" : "country-code",
+      "id" : "fm",
+      "sponsor" : "FSM Telecommunications Corporation"
+   },
+   "jp" : {
+      "url" : "/domains/root/db/jp.html",
+      "name" : ".jp",
+      "type" : "country-code",
+      "id" : "jp",
+      "sponsor" : "Japan Registry Services Co., Ltd."
+   },
+   "cl" : {
+      "url" : "/domains/root/db/cl.html",
+      "name" : ".cl",
+      "type" : "country-code",
+      "id" : "cl",
+      "sponsor" : "NIC Chile (University of Chile)"
+   },
+   "xn--fzc2c9e2c" : {
+      "url" : "/domains/root/db/xn--fzc2c9e2c.html",
+      "name" : ".ලංකා",
+      "type" : "country-code",
+      "id" : "xn--fzc2c9e2c",
+      "sponsor" : "LK Domain Registry"
+   },
+   "xn--j6w193g" : {
+      "url" : "/domains/root/db/xn--j6w193g.html",
+      "name" : ".香港",
+      "type" : "country-code",
+      "id" : "xn--j6w193g",
+      "sponsor" : "Hong Kong Internet Registration Corporation Ltd."
+   },
+   "xn--xkc2al3hye2a" : {
+      "url" : "/domains/root/db/xn--xkc2al3hye2a.html",
+      "name" : ".இலங்கை",
+      "type" : "country-code",
+      "id" : "xn--xkc2al3hye2a",
+      "sponsor" : "LK Domain Registry"
+   },
+   "sx" : {
+      "url" : "/domains/root/db/sx.html",
+      "name" : ".sx",
+      "type" : "country-code",
+      "id" : "sx",
+      "sponsor" : "SX Registry SA B.V."
+   },
+   "bn" : {
+      "url" : "/domains/root/db/bn.html",
+      "name" : ".bn",
+      "type" : "country-code",
+      "id" : "bn",
+      "sponsor" : "Telekom Brunei Berhad"
+   },
+   "vn" : {
+      "url" : "/domains/root/db/vn.html",
+      "name" : ".vn",
+      "type" : "country-code",
+      "id" : "vn",
+      "sponsor" : "Ministry of Information and Communications of Socialist Republic of Viet Nam"
+   },
+   "gp" : {
+      "url" : "/domains/root/db/gp.html",
+      "name" : ".gp",
+      "type" : "country-code",
+      "id" : "gp",
+      "sponsor" : "Networking Technologies Group"
+   },
+   "sm" : {
+      "url" : "/domains/root/db/sm.html",
+      "name" : ".sm",
+      "type" : "country-code",
+      "id" : "sm",
+      "sponsor" : "Telecom Italia San Marino S.p.A."
+   },
+   "ar" : {
+      "url" : "/domains/root/db/ar.html",
+      "name" : ".ar",
+      "type" : "country-code",
+      "id" : "ar",
+      "sponsor" : "Presidencia de la Nación – Secretaría Legal y Técnica"
+   },
+   "dj" : {
+      "url" : "/domains/root/db/dj.html",
+      "name" : ".dj",
+      "type" : "country-code",
+      "id" : "dj",
+      "sponsor" : "Djibouti Telecom S.A"
+   },
+   "xn--mgbayh7gpa" : {
+      "url" : "/domains/root/db/xn--mgbayh7gpa.html",
+      "name" : ".الاردن",
+      "type" : "country-code",
+      "id" : "xn--mgbayh7gpa",
+      "sponsor" : "National Information Technology Center (NITC)"
+   },
+   "xn--xkc2dl3a5ee0h" : {
+      "url" : "/domains/root/db/xn--xkc2dl3a5ee0h.html",
+      "name" : ".இந்தியா",
+      "type" : "country-code",
+      "id" : "xn--xkc2dl3a5ee0h",
+      "sponsor" : "National Internet Exchange of India"
+   },
+   "bl" : {
+      "url" : "/domains/root/db/bl.html",
+      "name" : ".bl",
+      "type" : "country-code",
+      "id" : "bl",
+      "sponsor" : "Not assigned"
+   },
+   "bd" : {
+      "url" : "/domains/root/db/bd.html",
+      "name" : ".bd",
+      "type" : "country-code",
+      "id" : "bd",
+      "sponsor" : "Ministry of Post & Telecommunications\nBangladesh Secretariat"
+   },
+   "mc" : {
+      "url" : "/domains/root/db/mc.html",
+      "name" : ".mc",
+      "type" : "country-code",
+      "id" : "mc",
+      "sponsor" : "Gouvernement de Monaco\nDirection des Communications Electroniques"
+   },
+   "ug" : {
+      "url" : "/domains/root/db/ug.html",
+      "name" : ".ug",
+      "type" : "country-code",
+      "id" : "ug",
+      "sponsor" : "Uganda Online Ltd."
+   },
+   "nu" : {
+      "url" : "/domains/root/db/nu.html",
+      "name" : ".nu",
+      "type" : "country-code",
+      "id" : "nu",
+      "sponsor" : "The IUSN Foundation"
+   },
+   "ci" : {
+      "url" : "/domains/root/db/ci.html",
+      "name" : ".ci",
+      "type" : "country-code",
+      "id" : "ci",
+      "sponsor" : "INP-HB Institut National Polytechnique Felix Houphouet Boigny"
+   },
+   "dk" : {
+      "url" : "/domains/root/db/dk.html",
+      "name" : ".dk",
+      "type" : "country-code",
+      "id" : "dk",
+      "sponsor" : "Dansk Internet Forum"
+   },
+   "nc" : {
+      "url" : "/domains/root/db/nc.html",
+      "name" : ".nc",
+      "type" : "country-code",
+      "id" : "nc",
+      "sponsor" : "Office des Postes et Telecommunications"
+   },
+   "rw" : {
+      "url" : "/domains/root/db/rw.html",
+      "name" : ".rw",
+      "type" : "country-code",
+      "id" : "rw",
+      "sponsor" : "Rwanda Information Communication and Technology Association (RICTA)"
+   },
+   "aq" : {
+      "url" : "/domains/root/db/aq.html",
+      "name" : ".aq",
+      "type" : "country-code",
+      "id" : "aq",
+      "sponsor" : "Mott and Associates"
+   },
+   "xn--clchc0ea0b2g2a9gcd" : {
+      "url" : "/domains/root/db/xn--clchc0ea0b2g2a9gcd.html",
+      "name" : ".சிங்கப்பூர்",
+      "type" : "country-code",
+      "id" : "xn--clchc0ea0b2g2a9gcd",
+      "sponsor" : "Singapore Network Information Centre (SGNIC) Pte Ltd"
+   },
+   "name" : {
+      "url" : "/domains/root/db/name.html",
+      "name" : ".name",
+      "type" : "generic-restricted",
+      "id" : "name",
+      "sponsor" : "VeriSign Information Services, Inc."
+   },
+   "st" : {
+      "url" : "/domains/root/db/st.html",
+      "name" : ".st",
+      "type" : "country-code",
+      "id" : "st",
+      "sponsor" : "Tecnisys"
+   },
+   "hm" : {
+      "url" : "/domains/root/db/hm.html",
+      "name" : ".hm",
+      "type" : "country-code",
+      "id" : "hm",
+      "sponsor" : "HM Domain Registry"
+   },
+   "mo" : {
+      "url" : "/domains/root/db/mo.html",
+      "name" : ".mo",
+      "type" : "country-code",
+      "id" : "mo",
+      "sponsor" : "Bureau of Telecommunications Regulation (DSRT)"
+   },
+   "gq" : {
+      "url" : "/domains/root/db/gq.html",
+      "name" : ".gq",
+      "type" : "country-code",
+      "id" : "gq",
+      "sponsor" : "GETESA"
+   },
+   "ps" : {
+      "url" : "/domains/root/db/ps.html",
+      "name" : ".ps",
+      "type" : "country-code",
+      "id" : "ps",
+      "sponsor" : "Ministry Of Telecommunications &\nInformation Technology,\nGovernment Computer Center."
+   },
+   "ge" : {
+      "url" : "/domains/root/db/ge.html",
+      "name" : ".ge",
+      "type" : "country-code",
+      "id" : "ge",
+      "sponsor" : "Caucasus Online"
+   },
+   "ao" : {
+      "url" : "/domains/root/db/ao.html",
+      "name" : ".ao",
+      "type" : "country-code",
+      "id" : "ao",
+      "sponsor" : "Faculdade de Engenharia da Universidade Agostinho Neto"
+   },
+   "xn--11b5bs3a9aj6g" : {
+      "url" : "/domains/root/db/xn--11b5bs3a9aj6g.html",
+      "name" : ".परीक्षा",
+      "type" : "test",
+      "id" : "xn--11b5bs3a9aj6g",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "va" : {
+      "url" : "/domains/root/db/va.html",
+      "name" : ".va",
+      "type" : "country-code",
+      "id" : "va",
+      "sponsor" : "Holy See Secretariat of State Department of Telecommunications"
+   },
+   "gr" : {
+      "url" : "/domains/root/db/gr.html",
+      "name" : ".gr",
+      "type" : "country-code",
+      "id" : "gr",
+      "sponsor" : "ICS-FORTH GR"
+   },
+   "xn--mgbbh1a71e" : {
+      "url" : "/domains/root/db/xn--mgbbh1a71e.html",
+      "name" : ".بھارت",
+      "type" : "country-code",
+      "id" : "xn--mgbbh1a71e",
+      "sponsor" : "National Internet Exchange of India"
+   },
+   "is" : {
+      "url" : "/domains/root/db/is.html",
+      "name" : ".is",
+      "type" : "country-code",
+      "id" : "is",
+      "sponsor" : "ISNIC - Internet Iceland ltd."
+   },
+   "mt" : {
+      "url" : "/domains/root/db/mt.html",
+      "name" : ".mt",
+      "type" : "country-code",
+      "id" : "mt",
+      "sponsor" : "NIC (Malta)"
+   },
+   "gi" : {
+      "url" : "/domains/root/db/gi.html",
+      "name" : ".gi",
+      "type" : "country-code",
+      "id" : "gi",
+      "sponsor" : "Sapphire Networks"
+   },
+   "la" : {
+      "url" : "/domains/root/db/la.html",
+      "name" : ".la",
+      "type" : "country-code",
+      "id" : "la",
+      "sponsor" : "Lao National Internet Committee (LANIC), Ministry of Posts and Telecommunications"
+   },
+   "bh" : {
+      "url" : "/domains/root/db/bh.html",
+      "name" : ".bh",
+      "type" : "country-code",
+      "id" : "bh",
+      "sponsor" : "Telecommunications Regulatory Authority (TRA)"
+   },
+   "ms" : {
+      "url" : "/domains/root/db/ms.html",
+      "name" : ".ms",
+      "type" : "country-code",
+      "id" : "ms",
+      "sponsor" : "MNI Networks Ltd."
+   },
+   "bt" : {
+      "url" : "/domains/root/db/bt.html",
+      "name" : ".bt",
+      "type" : "country-code",
+      "id" : "bt",
+      "sponsor" : "Ministry of Information and Communications"
+   },
+   "gb" : {
+      "url" : "/domains/root/db/gb.html",
+      "name" : ".gb",
+      "type" : "country-code",
+      "id" : "gb",
+      "sponsor" : "Reserved Domain - IANA"
+   },
+   "xn--3e0b707e" : {
+      "url" : "/domains/root/db/xn--3e0b707e.html",
+      "name" : ".한국",
+      "type" : "country-code",
+      "id" : "xn--3e0b707e",
+      "sponsor" : "KISA (Korea Internet & Security Agency)"
+   },
+   "wf" : {
+      "url" : "/domains/root/db/wf.html",
+      "name" : ".wf",
+      "type" : "country-code",
+      "id" : "wf",
+      "sponsor" : "AFNIC (NIC France) - Immeuble International"
+   },
+   "it" : {
+      "url" : "/domains/root/db/it.html",
+      "name" : ".it",
+      "type" : "country-code",
+      "id" : "it",
+      "sponsor" : "IIT - CNR"
+   },
+   "sb" : {
+      "url" : "/domains/root/db/sb.html",
+      "name" : ".sb",
+      "type" : "country-code",
+      "id" : "sb",
+      "sponsor" : "Solomon Telekom Company Limited"
+   },
+   "xn--g6w251d" : {
+      "url" : "/domains/root/db/xn--g6w251d.html",
+      "name" : ".測試",
+      "type" : "test",
+      "id" : "xn--g6w251d",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "ly" : {
+      "url" : "/domains/root/db/ly.html",
+      "name" : ".ly",
+      "type" : "country-code",
+      "id" : "ly",
+      "sponsor" : "General Post and Telecommunication Company"
+   },
+   "ng" : {
+      "url" : "/domains/root/db/ng.html",
+      "name" : ".ng",
+      "type" : "country-code",
+      "id" : "ng",
+      "sponsor" : "Nigeria Internet Registration Association"
+   },
+   "gt" : {
+      "url" : "/domains/root/db/gt.html",
+      "name" : ".gt",
+      "type" : "country-code",
+      "id" : "gt",
+      "sponsor" : "Universidad del Valle de Guatemala"
+   },
+   "xn--mgbai9azgqp6j" : {
+      "url" : "/domains/root/db/xn--mgbai9azgqp6j.html",
+      "name" : ".پاکستان",
+      "type" : "country-code",
+      "id" : "xn--mgbai9azgqp6j",
+      "sponsor" : "Not assigned"
+   },
+   "lu" : {
+      "url" : "/domains/root/db/lu.html",
+      "name" : ".lu",
+      "type" : "country-code",
+      "id" : "lu",
+      "sponsor" : "RESTENA"
+   },
+   "xn--9t4b11yi5a" : {
+      "url" : "/domains/root/db/xn--9t4b11yi5a.html",
+      "name" : ".테스트",
+      "type" : "test",
+      "id" : "xn--9t4b11yi5a",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "il" : {
+      "url" : "/domains/root/db/il.html",
+      "name" : ".il",
+      "type" : "country-code",
+      "id" : "il",
+      "sponsor" : "Internet Society of Israel"
+   },
+   "pt" : {
+      "url" : "/domains/root/db/pt.html",
+      "name" : ".pt",
+      "type" : "country-code",
+      "id" : "pt",
+      "sponsor" : "Fundação para a Computação Científica Nacional"
+   },
+   "mh" : {
+      "url" : "/domains/root/db/mh.html",
+      "name" : ".mh",
+      "type" : "country-code",
+      "id" : "mh",
+      "sponsor" : "Cabinet Office"
+   },
+   "eg" : {
+      "url" : "/domains/root/db/eg.html",
+      "name" : ".eg",
+      "type" : "country-code",
+      "id" : "eg",
+      "sponsor" : "Egyptian Universities Network (EUN)\nSupreme Council of Universities"
+   },
+   "xn--mgberp4a5d4ar" : {
+      "url" : "/domains/root/db/xn--mgberp4a5d4ar.html",
+      "name" : ".السعودية",
+      "type" : "country-code",
+      "id" : "xn--mgberp4a5d4ar",
+      "sponsor" : "Communications and Information Technology Commission"
+   },
+   "kg" : {
+      "url" : "/domains/root/db/kg.html",
+      "name" : ".kg",
+      "type" : "country-code",
+      "id" : "kg",
+      "sponsor" : "AsiaInfo Telecommunication Enterprise"
+   },
+   "pf" : {
+      "url" : "/domains/root/db/pf.html",
+      "name" : ".pf",
+      "type" : "country-code",
+      "id" : "pf",
+      "sponsor" : "Gouvernement de la Polynésie française"
+   },
+   "post" : {
+      "url" : "/domains/root/db/post.html",
+      "name" : ".post",
+      "type" : "sponsored",
+      "id" : "post",
+      "sponsor" : "Universal Postal Union"
+   },
+   "um" : {
+      "url" : "/domains/root/db/um.html",
+      "name" : ".um",
+      "type" : "country-code",
+      "id" : "um",
+      "sponsor" : "Not assigned"
+   },
+   "xn--90a3ac" : {
+      "url" : "/domains/root/db/xn--90a3ac.html",
+      "name" : ".срб",
+      "type" : "country-code",
+      "id" : "xn--90a3ac",
+      "sponsor" : "Serbian National Register of Internet Domain Names (RNIDS)"
+   },
+   "fr" : {
+      "url" : "/domains/root/db/fr.html",
+      "name" : ".fr",
+      "type" : "country-code",
+      "id" : "fr",
+      "sponsor" : "AFNIC (NIC France) - Immeuble International"
+   },
+   "xn--mgba3a4f16a" : {
+      "url" : "/domains/root/db/xn--mgba3a4f16a.html",
+      "name" : ".ایران",
+      "type" : "country-code",
+      "id" : "xn--mgba3a4f16a",
+      "sponsor" : "Not assigned"
+   },
+   "xn--pgbs0dh" : {
+      "url" : "/domains/root/db/xn--pgbs0dh.html",
+      "name" : ".تونس",
+      "type" : "country-code",
+      "id" : "xn--pgbs0dh",
+      "sponsor" : "Agence Tunisienne d'Internet"
+   },
+   "sr" : {
+      "url" : "/domains/root/db/sr.html",
+      "name" : ".sr",
+      "type" : "country-code",
+      "id" : "sr",
+      "sponsor" : "Telesur"
+   },
+   "vg" : {
+      "url" : "/domains/root/db/vg.html",
+      "name" : ".vg",
+      "type" : "country-code",
+      "id" : "vg",
+      "sponsor" : "Pinebrook Developments Ltd"
+   },
+   "fj" : {
+      "url" : "/domains/root/db/fj.html",
+      "name" : ".fj",
+      "type" : "country-code",
+      "id" : "fj",
+      "sponsor" : "The University of the South Pacific\nIT Services"
+   },
+   "py" : {
+      "url" : "/domains/root/db/py.html",
+      "name" : ".py",
+      "type" : "country-code",
+      "id" : "py",
+      "sponsor" : "NIC-PY"
+   },
+   "xn--fpcrj9c3d" : {
+      "url" : "/domains/root/db/xn--fpcrj9c3d.html",
+      "name" : ".భారత్",
+      "type" : "country-code",
+      "id" : "xn--fpcrj9c3d",
+      "sponsor" : "National Internet Exchange of India"
+   },
+   "pm" : {
+      "url" : "/domains/root/db/pm.html",
+      "name" : ".pm",
+      "type" : "country-code",
+      "id" : "pm",
+      "sponsor" : "AFNIC (NIC France) - Immeuble International"
+   },
+   "sn" : {
+      "url" : "/domains/root/db/sn.html",
+      "name" : ".sn",
+      "type" : "country-code",
+      "id" : "sn",
+      "sponsor" : "Universite Cheikh Anta Diop\nNIC Senegal"
+   },
+   "sd" : {
+      "url" : "/domains/root/db/sd.html",
+      "name" : ".sd",
+      "type" : "country-code",
+      "id" : "sd",
+      "sponsor" : "Sudan Internet Society"
+   },
+   "au" : {
+      "url" : "/domains/root/db/au.html",
+      "name" : ".au",
+      "type" : "country-code",
+      "id" : "au",
+      "sponsor" : ".au Domain Administration (auDA)"
+   },
+   "sl" : {
+      "url" : "/domains/root/db/sl.html",
+      "name" : ".sl",
+      "type" : "country-code",
+      "id" : "sl",
+      "sponsor" : "Sierratel"
+   },
+   "us" : {
+      "url" : "/domains/root/db/us.html",
+      "name" : ".us",
+      "type" : "country-code",
+      "id" : "us",
+      "sponsor" : "NeuStar, Inc."
+   },
+   "gh" : {
+      "url" : "/domains/root/db/gh.html",
+      "name" : ".gh",
+      "type" : "country-code",
+      "id" : "gh",
+      "sponsor" : "Network Computer Systems Limited"
+   },
+   "mr" : {
+      "url" : "/domains/root/db/mr.html",
+      "name" : ".mr",
+      "type" : "country-code",
+      "id" : "mr",
+      "sponsor" : "University of Nouakchott"
+   },
+   "ye" : {
+      "url" : "/domains/root/db/ye.html",
+      "name" : ".ye",
+      "type" : "country-code",
+      "id" : "ye",
+      "sponsor" : "TeleYemen"
+   },
+   "dz" : {
+      "url" : "/domains/root/db/dz.html",
+      "name" : ".dz",
+      "type" : "country-code",
+      "id" : "dz",
+      "sponsor" : "CERIST"
+   },
+   "kn" : {
+      "url" : "/domains/root/db/kn.html",
+      "name" : ".kn",
+      "type" : "country-code",
+      "id" : "kn",
+      "sponsor" : "Ministry of Finance, Sustainable Development Information & Technology"
+   },
+   "cm" : {
+      "url" : "/domains/root/db/cm.html",
+      "name" : ".cm",
+      "type" : "country-code",
+      "id" : "cm",
+      "sponsor" : "Cameroon Telecommunications (CAMTEL)"
+   },
+   "bw" : {
+      "url" : "/domains/root/db/bw.html",
+      "name" : ".bw",
+      "type" : "country-code",
+      "id" : "bw",
+      "sponsor" : "University of Botswana"
+   },
+   "arpa" : {
+      "url" : "/domains/root/db/arpa.html",
+      "name" : ".arpa",
+      "type" : "infrastructure",
+      "id" : "arpa",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "lk" : {
+      "url" : "/domains/root/db/lk.html",
+      "name" : ".lk",
+      "type" : "country-code",
+      "id" : "lk",
+      "sponsor" : "Council for Information Technology\nLK Domain Registrar"
+   },
+   "bq" : {
+      "url" : "/domains/root/db/bq.html",
+      "name" : ".bq",
+      "type" : "country-code",
+      "id" : "bq",
+      "sponsor" : "Not assigned"
+   },
+   "mg" : {
+      "url" : "/domains/root/db/mg.html",
+      "name" : ".mg",
+      "type" : "country-code",
+      "id" : "mg",
+      "sponsor" : "NIC-MG (Network Information Center Madagascar)"
+   },
+   "tk" : {
+      "url" : "/domains/root/db/tk.html",
+      "name" : ".tk",
+      "type" : "country-code",
+      "id" : "tk",
+      "sponsor" : "Telecommunication Tokelau Corporation (Teletok)"
+   },
+   "su" : {
+      "url" : "/domains/root/db/su.html",
+      "name" : ".su",
+      "type" : "country-code",
+      "id" : "su",
+      "sponsor" : "Russian Institute for Development of Public Networks\n(ROSNIIROS)"
+   },
+   "xn--ogbpf8fl" : {
+      "url" : "/domains/root/db/xn--ogbpf8fl.html",
+      "name" : ".سورية",
+      "type" : "country-code",
+      "id" : "xn--ogbpf8fl",
+      "sponsor" : "National Agency for Network Services (NANS)"
+   },
+   "sc" : {
+      "url" : "/domains/root/db/sc.html",
+      "name" : ".sc",
+      "type" : "country-code",
+      "id" : "sc",
+      "sponsor" : "VCS Pty Ltd"
+   },
+   "ru" : {
+      "url" : "/domains/root/db/ru.html",
+      "name" : ".ru",
+      "type" : "country-code",
+      "id" : "ru",
+      "sponsor" : "Coordination Center for TLD RU"
+   },
+   "travel" : {
+      "url" : "/domains/root/db/travel.html",
+      "name" : ".travel",
+      "type" : "sponsored",
+      "id" : "travel",
+      "sponsor" : "Tralliance Registry Management Company, LLC."
+   },
+   "az" : {
+      "url" : "/domains/root/db/az.html",
+      "name" : ".az",
+      "type" : "country-code",
+      "id" : "az",
+      "sponsor" : "IntraNS"
+   },
+   "ec" : {
+      "url" : "/domains/root/db/ec.html",
+      "name" : ".ec",
+      "type" : "country-code",
+      "id" : "ec",
+      "sponsor" : "NIC.EC (NICEC) S.A."
+   },
+   "xn--54b7fta0cc" : {
+      "url" : "/domains/root/db/xn--54b7fta0cc.html",
+      "name" : ".বাংলা",
+      "type" : "country-code",
+      "id" : "xn--54b7fta0cc",
+      "sponsor" : "Not assigned"
+   },
+   "mz" : {
+      "url" : "/domains/root/db/mz.html",
+      "name" : ".mz",
+      "type" : "country-code",
+      "id" : "mz",
+      "sponsor" : "Centro de Informatica de Universidade Eduardo Mondlane"
+   },
+   "lb" : {
+      "url" : "/domains/root/db/lb.html",
+      "name" : ".lb",
+      "type" : "country-code",
+      "id" : "lb",
+      "sponsor" : "American University of Beirut\nComputing and Networking Services"
+   },
+   "xn--ygbi2ammx" : {
+      "url" : "/domains/root/db/xn--ygbi2ammx.html",
+      "name" : ".فلسطين",
+      "type" : "country-code",
+      "id" : "xn--ygbi2ammx",
+      "sponsor" : "Ministry of Telecom & Information Technology (MTIT)"
+   },
+   "ml" : {
+      "url" : "/domains/root/db/ml.html",
+      "name" : ".ml",
+      "type" : "country-code",
+      "id" : "ml",
+      "sponsor" : "Agence des Technologies de l’Information et de la Communication"
+   },
+   "bj" : {
+      "url" : "/domains/root/db/bj.html",
+      "name" : ".bj",
+      "type" : "country-code",
+      "id" : "bj",
+      "sponsor" : "Benin Telecoms S.A."
+   },
+   "edu" : {
+      "url" : "/domains/root/db/edu.html",
+      "name" : ".edu",
+      "type" : "sponsored",
+      "id" : "edu",
+      "sponsor" : "EDUCAUSE"
+   },
+   "mf" : {
+      "url" : "/domains/root/db/mf.html",
+      "name" : ".mf",
+      "type" : "country-code",
+      "id" : "mf",
+      "sponsor" : "Not assigned"
+   },
+   "pr" : {
+      "url" : "/domains/root/db/pr.html",
+      "name" : ".pr",
+      "type" : "country-code",
+      "id" : "pr",
+      "sponsor" : "Gauss Research Laboratory Inc."
+   },
+   "fk" : {
+      "url" : "/domains/root/db/fk.html",
+      "name" : ".fk",
+      "type" : "country-code",
+      "id" : "fk",
+      "sponsor" : "Falkland Islands Government"
+   },
+   "lr" : {
+      "url" : "/domains/root/db/lr.html",
+      "name" : ".lr",
+      "type" : "country-code",
+      "id" : "lr",
+      "sponsor" : "Data Technology Solutions, Inc."
+   },
+   "nf" : {
+      "url" : "/domains/root/db/nf.html",
+      "name" : ".nf",
+      "type" : "country-code",
+      "id" : "nf",
+      "sponsor" : "Norfolk Island Data Services"
+   },
+   "xn--80ao21a" : {
+      "url" : "/domains/root/db/xn--80ao21a.html",
+      "name" : ".қаз",
+      "type" : "country-code",
+      "id" : "xn--80ao21a",
+      "sponsor" : "Association of IT Companies of Kazakhstan"
+   },
+   "np" : {
+      "url" : "/domains/root/db/np.html",
+      "name" : ".np",
+      "type" : "country-code",
+      "id" : "np",
+      "sponsor" : "Mercantile Communications Pvt. Ltd."
+   },
+   "do" : {
+      "url" : "/domains/root/db/do.html",
+      "name" : ".do",
+      "type" : "country-code",
+      "id" : "do",
+      "sponsor" : "Pontificia Universidad Catolica Madre y Maestra\nRecinto Santo Tomas de Aquino"
+   },
+   "mp" : {
+      "url" : "/domains/root/db/mp.html",
+      "name" : ".mp",
+      "type" : "country-code",
+      "id" : "mp",
+      "sponsor" : "Saipan Datacom, Inc."
+   },
+   "bs" : {
+      "url" : "/domains/root/db/bs.html",
+      "name" : ".bs",
+      "type" : "country-code",
+      "id" : "bs",
+      "sponsor" : "The College of the Bahamas"
+   },
+   "xn--s9brj9c" : {
+      "url" : "/domains/root/db/xn--s9brj9c.html",
+      "name" : ".ਭਾਰਤ",
+      "type" : "country-code",
+      "id" : "xn--s9brj9c",
+      "sponsor" : "National Internet Exchange of India"
+   },
+   "cat" : {
+      "url" : "/domains/root/db/cat.html",
+      "name" : ".cat",
+      "type" : "sponsored",
+      "id" : "cat",
+      "sponsor" : "Fundacio puntCAT"
+   },
+   "to" : {
+      "url" : "/domains/root/db/to.html",
+      "name" : ".to",
+      "type" : "country-code",
+      "id" : "to",
+      "sponsor" : "Government of the Kingdom of Tonga\nH.R.H. Crown Prince Tupouto'a\nc/o Consulate of Tonga"
+   },
+   "cu" : {
+      "url" : "/domains/root/db/cu.html",
+      "name" : ".cu",
+      "type" : "country-code",
+      "id" : "cu",
+      "sponsor" : "CENIAInternet\nIndustria y San Jose\nCapitolio Nacional"
+   },
+   "ch" : {
+      "url" : "/domains/root/db/ch.html",
+      "name" : ".ch",
+      "type" : "country-code",
+      "id" : "ch",
+      "sponsor" : "SWITCH The Swiss Education & Research Network"
+   },
+   "eu" : {
+      "url" : "/domains/root/db/eu.html",
+      "name" : ".eu",
+      "type" : "country-code",
+      "id" : "eu",
+      "sponsor" : "EURid vzw/asbl"
+   },
+   "mu" : {
+      "url" : "/domains/root/db/mu.html",
+      "name" : ".mu",
+      "type" : "country-code",
+      "id" : "mu",
+      "sponsor" : "Internet Direct Ltd"
+   },
+   "xn--zckzah" : {
+      "url" : "/domains/root/db/xn--zckzah.html",
+      "name" : ".テスト",
+      "type" : "test",
+      "id" : "xn--zckzah",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "ni" : {
+      "url" : "/domains/root/db/ni.html",
+      "name" : ".ni",
+      "type" : "country-code",
+      "id" : "ni",
+      "sponsor" : "Universidad Nacional del Ingernieria\nCentro de Computo"
+   },
+   "xn--wgbh1c" : {
+      "url" : "/domains/root/db/xn--wgbh1c.html",
+      "name" : ".مصر",
+      "type" : "country-code",
+      "id" : "xn--wgbh1c",
+      "sponsor" : "National Telecommunication Regulatory Authority - NTRA"
+   },
+   "pw" : {
+      "url" : "/domains/root/db/pw.html",
+      "name" : ".pw",
+      "type" : "country-code",
+      "id" : "pw",
+      "sponsor" : "Micronesia Investment and Development Corporation"
+   },
+   "pl" : {
+      "url" : "/domains/root/db/pl.html",
+      "name" : ".pl",
+      "type" : "country-code",
+      "id" : "pl",
+      "sponsor" : "Research and Academic Computer Network"
+   },
+   "gov" : {
+      "url" : "/domains/root/db/gov.html",
+      "name" : ".gov",
+      "type" : "sponsored",
+      "id" : "gov",
+      "sponsor" : "General Services Administration\nAttn: QTDC, 2E08 (.gov Domain Registration)"
+   },
+   "xn--fiqs8s" : {
+      "url" : "/domains/root/db/xn--fiqs8s.html",
+      "name" : ".中国",
+      "type" : "country-code",
+      "id" : "xn--fiqs8s",
+      "sponsor" : "China Internet Network Information Center"
+   },
+   "pe" : {
+      "url" : "/domains/root/db/pe.html",
+      "name" : ".pe",
+      "type" : "country-code",
+      "id" : "pe",
+      "sponsor" : "Red Cientifica Peruana"
+   },
+   "xn--p1ai" : {
+      "url" : "/domains/root/db/xn--p1ai.html",
+      "name" : ".рф",
+      "type" : "country-code",
+      "id" : "xn--p1ai",
+      "sponsor" : "Coordination Center for TLD RU"
+   },
+   "an" : {
+      "url" : "/domains/root/db/an.html",
+      "name" : ".an",
+      "type" : "country-code",
+      "id" : "an",
+      "sponsor" : "University of The Netherlands Antilles"
+   },
+   "uk" : {
+      "url" : "/domains/root/db/uk.html",
+      "name" : ".uk",
+      "type" : "country-code",
+      "id" : "uk",
+      "sponsor" : "Nominet UK"
+   },
+   "ua" : {
+      "url" : "/domains/root/db/ua.html",
+      "name" : ".ua",
+      "type" : "country-code",
+      "id" : "ua",
+      "sponsor" : "Communication Systems Ltd"
+   },
+   "gw" : {
+      "url" : "/domains/root/db/gw.html",
+      "name" : ".gw",
+      "type" : "country-code",
+      "id" : "gw",
+      "sponsor" : "Fundação IT & MEDIA Universidade de Bissao"
+   },
+   "tp" : {
+      "url" : "/domains/root/db/tp.html",
+      "name" : ".tp",
+      "type" : "country-code",
+      "id" : "tp",
+      "sponsor" : "-"
+   },
+   "je" : {
+      "url" : "/domains/root/db/je.html",
+      "name" : ".je",
+      "type" : "country-code",
+      "id" : "je",
+      "sponsor" : "Island Networks (Jersey) Ltd."
+   },
+   "kr" : {
+      "url" : "/domains/root/db/kr.html",
+      "name" : ".kr",
+      "type" : "country-code",
+      "id" : "kr",
+      "sponsor" : "Korea Internet & Security Agency (KISA)"
+   },
+   "net" : {
+      "url" : "/domains/root/db/net.html",
+      "name" : ".net",
+      "type" : "generic",
+      "id" : "net",
+      "sponsor" : "VeriSign Global Registry Services"
+   },
+   "tt" : {
+      "url" : "/domains/root/db/tt.html",
+      "name" : ".tt",
+      "type" : "country-code",
+      "id" : "tt",
+      "sponsor" : "University of the West Indies\nFaculty of Engineering"
+   },
+   "fo" : {
+      "url" : "/domains/root/db/fo.html",
+      "name" : ".fo",
+      "type" : "country-code",
+      "id" : "fo",
+      "sponsor" : "FO Council"
+   },
+   "yt" : {
+      "url" : "/domains/root/db/yt.html",
+      "name" : ".yt",
+      "type" : "country-code",
+      "id" : "yt",
+      "sponsor" : "AFNIC (NIC France) - Immeuble International"
+   },
+   "jobs" : {
+      "url" : "/domains/root/db/jobs.html",
+      "name" : ".jobs",
+      "type" : "sponsored",
+      "id" : "jobs",
+      "sponsor" : "Employ Media LLC"
+   },
+   "cc" : {
+      "url" : "/domains/root/db/cc.html",
+      "name" : ".cc",
+      "type" : "country-code",
+      "id" : "cc",
+      "sponsor" : "eNIC Cocos (Keeling) Islands Pty.\nLtd. d/b/a Island Internet Services"
+   },
+   "ss" : {
+      "url" : "/domains/root/db/ss.html",
+      "name" : ".ss",
+      "type" : "country-code",
+      "id" : "ss",
+      "sponsor" : "Not assigned"
+   },
+   "sh" : {
+      "url" : "/domains/root/db/sh.html",
+      "name" : ".sh",
+      "type" : "country-code",
+      "id" : "sh",
+      "sponsor" : "Government of St. Helena"
+   },
+   "zm" : {
+      "url" : "/domains/root/db/zm.html",
+      "name" : ".zm",
+      "type" : "country-code",
+      "id" : "zm",
+      "sponsor" : "ZAMNET Communication Systems Ltd."
+   },
+   "io" : {
+      "url" : "/domains/root/db/io.html",
+      "name" : ".io",
+      "type" : "country-code",
+      "id" : "io",
+      "sponsor" : "IO Top Level Domain Registry\nCable and Wireless"
+   },
+   "hk" : {
+      "url" : "/domains/root/db/hk.html",
+      "name" : ".hk",
+      "type" : "country-code",
+      "id" : "hk",
+      "sponsor" : "Hong Kong Internet Registration Corporation Ltd."
+   },
+   "th" : {
+      "url" : "/domains/root/db/th.html",
+      "name" : ".th",
+      "type" : "country-code",
+      "id" : "th",
+      "sponsor" : "Thai Network Information Center Foundation"
+   },
+   "so" : {
+      "url" : "/domains/root/db/so.html",
+      "name" : ".so",
+      "type" : "country-code",
+      "id" : "so",
+      "sponsor" : "Ministry of Post and Telecommunications"
+   },
+   "er" : {
+      "url" : "/domains/root/db/er.html",
+      "name" : ".er",
+      "type" : "country-code",
+      "id" : "er",
+      "sponsor" : "Eritrea Telecommunication Services Corporation (EriTel)"
+   },
+   "cz" : {
+      "url" : "/domains/root/db/cz.html",
+      "name" : ".cz",
+      "type" : "country-code",
+      "id" : "cz",
+      "sponsor" : "CZ.NIC, z.s.p.o"
+   },
+   "lt" : {
+      "url" : "/domains/root/db/lt.html",
+      "name" : ".lt",
+      "type" : "country-code",
+      "id" : "lt",
+      "sponsor" : "Kaunas University of Technology\nInformation Technology Development Institute"
+   },
+   "xn--mgbc0a9azcg" : {
+      "url" : "/domains/root/db/xn--mgbc0a9azcg.html",
+      "name" : ".المغرب",
+      "type" : "country-code",
+      "id" : "xn--mgbc0a9azcg",
+      "sponsor" : "Agence Nationale de Réglementation des Télécommunications (ANRT)"
+   },
+   "hr" : {
+      "url" : "/domains/root/db/hr.html",
+      "name" : ".hr",
+      "type" : "country-code",
+      "id" : "hr",
+      "sponsor" : "CARNet - Croatian Academic and Research Network"
+   },
+   "gn" : {
+      "url" : "/domains/root/db/gn.html",
+      "name" : ".gn",
+      "type" : "country-code",
+      "id" : "gn",
+      "sponsor" : "Centre National des Sciences Halieutiques de Boussoura"
+   },
+   "mil" : {
+      "url" : "/domains/root/db/mil.html",
+      "name" : ".mil",
+      "type" : "sponsored",
+      "id" : "mil",
+      "sponsor" : "DoD Network Information Center"
+   },
+   "be" : {
+      "url" : "/domains/root/db/be.html",
+      "name" : ".be",
+      "type" : "country-code",
+      "id" : "be",
+      "sponsor" : "DNS BE vzw/asbl"
+   },
+   "qa" : {
+      "url" : "/domains/root/db/qa.html",
+      "name" : ".qa",
+      "type" : "country-code",
+      "id" : "qa",
+      "sponsor" : "The Supreme Council of Information and Communication Technology (ictQATAR)"
+   },
+   "xn--kgbechtv" : {
+      "url" : "/domains/root/db/xn--kgbechtv.html",
+      "name" : ".إختبار",
+      "type" : "test",
+      "id" : "xn--kgbechtv",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "xn--jxalpdlp" : {
+      "url" : "/domains/root/db/xn--jxalpdlp.html",
+      "name" : ".δοκιμή",
+      "type" : "test",
+      "id" : "xn--jxalpdlp",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "xn--mgbpl2fh" : {
+      "url" : "/domains/root/db/xn--mgbpl2fh.html",
+      "name" : ".سودان",
+      "type" : "country-code",
+      "id" : "xn--mgbpl2fh",
+      "sponsor" : "Not assigned"
+   },
+   "xn--deba0ad" : {
+      "url" : "/domains/root/db/xn--deba0ad.html",
+      "name" : ".טעסט",
+      "type" : "test",
+      "id" : "xn--deba0ad",
+      "sponsor" : "Internet Assigned Numbers Authority"
+   },
+   "mobi" : {
+      "url" : "/domains/root/db/mobi.html",
+      "name" : ".mobi",
+      "type" : "sponsored",
+      "id" : "mobi",
+      "sponsor" : "Afilias Technologies Limited dba dotMobi"
+   },
+   "vc" : {
+      "url" : "/domains/root/db/vc.html",
+      "name" : ".vc",
+      "type" : "country-code",
+      "id" : "vc",
+      "sponsor" : "Ministry of Telecommunications, Science, Technology and Industry"
+   },
+   "cv" : {
+      "url" : "/domains/root/db/cv.html",
+      "name" : ".cv",
+      "type" : "country-code",
+      "id" : "cv",
+      "sponsor" : "Agência Nacional das Comunicações (ANAC)"
+   },
+   "tw" : {
+      "url" : "/domains/root/db/tw.html",
+      "name" : ".tw",
+      "type" : "country-code",
+      "id" : "tw",
+      "sponsor" : "Taiwan Network Information Center (TWNIC)"
+   },
+   "ws" : {
+      "url" : "/domains/root/db/ws.html",
+      "name" : ".ws",
+      "type" : "country-code",
+      "id" : "ws",
+      "sponsor" : "Government of Samoa Ministry of Foreign Affairs & Trade"
+   },
+   "xn--l1acc" : {
+      "url" : "/domains/root/db/xn--l1acc.html",
+      "name" : ".мон",
+      "type" : "country-code",
+      "id" : "xn--l1acc",
+      "sponsor" : "Not assigned"
+   },
+   "ad" : {
+      "url" : "/domains/root/db/ad.html",
+      "name" : ".ad",
+      "type" : "country-code",
+      "id" : "ad",
+      "sponsor" : "Andorra Telecom"
+   },
+   "sz" : {
+      "url" : "/domains/root/db/sz.html",
+      "name" : ".sz",
+      "type" : "country-code",
+      "id" : "sz",
+      "sponsor" : "University of Swaziland\nDepartment of Computer Science"
+   },
+   "at" : {
+      "url" : "/domains/root/db/at.html",
+      "name" : ".at",
+      "type" : "country-code",
+      "id" : "at",
+      "sponsor" : "nic.at GmbH"
+   },
+   "tg" : {
+      "url" : "/domains/root/db/tg.html",
+      "name" : ".tg",
+      "type" : "country-code",
+      "id" : "tg",
+      "sponsor" : "Cafe Informatique et Telecommunications"
+   },
+   "xn--wgbl6a" : {
+      "url" : "/domains/root/db/xn--wgbl6a.html",
+      "name" : ".قطر",
+      "type" : "country-code",
+      "id" : "xn--wgbl6a",
+      "sponsor" : "Supreme Council for Communications and Information Technology (ictQATAR)"
+   },
+   "zw" : {
+      "url" : "/domains/root/db/zw.html",
+      "name" : ".zw",
+      "type" : "country-code",
+      "id" : "zw",
+      "sponsor" : "Postal and Telecommunications Regulatory Authority of Zimbabwe (POTRAZ)"
+   },
+   "xn--45brj9c" : {
+      "url" : "/domains/root/db/xn--45brj9c.html",
+      "name" : ".ভারত",
+      "type" : "country-code",
+      "id" : "xn--45brj9c",
+      "sponsor" : "National Internet Exchange of India"
+   },
+   "nl" : {
+      "url" : "/domains/root/db/nl.html",
+      "name" : ".nl",
+      "type" : "country-code",
+      "id" : "nl",
+      "sponsor" : "SIDN (Stichting Internet  Domeinregistratie Nederland)"
+   }
+}
