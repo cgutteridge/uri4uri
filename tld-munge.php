@@ -20,7 +20,7 @@ foreach( $data->results->bindings as $row )
 			$ref["point"] = $row->point->value;
 		}
 		$ref["name"] = $row->label->value;
-		$results[$ref["tld"]] = $ref;
+		$results[$ref["tld"]][$ref["uri"]] = $ref;
 		continue; 
 	}
 	if( preg_match( "/resource\//", $tld ) ) { continue; }
@@ -35,7 +35,7 @@ foreach( $data->results->bindings as $row )
 				$ref["point"] = $row->point->value;
 			}
 			$ref["name"] = $row->label->value;
-			$results[$ref["tld"]] = $ref;
+			$results[$word][$ref["uri"]] = $ref;
 		}
 	}
 }

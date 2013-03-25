@@ -1,0 +1,53 @@
+account:p:has account
+delegationRecordPage:p:has delegation record page
+Domain:c:Internet Domain
+DomainDatatype:d:Internet Domain Identifier
+Domain-Invalid:c:Invalid Internet Domain
+Domain-Valid:c:Valid Internet Domain
+filename:p:has filename part
+FilenameDatatype:d:URI Filename Part Datatype
+fragement:p:has fragment part
+FragmentURI:c:URI with Fragement Identifier
+host:p:has host
+IANAPage:p:has IANA page
+IANARef:p:has IANA reference
+identifiedBy:p:resource is identified by URI
+key:p:has key
+length:p:has length
+Mimetype:c:Mimetype
+MimetypeDatatype:d:Mimetype Identifier
+noPortSpecified::No Port Specified
+pass:p:has password part
+path:p:has path part
+PathDatatype:d:URI Path Identifier
+port:p:has port part
+query:p:has query part
+Query:c:URI Query Part
+QueryKey:c:URI Query Key
+QueryKVP:c:URI Query Key-Value Pair
+queryString:p:has query string part
+QueryStringDatatype:d:URI Query String Identifier
+QueryValue:c:URI Query Value
+scheme:p:
+sponsor:p:
+subDom:p:
+suffix:p:
+Suffix:c:
+SuffixDatatype:d:
+TopLevelDomain:c:
+TopLevelDomain-CountryCode:c:
+TopLevelDomain-Generic:c:
+TopLevelDomain-GenericRestricted:c:
+TopLevelDomain-Infrastructure:c:
+TopLevelDomain-Sponsored:c:
+TopLevelDomain-Test:c:
+URI:c:
+URIDatatype:d:
+URIScheme:c:
+URISchemeDatatype:d:
+usedForSufffix:p:
+user:p:
+value:p:
+whoIsRecord:p:
+whoIsServer:p:
+WhoisServer:c:

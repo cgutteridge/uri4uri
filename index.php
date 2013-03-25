@@ -1,27 +1,103 @@
 <?php
-
-require_once( "../arc/ARC2.php" );
-require_once( "../Graphite/Graphite.php" );
-
+if( !@$donegraphite )
+{
+	require_once( "../arc/ARC2.php" );
+	require_once( "../Graphite/Graphite.php" );
+}
+$filepath = "/home/cjg/public_html/uri";
+error_log( "Req: ".$_SERVER["REQUEST_URI"] );
 $path = substr( $_SERVER["REQUEST_URI"], 10 );
+if( $path == "/" )
+{
+	print "Homepage";
+	exit;
+}
 
-if( preg_match( '/^uri\//', $path  ) )
+if( !preg_match( "/^(uri|fragment|scheme|suffix|domain|mime)(\.(rdf|ttl|html|nt))?\/(.*)$/", $path, $b ) )
 {
-	serveURI( substr( $path, 4 ) );
+	serve404();
+	exit;
 }
-elseif( preg_match( '/^scheme\//', $path  ) )
-{
-	serveScheme( substr( $path, 7 ) );
+@list( $dummy1, $type, $dummy2, $format, $id ) = $b;
+
+if( !isset( $format ) || $format == "")
+{	
+	$wants = "text/turtle";
+
+	if( isset( $_SERVER["HTTP_ACCEPT"] ) )
+	{
+		$o = array( 'text/html'=>0, "text/turtle"=>0.02, "application/rdf+xml"=>0.01 );
+	
+        	$opts = preg_split( "/\s*,\s*/", $_SERVER["HTTP_ACCEPT"] );
+	
+        	foreach( $opts as $opt)
+        	{
+                	$optparts = preg_split( "/;/", $opt );
+                	$mime = array_shift( $optparts );
+			if( !isset( $o[$mime] ) ) { continue; }
+				
+                	$o[$mime] = 1;
+                	foreach( $optparts as $optpart )
+                	{
+                        	list( $k,$v ) = preg_split( "/=/", $optpart );
+                        	if( $k == "q" ) { $o[$mime] = $v; }
+                	}
+        	}
+	
+		$top_score = 0;
+		foreach( $o as $mime=>$score )
+		{
+			if( $score > $top_score ) 
+			{
+				$top_score = $score;
+				$wants = $mime;
+			}
+		}
+	}
+
+	$format = "html";
+	if( $wants == "text/turtle" ) { $format = "ttl"; }
+	if( $wants == "application/rdf+xml" ) { $format = "rdf"; }
+
+	header( "HTTP/1.1 303 C.Elseware" );
+	header( "Location: http://lemur.ecs.soton.ac.uk/~cjg/uri/$type.$format/$id" );
+	exit;
 }
-elseif( preg_match( '/^domain\//', $path  ) )
+
+if( $type == "uri" ) { $graph = graphURI( $id ); }
+elseif( $type == "fragment" ) { $graph = graphFragment( $id ); }
+elseif( $type == "scheme" ) { $graph = graphScheme( $id ); }
+elseif( $type == "suffix" ) { $graph = graphSuffix( $id ); }
+elseif( $type == "domain" ) { $graph = graphDomain( $id ); }
+elseif( $type == "mime" ) { $graph = graphMime( $id ); }
+else { serve404(); exit; }
+
+if( $format == "html" )
 {
-	serveDomain( substr( $path, 7 ) );
+	header( "HTTP/1.1 200 OK" );
+	$doc = $graph->resource("");
+	print "<h1>".$doc->label()."</h1>";
+	$uri = $doc->getString( "foaf:primaryTopic" );
+	print "<p>About: <tt>$uri</tt></p>";
+	print $graph->dump();
+}
+elseif( $format == "rdf" )
+{
+	header( "HTTP/1.1 200 OK" );
+	header( "Content-type: application/rdf+xml" );
+	print $graph->serialize( "RDFXML" );
+}
+elseif( $format == "ttl" )
+{
+	header( "HTTP/1.1 200 OK" );
+	header( "Content-type: text/turtle" );
+	print $graph->serialize( "Turtle" );
 }
 else
 {
-	print "dang. 404 or such";
+	print "Weird error";
 }
-exit;
+
 
 function initGraph()
 {
@@ -32,45 +108,114 @@ function initGraph()
 	$graph->ns( "uriv",$BASE."ns/" );
 	$graph->ns( "scheme",$BASE."scheme/" );
 	$graph->ns( "dom",$BASE."domain/" );
+	$graph->ns( "suffix",$BASE."suffix/" );
+	$graph->ns( "fragment",$BASE."fragment/" );
+	$graph->ns( "mime",$BASE."mime/" );
 	$graph->ns( "vs","http://www.w3.org/2003/06/sw-vocab-status/ns#" );
 	
 	return $graph;
 }
 
-function serveDomain( $domain )
+function serve404()
+{
+	header( "HTTP/1.1 404 Not Found" );
+	print "<h1>404 Not Found</h1>";
+	print "<p>See, this is what Ted Nelson was trying to warn you about.</p>";
+}
+
+
+function graphFragment( $fragment )
+{
+	$uri = urldecode( $fragment );
+	$graph = initGraph();
+
+	if( !preg_match( "/#/" , $uri ))
+	{
+		serve404();
+		exit;
+	}
+
+	addBoilerplateTrips( $graph, "fragment:".urlencode($uri), "$uri - URI with Fragment" );
+	addFragmentTrips( $graph, $uri );
+
+	return $graph;
+}
+
+function graphURI( $uri )
+{
+	if( preg_match( "/#/" , $uri ))
+	{
+		serve404();
+		exit;
+	}
+	$graph = initGraph();
+	addBoilerplateTrips( $graph, "uri:$uri", $uri );
+	addURITrips( $graph, $uri );
+	return $graph;
+}
+
+
+function graphSuffix( $suffix )
+{
+	$graph = initGraph();
+	addBoilerplateTrips( $graph, "suffix:$suffix", "$suffix - Suffix" );
+	addSuffixTrips( $graph, $suffix );
+	return $graph;
+}
+
+function graphDomain( $domain )
 {
 	$graph = initGraph();
 	addBoilerplateTrips( $graph, "dom:$domain", "$domain - Internet Domain" );
 	addDomainTrips( $graph, $domain );
-	print $graph->dump();
+	return $graph;
 }
 
-function serveScheme( $scheme )
+function graphMime( $mime )
+{
+	$graph = initGraph();
+	addBoilerplateTrips( $graph, "mime:$mime", "$mime - Mimetype" );
+	addMimeTrips( $graph, $mime );
+	return $graph;
+}
+
+function graphScheme( $scheme )
 {
 	$graph = initGraph();
 	addBoilerplateTrips( $graph, "scheme:$scheme", "$scheme - URI Scheme" );
 	addSchemeTrips( $graph, $scheme );
-	print $graph->dump();
+	return $graph;
 }
 
 function addBoilerplateTrips( &$graph, $uri, $title )
 {
 	$graph->addCompressedTriple( "", "rdf:type", "foaf:Document" );
 	$graph->addCompressedTriple( "", "dcterms:title", $title, "literal" );
+	$graph->addCompressedTriple( "", "foaf:primaryTopic", "$uri" );
 # wikipedia data etc. not cc0
 #	$graph->addCompressedTriple( "", "dcterms:license", "http://creativecommons.org/publicdomain/zero/1.0/" );
 #	$graph->addCompressedTriple( "http://creativecommons.org/publicdomain/zero/1.0/", "rdfs:label", "CC0: Public Domain Dedication", "literal" );
 	
 }
 
-
-function serveURI( $uri )
+function addFragmentTrips( &$graph, $uri )
 {
-	$graph = initGraph();
-	addBoilerplateTrips( $graph, $uri, $uri );
+	list( $uri_part, $fragment_part ) = preg_split( '/#/', $uri, 2 );
 
+	$graph->addCompressedTriple( $uri, "uriv:identifiedBy", "uri:$uri" );
+	$graph->addCompressedTriple( "uri:$uri", "rdf:type", "uriv:URI" );
+	$graph->addCompressedTriple( "uri:$uri", "rdf:type", "uriv:FragmentURI" );
+	$graph->addCompressedTriple( $uri, "uriv:fragement", $fragment_part, "literal" );
+
+	addURITrips( $graph, $uri_part );
+
+}
+
+function addURITrips( &$graph, $uri )
+{
 	$b = parse_url( $uri );
 
+	$graph->addCompressedTriple( $uri, "uriv:identifiedBy", "uri:$uri" );
 	$graph->addCompressedTriple( "uri:$uri", "rdf:type", "uriv:URI" );
 	$graph->addCompressedTriple( $uri, "skos:notation", $uri, "uriv:URIDatatype" );
 	$graph->addCompressedTriple( $uri, "uriv:length", strlen( $uri ), "xsd:positiveInteger" );
@@ -79,12 +224,33 @@ function serveURI( $uri )
 	{
 		$graph->addCompressedTriple( "uri:$uri", "uriv:scheme", "scheme:".$b["scheme"] );
 		addSchemeTrips( $graph, $b["scheme"] );
+		if( $b["scheme"] == "http" || $b["scheme"] == "https" || $b["scheme"] == "ftp" )
+		{
+			addHTTPSchemeTrips( $graph, $uri );
+		}
 	} # end scheme
+
+}
+
+function addHTTPSchemeTrips( &$graph, $uri )
+{
+	$b = parse_url( $uri );
 
 	if( @$b["host"] )
 	{
 		$graph->addCompressedTriple( "uri:$uri", "uriv:host", "dom:".$b["host"] );
 		addDomainTrips( $graph, $b["host"] );
+		if( @$b["scheme"] == "http" || @$b["scheme"] == "https" )
+		{
+			$homepage = $b["scheme"]."://".$b["host"];
+			if( @$b["port"] )
+			{
+				$homepage.= ":".$b["port"];
+			}
+			$homepage.="/";
+
+			$graph->addCompressedTriple( "dom:".$b["host"], "foaf:homepage", $homepage);
+		}
 	}
 
 
@@ -110,16 +276,21 @@ function serveURI( $uri )
 
 	if( @$b["path"] )
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:path", $b["path"], "uriv:pathDatatype" );
-		if( preg_match( "/\.([^\.\/]+)$/", $b["path"], $bits  ) )
+		$graph->addCompressedTriple( "uri:$uri", "uriv:path", $b["path"], "uriv:PathDatatype" );
+		if( preg_match( "/\.([^#\.\/]+)($|#)/", $b["path"], $bits  ) )
 		{
-			$graph->addCompressedTriple( "uri:$uri", "uriv:suffix", $bits["1"], "uriv:suffixDatatype" );
+			$graph->addCompressedTriple( "uri:$uri", "uriv:suffix", "suffix:".$bits["1"] );
+			addSuffixTrips( $graph, $bits[1] );
+		}
+		if( preg_match( "/\/([^#\/]+)($|#)/", $b["path"], $bits  ) )
+		{
+			$graph->addCompressedTriple( "uri:$uri", "uriv:filename", $bits["1"], "uriv:FilenameDatatype" );
 		}
 	}
 
 	if( @$b["query"] )
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:queryString", $b["query"], "uriv:queryStringDatatype" );
+		$graph->addCompressedTriple( "uri:$uri", "uriv:queryString", $b["query"], "uriv:QueryStringDatatype" );
 		$graph->addCompressedTriple( "uri:$uri", "uriv:query", "uri:$uri#query" );
 		$graph->addCompressedTriple( "uri:$uri#query", "rdf:type", "uriv:Query" );
 		$graph->addCompressedTriple( "uri:$uri#query", "rdf:type", "rdf:Seq" );
@@ -134,22 +305,50 @@ function serveURI( $uri )
 			$graph->addCompressedTriple( "uri:$uri#query-$i", "uriv:value", $value, "uriv:QueryValue" );
 		}
 	}
-	
+}	
 		
 
-	# OUTPUT
-		
-	print "<h1>URI data.</h1>";
 
-	//print "<pre>".htmlspecialchars( print_r( $b ,true ))."</pre>";
-	print $graph->dump();
-}
 
 function addDomainTrips( &$graph, $domain )
 {	
+	$actual_domain = $domain;
+	$nowww_actual_domain = $domain;
+	if(substr(strtolower($nowww_actual_domain), 0, 4) == "www."){  $nowww_actual_domain = substr($actual_domain, 4);}
+
+	$whoisservers = whoisservers();
+	global $filepath;
+
+	global $schemes;
+	if( !isset( $schemes ) )
+	{
+		$schemes = json_decode( file_get_contents( "$filepath/schemes.json" ), true );
+	}
+	
+	global $tlds;
+	if( !isset( $tlds ) )
+	{
+		$tlds = json_decode( file_get_contents( "$filepath/tld.json" ), true );
+	}
+	global $zones;
+	if( !isset( $zones ) )
+	{
+		$zones = json_decode( file_get_contents( "$filepath/zones.json" ), true );
+	}
+
 	$graph->addCompressedTriple( "dom:".$domain, "rdf:type", "uriv:Domain" );
+#	if(ValidateDomain($domain)) 	
+#	{
+#		$graph->addCompressedTriple( "dom:".$domain, "rdf:type", "uriv:Domain-Valid" );
+#	}	
+#	else
+#	{
+#		$graph->addCompressedTriple( "dom:".$domain, "rdf:type", "uriv:Domain-Invalid" );
+#	}
 	$graph->addCompressedTriple( "dom:".$domain, "rdfs:label", $domain, "literal" );
 	$graph->addCompressedTriple( "dom:".$domain, "skos:notation", $domain, "uriv:DomainDatatype" );
+
+	# Super Domains
 	while( preg_match( "/\./", $domain ) )
 	{
 		$old_domain = $domain;
@@ -157,20 +356,138 @@ function addDomainTrips( &$graph, $domain )
 			
 		$graph->addCompressedTriple( "dom:".$domain, "uriv:subDom", "dom:".$old_domain );
 		$graph->addCompressedTriple( "dom:".$domain, "rdf:type", "uriv:Domain" );
+#		if(ValidateDomain($domain)) 	
+#		{
+#			$graph->addCompressedTriple( "dom:".$domain, "rdf:type", "uriv:Domain-Valid" );
+#		}	
+#		else
+#		{
+#			$graph->addCompressedTriple( "dom:".$domain, "rdf:type", "uriv:Domain-Invalid" );
+#		}
 		$graph->addCompressedTriple( "dom:".$domain, "rdfs:label", $domain, "literal" );
 		$graph->addCompressedTriple( "dom:".$domain, "skos:notation", $domain, "uriv:DomainDatatype" );
+
+		if( isset( $whoisservers["$domain"] ) )
+		{
+			$graph->addCompressedTriple( "dom:".$domain, "uriv:whoIsServer", "dom:".$whoisservers["$domain"] );
+			$graph->addCompressedTriple( "dom:".$whoisservers["$domain"], "rdf:type", "uriv:WhoisServer" );
+			
+			$lookup = LookupDomain($nowww_actual_domain,$whoisservers[$domain] );
+			if( @$lookup )
+			{
+				$graph->addCompressedTriple( "dom:$nowww_actual_domain", "uriv:whoIsRecord", $lookup, "literal" );
+			}
+		}
 	}
+
+	# TLD Shenanigans...
+
 	$graph->addCompressedTriple( "dom:".$domain, "rdf:type", "uriv:TopLevelDomain" );
+	if( isset( $tlds[".$domain"] ) )
+	{
+		$tld =  $tlds[".$domain"] ;
+		foreach( $tld as $place )
+		{
+			$graph->addCompressedTriple( $place["uri"], "http://dbpedia.org/property/cctld", "dom:$domain" );
+			$graph->addCompressedTriple( $place["uri"], "rdfs:label", $place["name"]."@en" );
+			if( isset( $place["tld_uri"] ) )
+			{
+				$graph->addCompressedTriple( "dom:".$domain, "owl:sameAS", $place["tld_uri"] );
+			}
+			if( isset( $place["point"] ) )
+			{
+				list( $lat, $long ) = preg_split( "/\s+/", trim( $place["point"] ) );
+				$graph->addCompressedTriple( $place["uri"], "geo:lat", $lat );
+				$graph->addCompressedTriple( $place["uri"], "geo:long", $long );
+			}
+		}
+	}
+	if( isset( $zones["$domain"] ) )
+	{
+		$zone = $zones["$domain"] ;
+		$graph->addCompressedTriple( "dom:$domain", "uriv:delegationRecordPage", "http://www.iana.org".$zone["url"] );
+		$graph->addCompressedTriple( "dom:$domain", "foaf:page", "http://www.iana.org".$zone["url"] );
+		$typemap = array(
+"country-code"=>"TopLevelDomain-CountryCode",
+"generic"=>"TopLevelDomain-Generic",
+"generic-restricted"=>"TopLevelDomain-GenericRestricted",
+"infrastructure"=>"TopLevelDomain-Infrastructure",
+"sponsored"=>"TopLevelDomain-Sponsored",
+"test"=>"TopLevelDomain-Test" );
+		$graph->addCompressedTriple( "dom:$domain", "rdf:type", "uriv:".$typemap[$zone["type"]] );
+		$graph->addCompressedTriple( "dom:$domain", "uriv:sponsor", "dom:$domain#sponsor" );
+		$graph->addCompressedTriple( "dom:$domain#sponsor", "rdf:type", "foaf:Organization" );
+		$graph->addCompressedTriple( "dom:$domain#sponsor", "rdfs:label", $zone["sponsor"] );
+	}
 }
+
+function addSuffixTrips( &$graph, $suffix )
+{
+	global $filepath;
+	$graph->addCompressedTriple( "suffix:$suffix", "rdf:type", "uriv:Suffix" );
+	$graph->addCompressedTriple( "suffix:$suffix", "rdfs:label", ".".$suffix, "literal" );
+	$graph->addCompressedTriple( "suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype" );
+	$lines = file( "$filepath/mime.types" );
+	foreach( $lines as $line )
+	{
+		$line = chop( $line );
+		if( preg_match( "/^#/", $line ) ) { continue; }
+		if( preg_match( "/^([^\t]+)\t+([^\t]+)/", $line, $b ) )
+		{
+			list( $null, $mime, $types ) = $b;
+			foreach( preg_split( "/ /", $types ) as $type )
+			{
+				if( $type == $suffix )
+				{
+					$graph->addCompressedTriple( "mime:$mime", "uriv:usedForSufffix", "suffix:$suffix" );
+					$graph->addCompressedTriple( "mime:$mime", "rdf:type", "uriv:Mimetype" );
+					$graph->addCompressedTriple( "mime:$mime", "rdfs:label", $mime, "literal" );
+					$graph->addCompressedTriple( "mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype" );
+				}
+			}
+		}	
+	}
+}
+
+function addMimeTrips( &$graph, $mime, $rec=true )
+{
+	global $filepath;
+	$graph->addCompressedTriple( "mime:$mime", "rdf:type", "uriv:Mimetype" );
+	$graph->addCompressedTriple( "mime:$mime", "rdfs:label", $mime, "literal" );
+	$graph->addCompressedTriple( "mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype" );
+	$lines = file( "$filepath/mime.types" );
+	foreach( $lines as $line )
+	{
+		$line = chop( $line );
+		if( preg_match( "/^#/", $line ) ) { continue; }
+		if( preg_match( "/^([^\t]+)\t+([^\t]+)/", $line, $b ) )
+		{
+			list( $null, $amime, $types ) = $b;
+			if( $amime == $mime )
+			{
+				foreach( preg_split( "/ /", $types ) as $suffix )
+				{
+					$graph->addCompressedTriple( "mime:$mime", "uriv:usedForSufffix", "suffix:$suffix" );
+					$graph->addCompressedTriple( "suffix:$suffix", "rdfs:label", ".".$suffix, "literal" );
+					$graph->addCompressedTriple( "suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype" );
+				}
+			}
+		}	
+	}
+}
+
 
 function addSchemeTrips( &$graph, $scheme )
 {
-	$schemes = json_decode( file_get_contents( "schemes.json" ), true );
-
-	$s = $schemes[$scheme];
+	global $filepath;
+	$schemes = json_decode( file_get_contents( "$filepath/schemes.json" ), true );
 	$graph->addCompressedTriple( "scheme:".$scheme, "rdf:type", "uriv:URIScheme" );
-	$graph->addCompressedTriple( "scheme:".$scheme, "rdfs:label", $s["name"], "literal" );
 	$graph->addCompressedTriple( "scheme:".$scheme, "skos:notation", $scheme, "uriv:URISchemeDatatype" );
+
+	$s = @$schemes[$scheme];
+	if( !isset( $s ) ) { return; }
+
+	$graph->addCompressedTriple( "scheme:".$scheme, "rdfs:label", $s["name"], "literal" );
 	$tmap = array( 
 		"permenent"=>"stable",
 		"provisional"=>"testing",
@@ -201,8 +518,10 @@ Contact:     webmaster@phpeasycode.com
 
 // For the full list of TLDs/Whois servers see http://www.iana.org/domains/root/db/ and http://www.whois365.com/en/listtld/
 
-
-$whoisservers = array(
+function whoisservers()
+{
+	return array(
+"ac.uk" => "whois.ja.net",
 	"ac" =>"whois.nic.ac",
 	"ae" =>"whois.nic.ae",
 	"aero"=>"whois.aero",
@@ -364,18 +683,14 @@ $whoisservers = array(
 	"ws" =>"whois.website.ws",
 	"yt" =>"whois.nic.yt",
 	"yu" =>"whois.ripe.net");
+}
 
-function LookupDomain($domain){
-	global $whoisservers;
+function LookupDomain($domain, $whoisserver){
 	$domain_parts = explode(".", $domain);
 	$tld = strtolower(array_pop($domain_parts));
-	$whoisserver = $whoisservers[$tld];
-	if(!$whoisserver) {
-		return "Error: No appropriate Whois server found for $domain domain!";
-	}
 	$result = QueryWhoisServer($whoisserver, $domain);
 	if(!$result) {
-		return "Error: No results retrieved from $whoisserver server for $domain domain!";
+		return;
 	}
 	else {
 		while(strpos($result, "Whois Server:") !== FALSE){
@@ -387,7 +702,7 @@ function LookupDomain($domain){
 			}
 		}
 	}
-	return "$domain domain lookup results from $whoisserver server:\n\n" . $result;
+	return "$result";
 }
 
 function LookupIP($ip) {
@@ -434,7 +749,7 @@ function ValidateDomain($domain) {
 
 function QueryWhoisServer($whoisserver, $domain) {
 	$port = 43;
-	$timeout = 10;
+	$timeout = 5;
 	$fp = @fsockopen($whoisserver, $port, $errno, $errstr, $timeout) or die("Socket Error " . $errno . " - " . $errstr);
 	//if($whoisserver == "whois.verisign-grs.com") $domain = "=".$domain; // whois.verisign-grs.com requires the equals sign ("=") or it returns any result containing the searched string.
 	fputs($fp, $domain . "\r\n");
@@ -456,31 +771,3 @@ function QueryWhoisServer($whoisserver, $domain) {
 	}
 	return $res;
 }
-?>
-<html>
-<head>
-<title>Whois Lookup Script</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-</head>
-
-<body>
-<form action="<?=$_SERVER['PHP_SELF'];?>">
-<p><b><label for="domain">Domain/IP Address:</label></b> <input type="text" name="domain" id="domain" value="<?=$domain;?>"> <input type="submit" value="Lookup"></p>
-</form>
-<?
-if($domain) {
-	$domain = trim($domain);
-	if(substr(strtolower($domain), 0, 7) == "http://") $domain = substr($domain, 7);
-	if(substr(strtolower($domain), 0, 4) == "www.") $domain = substr($domain, 4);
-	if(ValidateIP($domain)) {
-		$result = LookupIP($domain);
-	}
-	elseif(ValidateDomain($domain)) {
-		$result = LookupDomain($domain);
-	}
-	else die("Invalid Input!");
-	echo "<pre>\n" . $result . "\n</pre>\n";
-}
-?>
-</body>
-</html>
