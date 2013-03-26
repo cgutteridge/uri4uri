@@ -28,26 +28,26 @@ QueryKVP:c:URI Query Key-Value Pair
 queryString:p:has query string part
 QueryStringDatatype:d:URI Query String Identifier
 QueryValue:c:URI Query Value
-scheme:p:
-sponsor:p:
-subDom:p:
-suffix:p:
-Suffix:c:
-SuffixDatatype:d:
-TopLevelDomain:c:
-TopLevelDomain-CountryCode:c:
-TopLevelDomain-Generic:c:
-TopLevelDomain-GenericRestricted:c:
-TopLevelDomain-Infrastructure:c:
-TopLevelDomain-Sponsored:c:
-TopLevelDomain-Test:c:
-URI:c:
-URIDatatype:d:
-URIScheme:c:
-URISchemeDatatype:d:
-usedForSufffix:p:
-user:p:
-value:p:
-whoIsRecord:p:
-whoIsServer:p:
-WhoisServer:c:
+scheme:p:has URI scheme
+sponsor:p:has sponsor
+subDom:p:has subdomain
+suffix:p:has suffix part
+Suffix:c:Filename Suffix
+SuffixDatatype:d:Filename Suffix Identifier
+TopLevelDomain:c:Top-Level Domain
+TopLevelDomain-CountryCode:c:Country Top-Level Domain
+TopLevelDomain-Generic:c:Generic Top-Level Domain
+TopLevelDomain-GenericRestricted:c:Restricted Generic Top-Level Domain
+TopLevelDomain-Infrastructure:c:Infrastructure Top-Level Domain
+TopLevelDomain-Sponsored:c:Sponsored Top-Level Domain
+TopLevelDomain-Test:c:Test Top-Level Domain
+URI:c:URI
+URIDatatype:d:URI Identifier
+URIScheme:c:URI Scheme
+URISchemeDatatype:d:URI Scheme Identifier
+usedForSuffix:p:sometimes used for suffix
+user:p:has user part
+value:p:has value
+whoIsRecord:p:has whois record
+whoIsServer:p:has whois server
+WhoisServer:c:Whois Server
