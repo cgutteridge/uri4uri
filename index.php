@@ -1,15 +1,19 @@
 <?php
-if( !@$donegraphite )
-{
-	require_once( "../arc/ARC2.php" );
-	require_once( "../Graphite/Graphite.php" );
-}
-$filepath = "/home/cjg/public_html/uri";
-$BASE = "http://lemur.ecs.soton.ac.uk/~cjg/uri/";
+require_once( "../arc2/ARC2.php" );
+require_once( "../Graphite/Graphite.php" );
+
+$filepath = "/home/uri4uri/htdocs";
+$BASE = "http://uri4uri.net/";
 
 #error_log( "Req: ".$_SERVER["REQUEST_URI"] );
 
-$path = substr( $_SERVER["REQUEST_URI"], 10 );
+$path = substr( $_SERVER["REQUEST_URI"], 0 );
+
+if( $path == "" )
+{
+	header( "Location: $BASE" );
+	exit;
+}
 
 if( $path == "/" )
 {
@@ -17,7 +21,7 @@ if( $path == "/" )
 	exit;
 }
 
-if( !preg_match( "/^(vocab|uri|fragment|scheme|suffix|domain|mime)(\.(rdf|ttl|html|nt))?\/(.*)$/", $path, $b ) )
+if( !preg_match( "/^\/(vocab|uri|fragment|scheme|suffix|domain|mime)(\.(rdf|ttl|html|nt))?\/(.*)$/", $path, $b ) )
 {
 	serve404();
 	exit;
@@ -64,10 +68,9 @@ if( !isset( $format ) || $format == "")
 	if( $wants == "application/rdf+xml" ) { $format = "rdf"; }
 
 	header( "HTTP/1.1 303 C.Elseware" );
-	header( "Location: http://lemur.ecs.soton.ac.uk/~cjg/uri/$type.$format/$id" );
+	header( "Location: $BASE$type.$format/$id" );
 	exit;
 }
-
 if( $type == "uri" ) { $graph = graphURI( $id ); }
 elseif( $type == "fragment" ) { $graph = graphFragment( $id ); }
 elseif( $type == "scheme" ) { $graph = graphScheme( $id ); }
@@ -81,12 +84,20 @@ if( $format == "html" )
 {
 	header( "HTTP/1.1 200 OK" );
 	$doc = $graph->resource("");
+	print "<p><a href='/'>Home</a></p>";
 	print "<h1>".$doc->label()."</h1>";
 	if( $doc->has( "foaf:primaryTopic" ) )
 	{
 		$uri = $doc->getString( "foaf:primaryTopic" );
 		print "<p>About: <tt>$uri</tt></p>";
 	}
+	print "<p>View: ";
+	print "<a href='$BASE$type.rdf/$id'>RDF XML</a>";
+	print " | ";
+	print "<a href='$BASE$type.ttl/$id'>Turtle</a>";
+	print " | ";
+	print "<a href='$BASE$type.nt/$id'>N-Triples</a>";
+	print "</p>";
 	print $graph->dump();
 }
 elseif( $format == "rdf" )
