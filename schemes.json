@@ -148,7 +148,7 @@
       "refs" : {
          "http://www.rfc-editor.org/rfc/rfc2141.txt" : "RFC2141"
       },
-      "name" : "Uniform Resource Names (click for registry)",
+      "name" : "Uniform Resource Names",
       "id" : "urn",
       "type" : "permenent"
    },
@@ -1197,7 +1197,7 @@
    "z39.50" : {
       "refs" : {
          "http://www.rfc-editor.org/rfc/rfc1738.txt" : "RFC1738",
-         "http://www.rfc-editor.org/rfc/rfc2056.txt" : "RFC2056\n\n\n\n\n\n\n\n\n\n\n\n\nComments concerning the layout, construction and functionality of this site \nshould be sent to webmaster&iana.org.\n\n\n\nPage updated 2013-03-01\n(c) 2006 The Internet Corporation for Assigned Names and Numbers.&nbsp;&nbsp;&nbsp;&nbsp;All rights reserved."
+         "http://www.rfc-editor.org/rfc/rfc2056.txt" : "RFC2056"
       },
       "name" : "Z39.50 information access",
       "id" : "z39.50",

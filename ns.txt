@@ -1,4 +1,5 @@
 account:p:has account
+assignedBy:p:assigned by
 delegationRecordPage:p:has delegation record page
 Domain:c:Internet Domain
 DomainDatatype:d:Internet Domain Identifier

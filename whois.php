@@ -1,16 +1,20 @@
 <?php
+
 /*************************************************************************
 php easy :: whois lookup script
 ==========================================================================
 Author:      php easy code, www.phpeasycode.com
 Web Site:    http://www.phpeasycode.com
 Contact:     webmaster@phpeasycode.com
+(heavily hacked by Christopher Gutteridge to do stuff on this site)
 *************************************************************************/
 
-$domain = $_GET['domain'];
-
 // For the full list of TLDs/Whois servers see http://www.iana.org/domains/root/db/ and http://www.whois365.com/en/listtld/
-$whoisservers = array(
+
+function whoisservers()
+{
+	return array(
+"ac.uk" => "whois.ja.net",
 	"ac" =>"whois.nic.ac",
 	"ae" =>"whois.nic.ae",
 	"aero"=>"whois.aero",
@@ -172,18 +176,14 @@ $whoisservers = array(
 	"ws" =>"whois.website.ws",
 	"yt" =>"whois.nic.yt",
 	"yu" =>"whois.ripe.net");
+}
 
-function LookupDomain($domain){
-	global $whoisservers;
+function LookupDomain($domain, $whoisserver){
 	$domain_parts = explode(".", $domain);
 	$tld = strtolower(array_pop($domain_parts));
-	$whoisserver = $whoisservers[$tld];
-	if(!$whoisserver) {
-		return "Error: No appropriate Whois server found for $domain domain!";
-	}
 	$result = QueryWhoisServer($whoisserver, $domain);
 	if(!$result) {
-		return "Error: No results retrieved from $whoisserver server for $domain domain!";
+		return;
 	}
 	else {
 		while(strpos($result, "Whois Server:") !== FALSE){
@@ -195,7 +195,7 @@ function LookupDomain($domain){
 			}
 		}
 	}
-	return "$domain domain lookup results from $whoisserver server:\n\n" . $result;
+	return "$result";
 }
 
 function LookupIP($ip) {
@@ -242,7 +242,7 @@ function ValidateDomain($domain) {
 
 function QueryWhoisServer($whoisserver, $domain) {
 	$port = 43;
-	$timeout = 10;
+	$timeout = 5;
 	$fp = @fsockopen($whoisserver, $port, $errno, $errstr, $timeout) or die("Socket Error " . $errno . " - " . $errstr);
 	//if($whoisserver == "whois.verisign-grs.com") $domain = "=".$domain; // whois.verisign-grs.com requires the equals sign ("=") or it returns any result containing the searched string.
 	fputs($fp, $domain . "\r\n");
@@ -264,31 +264,4 @@ function QueryWhoisServer($whoisserver, $domain) {
 	}
 	return $res;
 }
-?>
-<html>
-<head>
-<title>Whois Lookup Script</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-</head>
 
-<body>
-<form action="<?=$_SERVER['PHP_SELF'];?>">
-<p><b><label for="domain">Domain/IP Address:</label></b> <input type="text" name="domain" id="domain" value="<?=$domain;?>"> <input type="submit" value="Lookup"></p>
-</form>
-<?
-if($domain) {
-	$domain = trim($domain);
-	if(substr(strtolower($domain), 0, 7) == "http://") $domain = substr($domain, 7);
-	if(substr(strtolower($domain), 0, 4) == "www.") $domain = substr($domain, 4);
-	if(ValidateIP($domain)) {
-		$result = LookupIP($domain);
-	}
-	elseif(ValidateDomain($domain)) {
-		$result = LookupDomain($domain);
-	}
-	else die("Invalid Input!");
-	echo "<pre>\n" . $result . "\n</pre>\n";
-}
-?>
-</body>
-</html>

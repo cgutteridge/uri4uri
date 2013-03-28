@@ -17,16 +17,40 @@ if( $path == "" )
 
 if( $path == "/" )
 {
-	print "Homepage";
+	$title = "Homepage title ";
+	$content = "homepage content";
+	require_once( "template.php" );
+	exit;
+}
+if( $path == "/robots.txt" )
+{
+	header( "Content-type: text/plain" );
+	print "User-agent: *\n";
+	# prevent robots triggering a who-is
+	print "Disallow: /uri.html/\n"; 
+	print "Disallow: /uri.rdf/\n"; 
+	print "Disallow: /uri.ttl/\n"; 
+	print "Disallow: /uri.nt/\n"; 
+	print "Disallow: /uri/\n"; 
 	exit;
 }
 
-if( !preg_match( "/^\/(vocab|uri|fragment|scheme|suffix|domain|mime)(\.(rdf|ttl|html|nt))?\/(.*)$/", $path, $b ) )
+if( $path == "/homedev" )
+{
+	$title = 'uri4uri';
+
+
+	$content = file_get_contents( "homepage.html" );
+	require_once( "template.php" );
+	exit;
+}
+
+if( !preg_match( "/^\/(vocab|uri|fragment|scheme|suffix|domain|mime)(\.(rdf|ttl|html|nt))?(\/(.*))?$/", $path, $b ) )
 {
 	serve404();
 	exit;
 }
-@list( $dummy1, $type, $dummy2, $format, $id ) = $b;
+@list( $dummy1, $type, $dummy2, $format, $dummy3, $id ) = $b;
 
 if( !isset( $format ) || $format == "")
 {	
@@ -84,21 +108,39 @@ if( $format == "html" )
 {
 	header( "HTTP/1.1 200 OK" );
 	$doc = $graph->resource("");
-	print "<p><a href='/'>Home</a></p>";
-	print "<h1>".$doc->label()."</h1>";
+	$title = $doc->label();
+	$content = "";
 	if( $doc->has( "foaf:primaryTopic" ) )
 	{
 		$uri = $doc->getString( "foaf:primaryTopic" );
-		print "<p>About: <tt>$uri</tt></p>";
+		#$content.= "<p>URI: <tt>$uri</tt></p>";
 	}
-	print "<p>View: ";
-	print "<a href='$BASE$type.rdf/$id'>RDF XML</a>";
-	print " | ";
-	print "<a href='$BASE$type.ttl/$id'>Turtle</a>";
-	print " | ";
-	print "<a href='$BASE$type.nt/$id'>N-Triples</a>";
-	print "</p>";
-	print $graph->dump();
+	$content.= "<p><span style='font-weight:bold'>Download data:</span> ";
+	$content.= "<a href='$BASE$type.ttl/$id'>Turtle</a>";
+	$content.= " | ";
+	$content.= "<a href='$BASE$type.nt/$id'>N-Triples</a>";
+	$content.= " | ";
+	$content.= "<a href='$BASE$type.rdf/$id'>RDF XML</a>";
+	$content.= "</p>";
+
+	if( $type == "vocab" )
+	{
+		$title = "uri4uri vocabulary";
+		$content.= $graph->dump();
+	}
+	else
+	{ 
+		addVocabTrips( $graph );
+		addExtraVocabTrips( $graph );
+		$resource = $graph->resource( $uri );
+		if( $resource->has("rdf:type") )
+		{
+			$thingy_type =" <span class='classType'>[".$resource->all( "rdf:type" )->label()->join( ", " )."]</span>";
+		}
+		$r.= "</div>";
+		$content.= renderResource( $graph, $resource );
+	}
+	require_once( "template.php" );
 }
 elseif( $format == "rdf" )
 {
@@ -130,7 +172,7 @@ function initGraph()
 
 	$graph = new Graphite();
 	$graph->ns( "uri",$BASE."uri/" );
-	$graph->ns( "uriv",$BASE."vocab/" );
+	$graph->ns( "uriv",$BASE."vocab#" );
 	$graph->ns( "scheme",$BASE."scheme/" );
 	$graph->ns( "domain",$BASE."domain/" );
 	$graph->ns( "suffix",$BASE."suffix/" );
@@ -144,33 +186,39 @@ function initGraph()
 function serve404()
 {
 	header( "HTTP/1.1 404 Not Found" );
-	print "<h1>404 Not Found</h1>";
-	print "<p>See, this is what Ted Nelson was trying to warn you about.</p>";
+	$title = "404 Not Found";
+	$content =  "<p>See, it's things like this that are what Ted Nelson was trying to warn you about.</p>";
+	require_once( "template.php" );
 }
 
 function graphVocab( $id )
 {
-	global $filepath;
 
+	$graph = initGraph();
+	addBoilerplateTrips( $graph, "uriv:", "URI Vocabulary" );
+	$graph->addCompressedTriple( "uriv:", "rdf:type", "owl:Ontology" );
+	$graph->addCompressedTriple( "uriv:", "dcterms:title", "URI Vocabulary", "literal" );
+	addVocabTrips( $graph );
+
+	return $graph;
+}
+
+function addVocabTrips( &$graph )
+{
+	global $filepath;
 	$lines = file( "$filepath/ns.txt" );
 	$tmap = array(
 		""=>"skos:Concept",
 		"c"=>"rdfs:Class",	
 		"p"=>"rdfs:Property",
 		"d"=>"rdfs:Datatype" );
-	$graph = initGraph();
-	$graph->addCompressedTriple( "vocab:", "rdf:type", "owl:Ontology" );
-	$graph->addCompressedTriple( "vocab:", "dcterms:title", "URI Namespace Vocabulary", "literal" );
-	$graph->addCompressedTriple( "", "dcterms:title", "URI Namespace Vocabulary", "literal" );
 	foreach( $lines as $line )
 	{
 		list( $term, $type, $name ) = preg_split( "/:/", chop( $line ) );
-		$graph->addCompressedTriple( "vocab:$term", "rdf:type", $tmap[$type] );
-		$graph->addCompressedTriple( "vocab:$term", "rdfs:isDefinedBy", "vocab:" );
-		$graph->addCompressedTriple( "vocab:$term", "rdfs:label", $name, "literal" );
+		$graph->addCompressedTriple( "uriv:$term", "rdf:type", $tmap[$type] );
+		$graph->addCompressedTriple( "uriv:$term", "rdfs:isDefinedBy", "uriv:" );
+		$graph->addCompressedTriple( "uriv:$term", "rdfs:label", $name, "literal" );
 	}
-
-	return $graph;
 }
 
 function graphFragment( $fragment )
@@ -184,7 +232,7 @@ function graphFragment( $fragment )
 		exit;
 	}
 
-	addBoilerplateTrips( $graph, "fragment:".urlencode($uri), "$uri - URI with Fragment" );
+	addBoilerplateTrips( $graph, "fragment:".urlencode($uri), $uri );
 	addFragmentTrips( $graph, $uri );
 
 	return $graph;
@@ -207,7 +255,8 @@ function graphURI( $uri )
 function graphSuffix( $suffix )
 {
 	$graph = initGraph();
-	addBoilerplateTrips( $graph, "suffix:$suffix", "$suffix - Suffix" );
+	$uri = $graph->expandURI( "suffix:$suffix" );
+	addBoilerplateTrips( $graph, "suffix:$suffix", $uri );
 	addSuffixTrips( $graph, $suffix );
 	return $graph;
 }
@@ -215,7 +264,8 @@ function graphSuffix( $suffix )
 function graphDomain( $domain )
 {
 	$graph = initGraph();
-	addBoilerplateTrips( $graph, "domain:$domain", "$domain - Internet Domain" );
+	$uri = $graph->expandURI( "domain:$domain" );
+	addBoilerplateTrips( $graph, "domain:$domain", $uri );
 	addDomainTrips( $graph, $domain );
 	return $graph;
 }
@@ -223,7 +273,8 @@ function graphDomain( $domain )
 function graphMime( $mime )
 {
 	$graph = initGraph();
-	addBoilerplateTrips( $graph, "mime:$mime", "$mime - Mimetype" );
+	$uri = $graph->expandURI( "mime:$mime" );
+	addBoilerplateTrips( $graph, "mime:$mime", $uri );
 	addMimeTrips( $graph, $mime );
 	return $graph;
 }
@@ -231,7 +282,8 @@ function graphMime( $mime )
 function graphScheme( $scheme )
 {
 	$graph = initGraph();
-	addBoilerplateTrips( $graph, "scheme:$scheme", "$scheme - URI Scheme" );
+	$uri = $graph->expandURI( "scheme:$scheme" );
+	addBoilerplateTrips( $graph, "scheme:$scheme", $uri );
 	addSchemeTrips( $graph, $scheme );
 	return $graph;
 }
@@ -300,6 +352,7 @@ function addHTTPSchemeTrips( &$graph, $uri )
 			$homepage.="/";
 
 			$graph->addCompressedTriple( "domain:".$b["host"], "foaf:homepage", $homepage);
+			$graph->addCompressedTriple( $homepage, "rdf:type", "foaf:Document" );
 		}
 	}
 
@@ -366,6 +419,7 @@ function addDomainTrips( &$graph, $domain )
 	$nowww_actual_domain = $domain;
 	if(substr(strtolower($nowww_actual_domain), 0, 4) == "www."){  $nowww_actual_domain = substr($actual_domain, 4);}
 
+	require_once( "whois.php" );
 	$whoisservers = whoisservers();
 	global $filepath;
 
@@ -439,16 +493,23 @@ function addDomainTrips( &$graph, $domain )
 		foreach( $tld as $place )
 		{
 			$graph->addCompressedTriple( $place["uri"], "http://dbpedia.org/property/cctld", "domain:$domain" );
-			$graph->addCompressedTriple( $place["uri"], "rdfs:label", $place["name"]."@en" );
+			$graph->addCompressedTriple( $place["uri"], "rdfs:label", $place["name"], "literal" );
+			$graph->addCompressedTriple( $place["uri"], "rdf:type", "http://dbpedia.org/ontology/Country" );
+			$graph->addCompressedTriple( $place["uri"], "foaf:page", db2wiki( $place["uri"] ) );
+			$graph->addCompressedTriple( db2wiki( $place["uri"] ), "rdf:type", "foaf:Document" );
 			if( isset( $place["tld_uri"] ) )
 			{
-				$graph->addCompressedTriple( "domain:".$domain, "owl:sameAS", $place["tld_uri"] );
+				$graph->addCompressedTriple( "domain:".$domain, "owl:sameAs", $place["tld_uri"] );
+				$graph->addCompressedTriple( "domain:".$domain, "foaf:page", db2wiki( $place["tld_uri"] ) );
+				$graph->addCompressedTriple( db2wiki( $place["tld_uri"] ), "rdf:type", "foaf:Document" );
 			}
 			if( isset( $place["point"] ) )
 			{
 				list( $lat, $long ) = preg_split( "/\s+/", trim( $place["point"] ) );
-				$graph->addCompressedTriple( $place["uri"], "geo:lat", $lat );
-				$graph->addCompressedTriple( $place["uri"], "geo:long", $long );
+				$lat = sprintf( "%0.5f",$lat );
+				$long = sprintf( "%0.5f",$long );
+				$graph->addCompressedTriple( $place["uri"], "geo:lat", $lat, "xsd:float" );
+				$graph->addCompressedTriple( $place["uri"], "geo:long", $long, "xsd:float" );
 			}
 		}
 	}
@@ -457,6 +518,7 @@ function addDomainTrips( &$graph, $domain )
 		$zone = $zones["$domain"] ;
 		$graph->addCompressedTriple( "domain:$domain", "uriv:delegationRecordPage", "http://www.iana.org".$zone["url"] );
 		$graph->addCompressedTriple( "domain:$domain", "foaf:page", "http://www.iana.org".$zone["url"] );
+		$graph->addCompressedTriple( "http://www.iana.org".$zone["url"], "rdf:type", "foaf:Document" );
 		$typemap = array(
 "country-code"=>"TopLevelDomain-CountryCode",
 "generic"=>"TopLevelDomain-Generic",
@@ -467,7 +529,7 @@ function addDomainTrips( &$graph, $domain )
 		$graph->addCompressedTriple( "domain:$domain", "rdf:type", "uriv:".$typemap[$zone["type"]] );
 		$graph->addCompressedTriple( "domain:$domain", "uriv:sponsor", "domain:$domain#sponsor" );
 		$graph->addCompressedTriple( "domain:$domain#sponsor", "rdf:type", "foaf:Organization" );
-		$graph->addCompressedTriple( "domain:$domain#sponsor", "rdfs:label", $zone["sponsor"] );
+		$graph->addCompressedTriple( "domain:$domain#sponsor", "rdfs:label", $zone["sponsor"], "literal" );
 	}
 }
 
@@ -548,276 +610,129 @@ function addSchemeTrips( &$graph, $scheme )
 	{
 		$graph->addCompressedTriple( "scheme:".$scheme, "foaf:page", $s["url"] );
 		$graph->addCompressedTriple( "scheme:".$scheme, "uriv:IANAPage", $s["url"] );
+		$graph->addCompressedTriple( $s["uri"], "rdf:type", "foaf:Document" );
 	}
 	foreach( $s["refs"] as $url=>$label )
 	{
 		$graph->addCompressedTriple( "scheme:".$scheme, "foaf:page", $url );
 		$graph->addCompressedTriple( "scheme:".$scheme, "uriv:IANARef", $url );
+		$graph->addCompressedTriple( $url, "rdf:type", "foaf:Document" );
 		$graph->addCompressedTriple( $url, "rdfs:label", $label, "literal" );
 	}
 }
 
-/*************************************************************************
-php easy :: whois lookup script
-==========================================================================
-Author:      php easy code, www.phpeasycode.com
-Web Site:    http://www.phpeasycode.com
-Contact:     webmaster@phpeasycode.com
-(heavily hacked by Christopher Gutteridge to do stuff on this site)
-*************************************************************************/
-
-// For the full list of TLDs/Whois servers see http://www.iana.org/domains/root/db/ and http://www.whois365.com/en/listtld/
-
-function whoisservers()
+function addExtraVocabTrips( &$graph )
 {
-	return array(
-"ac.uk" => "whois.ja.net",
-	"ac" =>"whois.nic.ac",
-	"ae" =>"whois.nic.ae",
-	"aero"=>"whois.aero",
-	"af" =>"whois.nic.af",
-	"ag" =>"whois.nic.ag",
-	"al" =>"whois.ripe.net",
-	"am" =>"whois.amnic.net",
-	"arpa" =>"whois.iana.org",
-	"as" =>"whois.nic.as",
-	"asia" =>"whois.nic.asia",
-	"at" =>"whois.nic.at",
-	"au" =>"whois.aunic.net",
-	"az" =>"whois.ripe.net",
-	"ba" =>"whois.ripe.net",
-	"be" =>"whois.dns.be",
-	"bg" =>"whois.register.bg",
-	"bi" =>"whois.nic.bi",
-	"biz" =>"whois.biz",
-	"bj" =>"whois.nic.bj",
-	"br" =>"whois.registro.br",
-	"bt" =>"whois.netnames.net",
-	"by" =>"whois.ripe.net",
-	"bz" =>"whois.belizenic.bz",
-	"ca" =>"whois.cira.ca",
-	"cat" =>"whois.cat",
-	"cc" =>"whois.nic.cc",
-	"cd" =>"whois.nic.cd",
-	"ch" =>"whois.nic.ch",
-	"ci" =>"whois.nic.ci",
-	"ck" =>"whois.nic.ck",
-	"cl" =>"whois.nic.cl",
-	"cn" =>"whois.cnnic.net.cn",
-	"com" =>"whois.verisign-grs.com",
-	"coop" =>"whois.nic.coop",
-	"cx" =>"whois.nic.cx",
-	"cy" =>"whois.ripe.net",
-	"cz" =>"whois.nic.cz",
-	"de" =>"whois.denic.de",
-	"dk" =>"whois.dk-hostmaster.dk",
-	"dm" =>"whois.nic.cx",
-	"dz" =>"whois.ripe.net",
-	"edu" =>"whois.educause.edu",
-	"ee" =>"whois.eenet.ee",
-	"eg" =>"whois.ripe.net",
-	"es" =>"whois.ripe.net",
-	"eu" =>"whois.eu",
-	"fi" =>"whois.ficora.fi",
-	"fo" =>"whois.ripe.net",
-	"fr" =>"whois.nic.fr",
-	"gb" =>"whois.ripe.net",
-	"gd" =>"whois.adamsnames.com",
-	"ge" =>"whois.ripe.net",
-	"gg" =>"whois.channelisles.net",
-	"gi" =>"whois2.afilias-grs.net",
-	"gl" =>"whois.ripe.net",
-	"gm" =>"whois.ripe.net",
-	"gov" =>"whois.nic.gov",
-	"gr" =>"whois.ripe.net",
-	"gs" =>"whois.nic.gs",
-	"gw" =>"whois.nic.gw",
-	"gy" =>"whois.registry.gy",
-	"hk" =>"whois.hkirc.hk",
-	"hm" =>"whois.registry.hm",
-	"hn" =>"whois2.afilias-grs.net",
-	"hr" =>"whois.ripe.net",
-	"hu" =>"whois.nic.hu",
-	"ie" =>"whois.domainregistry.ie",
-	"il" =>"whois.isoc.org.il",
-	"in" =>"whois.inregistry.net",
-	"info" =>"whois.afilias.net",
-	"int" =>"whois.iana.org",
-	"io" =>"whois.nic.io",
-	"iq" =>"vrx.net",
-	"ir" =>"whois.nic.ir",
-	"is" =>"whois.isnic.is",
-	"it" =>"whois.nic.it",
-	"je" =>"whois.channelisles.net",
-	"jobs" =>"jobswhois.verisign-grs.com",
-	"jp" =>"whois.jprs.jp",
-	"ke" =>"whois.kenic.or.ke",
-	"kg" =>"www.domain.kg",
-	"ki" =>"whois.nic.ki",
-	"kr" =>"whois.nic.or.kr",
-	"kz" =>"whois.nic.kz",
-	"la" =>"whois.nic.la",
-	"li" =>"whois.nic.li",
-	"lt" =>"whois.domreg.lt",
-	"lu" =>"whois.dns.lu",
-	"lv" =>"whois.nic.lv",
-	"ly" =>"whois.nic.ly",
-	"ma" =>"whois.iam.net.ma",
-	"mc" =>"whois.ripe.net",
-	"md" =>"whois.ripe.net",
-	"me" =>"whois.meregistry.net",
-	"mg" =>"whois.nic.mg",
-	"mil" =>"whois.nic.mil",
-	"mn" =>"whois.nic.mn",
-	"mobi" =>"whois.dotmobiregistry.net",
-	"ms" =>"whois.adamsnames.tc",
-	"mt" =>"whois.ripe.net",
-	"mu" =>"whois.nic.mu",
-	"museum" =>"whois.museum",
-	"mx" =>"whois.nic.mx",
-	"my" =>"whois.mynic.net.my",
-	"na" =>"whois.na-nic.com.na",
-	"name" =>"whois.nic.name",
-	"net" =>"whois.verisign-grs.net",
-	"nf" =>"whois.nic.nf",
-	"nl" =>"whois.domain-registry.nl",
-	"no" =>"whois.norid.no",
-	"nu" =>"whois.nic.nu",
-	"nz" =>"whois.srs.net.nz",
-	"org" =>"whois.pir.org",
-	"pl" =>"whois.dns.pl",
-	"pm" =>"whois.nic.pm",
-	"pr" =>"whois.uprr.pr",
-	"pro" =>"whois.registrypro.pro",
-	"pt" =>"whois.dns.pt",
-	"re" =>"whois.nic.re",
-	"ro" =>"whois.rotld.ro",
-	"ru" =>"whois.ripn.net",
-	"sa" =>"whois.nic.net.sa",
-	"sb" =>"whois.nic.net.sb",
-	"sc" =>"whois2.afilias-grs.net",
-	"se" =>"whois.iis.se",
-	"sg" =>"whois.nic.net.sg",
-	"sh" =>"whois.nic.sh",
-	"si" =>"whois.arnes.si",
-	"sk" =>"whois.ripe.net",
-	"sm" =>"whois.ripe.net",
-	"st" =>"whois.nic.st",
-	"su" =>"whois.ripn.net",
-	"tc" =>"whois.adamsnames.tc",
-	"tel" =>"whois.nic.tel",
-	"tf" =>"whois.nic.tf",
-	"th" =>"whois.thnic.net",
-	"tj" =>"whois.nic.tj",
-	"tk" =>"whois.dot.tk",
-	"tl" =>"whois.nic.tl",
-	"tm" =>"whois.nic.tm",
-	"tn" =>"whois.ripe.net",
-	"to" =>"whois.tonic.to",
-	"tp" =>"whois.nic.tl",
-	"tr" =>"whois.nic.tr",
-	"travel" =>"whois.nic.travel",
-	"tv" => "tvwhois.verisign-grs.com",
-	"tw" =>"whois.twnic.net.tw",
-	"ua" =>"whois.net.ua",
-	"ug" =>"whois.co.ug",
-	"uk" =>"whois.nic.uk",
-	"us" =>"whois.nic.us",
-	"uy" =>"nic.uy",
-	"uz" =>"whois.cctld.uz",
-	"va" =>"whois.ripe.net",
-	"vc" =>"whois2.afilias-grs.net",
-	"ve" =>"whois.nic.ve",
-	"vg" =>"whois.adamsnames.tc",
-	"wf" =>"whois.nic.wf",
-	"ws" =>"whois.website.ws",
-	"yt" =>"whois.nic.yt",
-	"yu" =>"whois.ripe.net");
+	$lines = array( 
+"rdf:type	p	type",
+"foaf:primaryTopic	p	primary topic",
+"skos:notation	p	notation",
+"vs:term_status	p	term status",
+"foaf:page	p	page",
+"foaf:homepage	p	homepage",
+"http://dbpedia.org/property/cctld	p	country code top-level domain",
+"owl:sameAs	p	is the same as",
+"geo:lat	p	latitude",
+"geo:long	p	longitude",
+
+"xsd:float	d	Floating-point number",
+
+"foaf:Document	c	Document",
+"foaf:Organization	c	Organization",
+"skos:Concept	c	Concept",
+"http://dbpedia.org/ontology/Country	c	Country",
+);
+	$tmap = array(
+		""=>"skos:Concept",
+		"c"=>"rdfs:Class",	
+		"p"=>"rdfs:Property",
+		"d"=>"rdfs:Datatype" );
+	foreach( $lines as $line )
+	{
+		list( $term, $type, $name ) = preg_split( "/	/", chop( $line ) );
+		$graph->addCompressedTriple( "$term", "rdf:type", $tmap[$type] );
+		$graph->addCompressedTriple( "$term", "rdfs:isDefinedBy", "uriv:" );
+		$graph->addCompressedTriple( "$term", "rdfs:label", $name, "literal" );
+	}
 }
 
-function LookupDomain($domain, $whoisserver){
-	$domain_parts = explode(".", $domain);
-	$tld = strtolower(array_pop($domain_parts));
-	$result = QueryWhoisServer($whoisserver, $domain);
-	if(!$result) {
-		return;
+function renderResource( $graph, $resource )
+{
+	$type = $resource->nodeType();
+	$r = "";
+
+	$r.="<div class='class'>";
+	if( $resource->hasLabel() )
+	{
+		$r.= "<div class='classLabel'>".$resource->label();
+		if( $resource->has("rdf:type") )
+		{
+			$r.=" <span class='classType'>[".$resource->all( "rdf:type" )->label()->join( ", " )."]</span>";
+		}
+		$r.= "</div>";
 	}
-	else {
-		while(strpos($result, "Whois Server:") !== FALSE){
-			preg_match("/Whois Server: (.*)/", $result, $matches);
-			$secondary = $matches[1];
-			if($secondary) {
-				$result = QueryWhoisServer($secondary, $domain);
-				$whoisserver = $secondary;
+	$r.="<div class='class2'>";
+	$r.="<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".$resource->link()."</span></div>";
+	foreach( $resource->relations() as $rel )
+	{
+		if( $rel == "http://www.w3.org/2000/01/rdf-schema#label" ) { continue; }
+		if( $rel == "http://www.w3.org/2000/01/rdf-schema#isDefinedBy" ) { continue; }
+		if( $rel == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" ) { continue; }
+		$follow_inverse = false;
+		if( $rel == "http://dbpedia.org/property/cctld" ) { $follow_inverse = true; }
+		if( $rel == "http://uri4uri.net/vocab#subDom" ) { $follow_inverse = true; }
+#$r .= "<div>($rel)  ".$rel->nodeType()."</div>";
+#$r.="<p>$rel :: $follow_inverse</p>";
+		if( !$follow_inverse && $rel->nodeType() == "#inverseRelation" ) { continue; }
+		if( $follow_inverse && $rel->nodeType() != "#inverseRelation" ) { continue; }
+		#if( $rel->label() == "has type" ) { continue; } # hacky!
+
+		$label = $rel->label();
+		if( preg_match( '/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $rel, $b ) )
+		{
+			$label = "#".$b[1];
+		}
+		if( $rel->nodeType() == "#inverseRelation" ) { $label = "is $label of"; }
+		$pred = "<a href='$rel' class='predicate'>$label</a>";
+
+		foreach( $resource->all( $rel ) as $r2 )
+		{
+
+			$type = $r2->nodeType();
+			if( $type == "#literal" )
+			{
+				$r.= "<div class='relation'>$pred: \"<span class='literal'>$r2</span>\"</div>";
+				continue;
 			}
-		}
-	}
-	return "$result";
-}
-
-function LookupIP($ip) {
-	$whoisservers = array(
-		//"whois.afrinic.net", // Africa - returns timeout error :-(
-		"whois.lacnic.net", // Latin America and Caribbean - returns data for ALL locations worldwide :-)
-		"whois.apnic.net", // Asia/Pacific only
-		"whois.arin.net", // North America only
-		"whois.ripe.net" // Europe, Middle East and Central Asia only
-	);
-	$results = array();
-	foreach($whoisservers as $whoisserver) {
-		$result = QueryWhoisServer($whoisserver, $ip);
-		if($result && !in_array($result, $results)) {
-			$results[$whoisserver]= $result;
-		}
-	}
-	$res = "RESULTS FOUND: " . count($results);
-	foreach($results as $whoisserver=>$result) {
-		$res .= "\n\n-------------\nLookup results for " . $ip . " from " . $whoisserver . " server:\n\n" . $result;
-	}
-	return $res;
-}
-
-function ValidateIP($ip) {
-	$ipnums = explode(".", $ip);
-	if(count($ipnums) != 4) {
-		return false;
-	}
-	foreach($ipnums as $ipnum) {
-		if(!is_numeric($ipnum) || ($ipnum > 255)) {
-			return false;
-		}
-	}
-	return $ip;
-}
-
-function ValidateDomain($domain) {
-	if(!preg_match("/^([-a-z0-9]{2,100})\.([a-z\.]{2,8})$/i", $domain)) {
-		return false;
-	}
-	return $domain;
-}
-
-function QueryWhoisServer($whoisserver, $domain) {
-	$port = 43;
-	$timeout = 5;
-	$fp = @fsockopen($whoisserver, $port, $errno, $errstr, $timeout) or die("Socket Error " . $errno . " - " . $errstr);
-	//if($whoisserver == "whois.verisign-grs.com") $domain = "=".$domain; // whois.verisign-grs.com requires the equals sign ("=") or it returns any result containing the searched string.
-	fputs($fp, $domain . "\r\n");
-	$out = "";
-	while(!feof($fp)){
-		$out .= fgets($fp);
-	}
-	fclose($fp);
-
-	$res = "";
-	if((strpos(strtolower($out), "error") === FALSE) && (strpos(strtolower($out), "not allocated") === FALSE)) {
-		$rows = explode("\n", $out);
-		foreach($rows as $row) {
-			$row = trim($row);
-			if(($row != '') && ($row{0} != '#') && ($row{0} != '%')) {
-				$res .= $row."\n";
+			if( substr( $type, 0, 4 ) == "http" )
+			{
+				$rt = $graph->resource($type);
+				$r.= "<div class='relation'>$pred: \"<span class='literal'>$r2</span>\" <span class='datatype'>[".$rt->prettyLink()."]</span></div>";
+				continue;
 			}
+			if( $r2->isType( "foaf:Document" ) )
+			{
+				$r.= "<div class='relation'>$pred: ".$r2->prettyLink()."</div>";
+				continue;
+			}
+			$r.= "<table class='relation'><tr>";
+			$r.= "<th>$pred:</th>";
+			$r.= "<td class='object'>".renderResource( $graph, $r2 )."</td>";
+			$r.= "</tr></table>";	
 		}
+
 	}
-	return $res;
+	#$r .= "<div style='font-size:80%'>".$resource->dump()."</div>";
+	$r .= "</div>";
+	$r .= "</div>";
+	
+
+	return $r;
+}
+
+function db2wiki( $dbpedia_uri )
+{
+	$db_pre = "http://dbpedia.org/resource/";
+	$wiki_pre = "http://en.wikipedia.org/wiki/";
+	return $wiki_pre.substr( $dbpedia_uri, strlen( $db_pre ) );
 }

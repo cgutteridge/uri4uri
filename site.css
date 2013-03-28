@@ -1,0 +1,191 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+
+
+/* local css */
+
+@font-face {
+  font-family: 'Wellfleet';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Wellfleet'), local('Wellfleet-Regular'), url(/wellfleet.woff) format('woff');
+}
+
+
+body {
+	margin: 20px;
+	background-color: #006;
+	font-family: sans-serif;	
+}
+h1 {
+ 	color: #fff;
+	font-family: 'Wellfleet', cursive;
+	font-size: 200%;
+	margin-left: 50px;
+}
+h1 a {
+ 	color: #fff;
+}
+.headline {
+	font-family: cursive;
+	font-size: 150%;
+	color: #666;
+}
+p {
+	margin-bottom: 0.5em;
+	line-height: 1.3em;
+}
+h3 {
+	margin-top: 2em;
+	margin-bottom: 0.5em;
+	color: #006;
+	font-family: 'Wellfleet', cursive;
+	font-size: 120%;
+}
+h2 {
+	background-color: #ccc;
+	color: #000;
+	border-top-left-radius: 50px;
+	border-top-right-radius: 50px;
+	border-bottom: solid 3px #000;
+	font-family: 'Wellfleet', cursive;
+	font-size: 30px;
+	padding: 15px 20px 5px 30px;
+	min-height: 40px;
+}
+div.content {
+	margin-top: 10px;
+	border-radius: 50px;
+	border: solid 3px #000;
+	background-color: #eef;
+}
+div.content2 {
+	padding: 5px 20px 50px 20px;
+}
+table.relation th {
+	padding-right: 10px;
+}
+table.relation {
+	margin-top: 1em;
+}
+div.relation {
+	margin-top: 1em;
+}
+a.predicate {
+	color: #000;
+	font-weight: bold;
+}
+.literal { 
+	white-space: pre;
+}
+.classLabel {
+	padding: 5px 10px;
+	font-family: 'Wellfleet', cursive;	
+	font-size: 120%;
+	font-weight:bold;
+	border-bottom: solid 2px #666;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+}
+.uri {
+}
+.classType {
+	font-weight: normal;
+	font-size: 60%;
+}
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+i { 
+	font-style: italic;
+}
+.class2 {
+	padding: 10px;
+}
+.class .class { 
+	border: solid 2px #666;
+	border-radius: 20px;
+	background-color: #fef;
+}
+.class .class .classLabel { background-color: #ede; }
+
+
+.class .class .class { background-color: #efe; }
+.class .class .class .classLabel { background-color: #ded; }
+.class .class .class .class { background-color: #ffe; }
+.class .class .class .class .classLabel { background-color: #eed; }
+.class .class .class .class .class { background-color: #fff0ee; }
+.class .class .class .class .class .classLabel { background-color: #eee0dd; }
+.class .class .class .class .class .class { background-color: #eeeeff; }
+.class .class .class .class .class .class .classLabel { background-color: #ddddee; }
+.class .class .class .class .class .class .class { background-color: #fef; }
+.class .class .class .class .class .class .class .classLabel { background-color: #eeddee; }
+
+.class .class .class .class .class .class .class .class { background-color: #efe; }
+.class .class .class .class .class .class .class .class .classLabel { background-color: #ded; }
+.class .class .class .class .class .class .class .class .class { background-color: #ffe; }
+.class .class .class .class .class .class .class .class .class .classLabel { background-color: #eed; }
+.class .class .class .class .class .class .class .class .class .class { background-color: #fff0ee; }
+.class .class .class .class .class .class .class .class .class .class .classLabel { background-color: #eee0dd; }
+.class .class .class .class .class .class .class .class .class .class .class { background-color: #eeeeff; }
+.class .class .class .class .class .class .class .class .class .class .class .classLabel { background-color: #ddddee; }
+.class .class .class .class .class .class .class .class .class .class .class .class { background-color: #fef; }
+.class .class .class .class .class .class .class .class .class .class .class .class .classLabel { background-color: #eeddee; }
+
+sup { 
+	font-size: 50%;
+	vertical-align: super;
+}
