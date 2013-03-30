@@ -117,16 +117,47 @@ if( $format == "html" )
 	}
 	$content.= "<p><span style='font-weight:bold'>Download data:</span> ";
 	$content.= "<a href='$BASE$type.ttl/$id'>Turtle</a>";
-	$content.= " | ";
+	$content.= " &bull; ";
 	$content.= "<a href='$BASE$type.nt/$id'>N-Triples</a>";
-	$content.= " | ";
+	$content.= " &bull; ";
 	$content.= "<a href='$BASE$type.rdf/$id'>RDF XML</a>";
 	$content.= "</p>";
 
 	if( $type == "vocab" )
 	{
-		$title = "uri4uri vocabulary";
-		$content.= $graph->dump();
+		$title = "uri4uri Vocabulary";
+
+		$sections = array( 
+			array( "Classes", "rdfs:Class", "classes" ),
+			array( "Properties", "rdfs:Property", "properties" ),
+			array( "Datatypes", "rdfs:Datatype", "datatypes" ),
+			array( "Concepts", "skos:Concept", "concepts" ),
+		);
+		$l = array();
+		$skips = array();
+		foreach( $sections as $s )
+		{
+			$l[$s[2]] = $graph->allOfType( $s[1] );
+			$skips []= "<a href='#".$s[2]."'>".$s[0]."</a>";
+		}
+		addExtraVocabTrips( $graph );
+		$content.="<p><strong style='font-weight:bold'>Jump to:</strong> ".join( " &bull; ", $skips )."</p>";
+		$content.= "<style>.class .class { margin: 4em 0;} .class .class .class { margin: 1em 0; }</style>";
+		$content.= "<div class='class'><div class='class2'>";
+		foreach( $sections as $s )
+		{
+			$html = array();
+			foreach( $l[$s[2]] as $resource ) 
+			{ 
+				$html[$resource->toString()]= "<a name='".substr( $resource->toString(),25)."' />".renderResource( $graph, $resource ); 
+			}
+			ksort($html);
+			$content.= "<a name='".$s[2]."' /><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
+			$content.= join( "", $html );	
+			$content.= "</div></div>";
+		}
+
+		$content.= "</div></div>";
 	}
 	else
 	{ 
@@ -137,7 +168,6 @@ if( $format == "html" )
 		{
 			$thingy_type =" <span class='classType'>[".$resource->all( "rdf:type" )->label()->join( ", " )."]</span>";
 		}
-		$r.= "</div>";
 		$content.= renderResource( $graph, $resource );
 	}
 	require_once( "template.php" );
@@ -319,8 +349,8 @@ function addURITrips( &$graph, $uri )
 
 	$graph->addCompressedTriple( $uri, "uriv:identifiedBy", "uri:$uri" );
 	$graph->addCompressedTriple( "uri:$uri", "rdf:type", "uriv:URI" );
-	$graph->addCompressedTriple( $uri, "skos:notation", $uri, "uriv:URIDatatype" );
-	$graph->addCompressedTriple( $uri, "uriv:length", strlen( $uri ), "xsd:positiveInteger" );
+	$graph->addCompressedTriple( "uri:$uri", "skos:notation", $uri, "uriv:URIDatatype" );
+	$graph->addCompressedTriple( "uri:$uri", "uriv:length", strlen( $uri ), "xsd:positiveInteger" );
 
 	if( @$b["scheme"] )
 	{
@@ -636,11 +666,15 @@ function addExtraVocabTrips( &$graph )
 "geo:long	p	longitude",
 
 "xsd:float	d	Floating-point number",
+"xsd:positiveInteger	d	Postitive Integer",
 
 "foaf:Document	c	Document",
 "foaf:Organization	c	Organization",
 "skos:Concept	c	Concept",
 "http://dbpedia.org/ontology/Country	c	Country",
+"rdfs:Class	c	Class",
+"rdfs:Property	c	Property",
+"rdfs:Datatype	c	Datatype",
 );
 	$tmap = array(
 		""=>"skos:Concept",
@@ -673,6 +707,7 @@ function renderResource( $graph, $resource )
 	}
 	$r.="<div class='class2'>";
 	$r.="<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".$resource->link()."</span></div>";
+	$short = $long = "";
 	foreach( $resource->relations() as $rel )
 	{
 		if( $rel == "http://www.w3.org/2000/01/rdf-schema#label" ) { continue; }
@@ -681,6 +716,7 @@ function renderResource( $graph, $resource )
 		$follow_inverse = false;
 		if( $rel == "http://dbpedia.org/property/cctld" ) { $follow_inverse = true; }
 		if( $rel == "http://uri4uri.net/vocab#subDom" ) { $follow_inverse = true; }
+		if( $rel == "http://uri4uri.net/vocab#usedForSuffix" ) { $follow_inverse = true; }
 #$r .= "<div>($rel)  ".$rel->nodeType()."</div>";
 #$r.="<p>$rel :: $follow_inverse</p>";
 		if( !$follow_inverse && $rel->nodeType() == "#inverseRelation" ) { continue; }
@@ -697,32 +733,32 @@ function renderResource( $graph, $resource )
 
 		foreach( $resource->all( $rel ) as $r2 )
 		{
-
 			$type = $r2->nodeType();
 			if( $type == "#literal" )
 			{
-				$r.= "<div class='relation'>$pred: \"<span class='literal'>$r2</span>\"</div>";
+				$short.= "<div class='relation'>$pred: \"<span class='literal'>$r2</span>\"</div>";
 				continue;
 			}
 			if( substr( $type, 0, 4 ) == "http" )
 			{
 				$rt = $graph->resource($type);
-				$r.= "<div class='relation'>$pred: \"<span class='literal'>$r2</span>\" <span class='datatype'>[".$rt->prettyLink()."]</span></div>";
+				$short.= "<div class='relation'>$pred: \"<span class='literal'>$r2</span>\" <span class='datatype'>[".$rt->prettyLink()."]</span></div>";
 				continue;
 			}
 			if( $r2->isType( "foaf:Document" ) )
 			{
-				$r.= "<div class='relation'>$pred: ".$r2->prettyLink()."</div>";
+				$short.= "<div class='relation'>$pred: ".$r2->prettyLink()."</div>";
 				continue;
 			}
-			$r.= "<table class='relation'><tr>";
-			$r.= "<th>$pred:</th>";
-			$r.= "<td class='object'>".renderResource( $graph, $r2 )."</td>";
-			$r.= "</tr></table>";	
+			$long.= "<table class='relation'><tr>";
+			$long.= "<th>$pred:</th>";
+			$long.= "<td class='object'>".renderResource( $graph, $r2 )."</td>";
+			$long.= "</tr></table>";	
 		}
 
 	}
 	#$r .= "<div style='font-size:80%'>".$resource->dump()."</div>";
+	$r .= $short.$long;
 	$r .= "</div>";
 	$r .= "</div>";
 	

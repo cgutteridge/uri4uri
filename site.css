@@ -94,17 +94,17 @@ h3 {
 h2 {
 	background-color: #ccc;
 	color: #000;
-	border-top-left-radius: 50px;
-	border-top-right-radius: 50px;
+	border-top-left-radius: 30px;
+	border-top-right-radius: 30px;
 	border-bottom: solid 3px #000;
 	font-family: 'Wellfleet', cursive;
 	font-size: 30px;
-	padding: 15px 20px 5px 30px;
+	padding: 15px 20px 5px 20px;
 	min-height: 40px;
 }
 div.content {
 	margin-top: 10px;
-	border-radius: 50px;
+	border-radius: 30px;
 	border: solid 3px #000;
 	background-color: #eef;
 }
@@ -133,8 +133,8 @@ a.predicate {
 	font-size: 120%;
 	font-weight:bold;
 	border-bottom: solid 2px #666;
-	border-top-left-radius: 20px;
-	border-top-right-radius: 20px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
 }
 .uri {
 }
@@ -157,7 +157,7 @@ i {
 }
 .class .class { 
 	border: solid 2px #666;
-	border-radius: 20px;
+	border-radius: 10px;
 	background-color: #fef;
 }
 .class .class .classLabel { background-color: #ede; }

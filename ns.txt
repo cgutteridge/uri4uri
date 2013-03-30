@@ -1,38 +1,38 @@
-account:p:has account
+account:p:account
 assignedBy:p:assigned by
-delegationRecordPage:p:has delegation record page
+delegationRecordPage:p:delegation record page
 Domain:c:Internet Domain
 DomainDatatype:d:Internet Domain Identifier
 Domain-Invalid:c:Invalid Internet Domain
 Domain-Valid:c:Valid Internet Domain
-filename:p:has filename part
+filename:p:filename
 FilenameDatatype:d:URI Filename Part Datatype
-fragement:p:has fragment part
+fragement:p:fragment
 FragmentURI:c:URI with Fragement Identifier
-host:p:has host
-IANAPage:p:has IANA page
-IANARef:p:has IANA reference
+host:p:host
+IANAPage:p:IANA page
+IANARef:p:IANA reference
 identifiedBy:p:resource is identified by URI
-key:p:has key
-length:p:has length
+key:p:key
+length:p:length
 Mimetype:c:Mimetype
 MimetypeDatatype:d:Mimetype Identifier
 noPortSpecified::No Port Specified
-pass:p:has password part
-path:p:has path part
+pass:p:password
+path:p:path
 PathDatatype:d:URI Path Identifier
-port:p:has port part
-query:p:has query part
+port:p:port
+query:p:query
 Query:c:URI Query Part
 QueryKey:c:URI Query Key
 QueryKVP:c:URI Query Key-Value Pair
-queryString:p:has query string part
+queryString:p:query string
 QueryStringDatatype:d:URI Query String Identifier
 QueryValue:c:URI Query Value
-scheme:p:has URI scheme
-sponsor:p:has sponsor
-subDom:p:has subdomain
-suffix:p:has suffix part
+scheme:p:URI scheme
+sponsor:p:sponsor
+subDom:p:subdomain
+suffix:p:suffix
 Suffix:c:Filename Suffix
 SuffixDatatype:d:Filename Suffix Identifier
 TopLevelDomain:c:Top-Level Domain
@@ -47,8 +47,8 @@ URIDatatype:d:URI Identifier
 URIScheme:c:URI Scheme
 URISchemeDatatype:d:URI Scheme Identifier
 usedForSuffix:p:sometimes used for suffix
-user:p:has user part
-value:p:has value
-whoIsRecord:p:has whois record
-whoIsServer:p:has whois server
+user:p:user
+value:p:value
+whoIsRecord:p:whois record
+whoIsServer:p:whois server
 WhoisServer:c:Whois Server

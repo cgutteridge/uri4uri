@@ -195,6 +195,8 @@ function LookupDomain($domain, $whoisserver){
 			}
 		}
 	}
+
+	if( preg_match( "/^No such/", $result ) ) { return; }
 	return "$result";
 }
 
