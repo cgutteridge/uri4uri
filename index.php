@@ -35,11 +35,15 @@ if( $path == "/robots.txt" )
 	exit;
 }
 
+if( preg_match( "/\/homedev/", $path ) && @$_GET["uri"] )
+{
+	$uri4uri = "http://uri4uri.net/uri/".$_GET["uri"];
+	header( "Location: $uri4uri" );
+	exit;
+}
 if( $path == "/homedev" )
 {
 	$title = 'uri4uri';
-
-
 	$content = file_get_contents( "homepage.html" );
 	require_once( "template.php" );
 	exit;
@@ -208,6 +212,7 @@ function initGraph()
 	$graph->ns( "suffix",$BASE."suffix/" );
 	$graph->ns( "fragment",$BASE."fragment/" );
 	$graph->ns( "mime",$BASE."mime/" );
+	$graph->ns( "occult", "http://data.totl.net/occult/" );
 	$graph->ns( "vs","http://www.w3.org/2003/06/sw-vocab-status/ns#" );
 	
 	return $graph;
@@ -361,7 +366,24 @@ function addURITrips( &$graph, $uri )
 			addHTTPSchemeTrips( $graph, $uri );
 		}
 	} # end scheme
+	
+	$hash = md5( $uri );
+	$hash_number  = substr( base_convert($hash, 16, 10),0, 10);
+	$graph->addCompressedTriple( "uri:$uri", "uriv:md5", $hash, "uriv:MD5HashDatatype" );
 
+	# silly stuff
+	$chances = 2;
+	if( $hash_number % $chances == 0 )
+	{
+		$hash_number = floor( $hash_number / $chances );
+		global $filepath;
+		$thingys = file( "$filepath/occult.txt" );
+		$row = chop($thingys[ $hash_number % sizeof( $thingys ) ]);
+		list( $thing_uri, $thing_name ) = preg_split( "/\t/", $row );
+		
+		$graph->addCompressedTriple( "uri:$uri", "occult:correspondsTo", $thing_uri );
+		$graph->addCompressedTriple( $thing_uri, "rdfs:label", $thing_name, "literal" );
+	}
 }
 
 function addHTTPSchemeTrips( &$graph, $uri )
@@ -664,6 +686,7 @@ function addExtraVocabTrips( &$graph )
 "owl:sameAs	p	is the same as",
 "geo:lat	p	latitude",
 "geo:long	p	longitude",
+"occult:correspondsTo	p	corresponds to",
 
 "xsd:float	d	Floating-point number",
 "xsd:positiveInteger	d	Postitive Integer",

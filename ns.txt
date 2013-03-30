@@ -15,6 +15,8 @@ IANARef:p:IANA reference
 identifiedBy:p:resource is identified by URI
 key:p:key
 length:p:length
+md5:p:md5 hash
+MD5HashDatatype:d:MD5 Hash Datatype
 Mimetype:c:Mimetype
 MimetypeDatatype:d:Mimetype Identifier
 noPortSpecified::No Port Specified

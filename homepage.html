@@ -4,15 +4,64 @@ h2 {display:none;}
 <script src='jquery-1.9.1.min.js'></script>
 
 <div style='text-align:center;'>
-<p class='headline' style='margin:1em 0em 4em 0em'>"The single most important development in the history of the Semantic Web"</p>
+<p class='headline' style='margin:1em 0em 2em 0em'>"The single most important development in the history of the Semantic Web"</p>
 
-<p>uri4uri provides resolvable URIs to represent any URI. This is a major breakthrough in how the web works. This service will enable a raft of advances in web technology. Our database contains many useful facts about <i>every</i> URI.</p>
+<p style='margin-bottom:2em'>uri4uri provides resolvable URIs to represent any URI. This is a major breakthrough in how the web works. This service will enable a raft of advances in web technology. Our database contains many useful facts about <i>every</i> URI.</p>
+<div class='class'>
+<div class='class'>
+<div class='classLabel'>Generate a URI for a URI</div>
+<div class='class2'>
 <form>
-Enter any URI:
-<input style='border-radius:5px' name='uri' id='uri' /> 
+<input autocomplete="off" style='padding:4px;width:80%;border-radius:5px' name='uri' id='uri' value='' /> 
 </form>
-<div id='result'></div>
+<div id='resultBlock' style='margin-top: 1em'>The URI for this URI is:<div id='result' style='margin-top:0.5em'></div></div>
 </div>
+</div>
+</div>
+</div>
+
+<script>
+$(document).ready( function() {
+	var default_text = "Enter any URI or URL";
+	var uri = $('#uri');
+	if( uri.val() == default_text )
+	{
+		uri.css( "color", "#999" );
+	}
+	uri.focus( function() {
+		uri.css( "color", "#000" );
+		if( uri.val() == default_text )
+		{
+			uri.val( "" );
+		}
+	} );
+ 	function blur() {
+		if( uri.val() == "" )
+		{
+			uri.val( default_text );
+		}
+		if( uri.val() == default_text )
+		{
+			uri.css( "color", "#999" );
+		}
+	}
+	function keyup() {
+		if( uri.val() == default_text || uri.val() == "" )
+		{
+			$('#resultBlock').hide();
+			return;
+		}
+			
+		uri4uri = "http://uri4uri.net/uri/"+uri.val();
+		$('#result').html("<a href='"+uri4uri+"'>"+uri4uri+"</a>" );
+		$('#resultBlock').show();
+	}
+	uri.blur( blur );
+	uri.keyup( keyup );
+	keyup();
+	blur();
+} );
+</script>
 <h3>How does it work?</h3>
 <p>For the past 3 years our server farm has been working to caculate every possible URI, including <a href="http://uri4uri.net/uri/http://totl.net/">web addresses</a>, <a href="http://uri4uri.net/uri/mailto:webmaster@microsoft.com">email addresses</a>, <a href="http://uri4uri.net/uri/urn:isbn:817224164X">ISBNs</a> and even some support for <a href='http://uri4uri.net/uri/gopher://sdf.org:70/1/computers/apple/mac/hypercard'>Gopher</a>. This has been a massive undertaking and would not have been possible even five years ago. The data store is intensely indexed so that the information can be retrieved virtually instantly. Ensuring excellent response times has been at the core of everything we do.</p>
 
@@ -39,6 +88,9 @@ Figure 1. Comparison in size between uri4uri &amp; conventional linked data
 </tr></table>
 </div>
 </div>
-
+<h3>What is included</h3>
+<p>URIs, URI fragment identifiers, Internet Domains, Mime Types, File Suffixes, URI Schemes.</p>
 <h3>Who are uri4uri.net?</h3>
 <p>This service has been conceived, created and maintained by the award-winning team behind <a href='http://data.totl.net'>data.totl.net</a><sup>TM</sup>. You can trust us to do the smart thing. You can trust us to do the right thing.</p>
+<h3>How do I contact you?</h3>
+<p>Feel free to <a href='mailto:c@totl.net'>email us</a> with comments and suggestions.</p>
