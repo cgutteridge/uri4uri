@@ -5,6 +5,7 @@ require_once( "../Graphite/Graphite.php" );
 $filepath = "/home/uri4uri/htdocs";
 $BASE = "http://uri4uri.net/";
 
+$show_title = true;
 #error_log( "Req: ".$_SERVER["REQUEST_URI"] );
 
 $path = substr( $_SERVER["REQUEST_URI"], 0 );
@@ -15,13 +16,6 @@ if( $path == "" )
 	exit;
 }
 
-if( $path == "/" )
-{
-	$title = "Homepage title ";
-	$content = "homepage content";
-	require_once( "template.php" );
-	exit;
-}
 if( $path == "/robots.txt" )
 {
 	header( "Content-type: text/plain" );
@@ -35,15 +29,20 @@ if( $path == "/robots.txt" )
 	exit;
 }
 
-if( preg_match( "/\/homedev/", $path ) && @$_GET["uri"] )
+if( preg_match( "/^\/(homedev)?/", $path ) && @$_GET["uri"] )
 {
 	$uri4uri = "http://uri4uri.net/uri/".$_GET["uri"];
+	if( preg_match( '/#/', $_GET["uri"] ) )
+	{
+		$uri4uri = "http://uri4uri.net/fragment/".urlencode($_GET["uri"]);
+	}
 	header( "Location: $uri4uri" );
 	exit;
 }
-if( $path == "/homedev" )
+if( $path == "/" )
 {
 	$title = 'uri4uri';
+	$show_title = false;
 	$content = file_get_contents( "homepage.html" );
 	require_once( "template.php" );
 	exit;
@@ -146,14 +145,14 @@ if( $format == "html" )
 		}
 		addExtraVocabTrips( $graph );
 		$content.="<p><strong style='font-weight:bold'>Jump to:</strong> ".join( " &bull; ", $skips )."</p>";
-		$content.= "<style>.class .class { margin: 4em 0;} .class .class .class { margin: 1em 0; }</style>";
+		$content.= "<style type='text/css'>.class .class { margin: 4em 0;} .class .class .class { margin: 1em 0; }</style>";
 		$content.= "<div class='class'><div class='class2'>";
 		foreach( $sections as $s )
 		{
 			$html = array();
 			foreach( $l[$s[2]] as $resource ) 
 			{ 
-				$html[$resource->toString()]= "<a name='".substr( $resource->toString(),25)."' />".renderResource( $graph, $resource ); 
+				$html[$resource->toString()]= "<a name='".substr( $resource->toString(),25)."'></a>".renderResource( $graph, $resource ); 
 			}
 			ksort($html);
 			$content.= "<a name='".$s[2]."' /><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
@@ -173,6 +172,7 @@ if( $format == "html" )
 			$thingy_type =" <span class='classType'>[".$resource->all( "rdf:type" )->label()->join( ", " )."]</span>";
 		}
 		$content.= renderResource( $graph, $resource );
+		#$content .= "<div style='font-size:80%'>".$graph->dump()."</div>";
 	}
 	require_once( "template.php" );
 }
@@ -213,6 +213,7 @@ function initGraph()
 	$graph->ns( "fragment",$BASE."fragment/" );
 	$graph->ns( "mime",$BASE."mime/" );
 	$graph->ns( "occult", "http://data.totl.net/occult/" );
+	$graph->ns( "xtypes", "http://prefix.cc/xtypes/" );
 	$graph->ns( "vs","http://www.w3.org/2003/06/sw-vocab-status/ns#" );
 	
 	return $graph;
@@ -330,7 +331,7 @@ function addBoilerplateTrips( &$graph, $uri, $title )
 	$graph->addCompressedTriple( "", "foaf:primaryTopic", "$uri" );
 	
 # wikipedia data etc. not cc0
-#	$graph->addCompressedTriple( "", "dcterms:license", "http://creativecommons.org/publicdomain/zero/1.0/" );
+#"	$graph->addCompressedTriple( "", "dcterms:license", "http://creativecommons.org/publicdomain/zero/1.0/" );
 #	$graph->addCompressedTriple( "http://creativecommons.org/publicdomain/zero/1.0/", "rdfs:label", "CC0: Public Domain Dedication", "literal" );
 	
 }
@@ -339,10 +340,12 @@ function addFragmentTrips( &$graph, $uri )
 {
 	list( $uri_part, $fragment_part ) = preg_split( '/#/', $uri, 2 );
 
-	$graph->addCompressedTriple( $uri, "uriv:identifiedBy", "uri:$uri" );
-	$graph->addCompressedTriple( "uri:$uri", "rdf:type", "uriv:URI" );
-	$graph->addCompressedTriple( "uri:$uri", "rdf:type", "uriv:FragmentURI" );
-	$graph->addCompressedTriple( $uri, "uriv:fragement", $fragment_part, "literal" );
+	$f_uri = "fragment:".urlencode( $uri );
+	$graph->addCompressedTriple( $uri, "uriv:identifiedBy", $f_uri );
+	$graph->addCompressedTriple( $f_uri, "rdf:type", "uriv:URI" );
+	$graph->addCompressedTriple( $f_uri, "rdf:type", "uriv:FragmentURI" );
+	$graph->addCompressedTriple( $f_uri, "skos:notation", $fragment_part, "uriv:FragmentDatatype" );
+	$graph->addCompressedTriple( "uri:$uri_part", "uriv:fragment", $f_uri );
 
 	addURITrips( $graph, $uri_part );
 
@@ -372,7 +375,7 @@ function addURITrips( &$graph, $uri )
 	$graph->addCompressedTriple( "uri:$uri", "uriv:md5", $hash, "uriv:MD5HashDatatype" );
 
 	# silly stuff
-	$chances = 2;
+	$chances = 4;
 	if( $hash_number % $chances == 0 )
 	{
 		$hash_number = floor( $hash_number / $chances );
@@ -427,6 +430,7 @@ function addHTTPSchemeTrips( &$graph, $uri )
 		}
 		$graph->addCompressedTriple( "uri:$uri", "uriv:account", "uri:$uri#account-".$b["user"] );
 		$graph->addCompressedTriple( "uri:$uri#account-".$b["user"], "rdf:type", "foaf:OnlineAccount" );
+		$graph->addCompressedTriple( "uri:$uri#account-".$b["user"], "rdfs:label", $b["user"], "xsd:string" );
 	}
 
 	if( @$b["path"] )
@@ -455,9 +459,12 @@ function addHTTPSchemeTrips( &$graph, $uri )
 			++$i;
 			$graph->addCompressedTriple( "uri:$uri#query", "rdf:_$i", "uri:$uri#query-$i" );
 			$graph->addCompressedTriple( "uri:$uri#query-$i", "rdf:type", "uriv:QueryKVP" );
-			list( $key, $value ) = preg_split( '/=/', $kv, 2 );
-			$graph->addCompressedTriple( "uri:$uri#query-$i", "uriv:key", $key, "uriv:QueryKey" );
-			$graph->addCompressedTriple( "uri:$uri#query-$i", "uriv:value", $value, "uriv:QueryValue" );
+			if( preg_match( '/=/', $kv ) )
+			{
+				list( $key, $value ) = preg_split( '/=/', $kv, 2 );
+				$graph->addCompressedTriple( "uri:$uri#query-$i", "uriv:key", $key, "uriv:QueryKey" );
+				$graph->addCompressedTriple( "uri:$uri#query-$i", "uriv:value", $value, "uriv:QueryValue" );
+			}
 		}
 	}
 }	
@@ -591,6 +598,26 @@ function addSuffixTrips( &$graph, $suffix )
 	$graph->addCompressedTriple( "suffix:$suffix", "rdf:type", "uriv:Suffix" );
 	$graph->addCompressedTriple( "suffix:$suffix", "rdfs:label", ".".$suffix, "literal" );
 	$graph->addCompressedTriple( "suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype" );
+
+	$exts = json_decode( file_get_contents( "$filepath/extensions.json" ), true );
+	if( isset($exts[$suffix]) )
+	{
+		foreach( $exts[$suffix] as $format_uri=>$format_info )
+		{
+			$graph->addCompressedTriple( "suffix:$suffix", "uriv:usedForFormat", $format_uri );
+			$graph->addCompressedTriple( $format_uri, "rdfs:label", $format_info["label"], "literal", "en" );
+			$graph->addCompressedTriple( $format_uri, "rdf:type", "uriv:Format" );
+			if( isset( $format_info["desc"] ) && $format_info["desc"]!="" )
+			{
+				$desc = preg_replace( "/\. .*$/", ".", $format_info["desc"] );
+				$graph->addCompressedTriple( $format_uri, "dcterms:description", $desc, "literal", "en" );
+			}
+			$graph->addCompressedTriple( $format_uri, "foaf:page", db2wiki( $format_uri ) );
+			$graph->addCompressedTriple( db2wiki( $format_uri ), "rdf:type", "foaf:Document" );
+		}
+	}
+
+
 	$lines = file( "$filepath/mime.types" );
 	foreach( $lines as $line )
 	{
@@ -619,6 +646,26 @@ function addMimeTrips( &$graph, $mime, $rec=true )
 	$graph->addCompressedTriple( "mime:$mime", "rdf:type", "uriv:Mimetype" );
 	$graph->addCompressedTriple( "mime:$mime", "rdfs:label", $mime, "literal" );
 	$graph->addCompressedTriple( "mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype" );
+
+	$suffix = json_decode( file_get_contents( "$filepath/mime.json" ), true );
+	if( isset($suffix[$mime]) )
+	{
+		foreach( $suffix[$mime] as $format_uri=>$format_info )
+		{
+			$graph->addCompressedTriple( "mime:$mime", "uriv:usedForFormat", $format_uri );
+			$graph->addCompressedTriple( $format_uri, "rdfs:label", $format_info["label"], "literal", "en" );
+			$graph->addCompressedTriple( $format_uri, "rdf:type", "uriv:Format" );
+			if( isset( $format_info["desc"] ))
+			{
+				$desc = preg_replace( "/\. .*$/", ".", $format_info["desc"] );
+				$graph->addCompressedTriple( $format_uri, "dcterms:description", $desc, "literal", "en" );
+			}
+			$graph->addCompressedTriple( $format_uri, "foaf:page", db2wiki( $format_uri ) );
+			$graph->addCompressedTriple( db2wiki( $format_uri ), "rdf:type", "foaf:Document" );
+		}
+	}
+
+
 	$lines = file( "$filepath/mime.types" );
 	foreach( $lines as $line )
 	{
@@ -631,7 +678,7 @@ function addMimeTrips( &$graph, $mime, $rec=true )
 			{
 				foreach( preg_split( "/ /", $types ) as $suffix )
 				{
-					$graph->addCompressedTriple( "mime:$mime", "uriv:usedForSufffix", "suffix:$suffix" );
+					$graph->addCompressedTriple( "mime:$mime", "uriv:usedForSuffix", "suffix:$suffix" );
 					$graph->addCompressedTriple( "suffix:$suffix", "rdfs:label", ".".$suffix, "literal" );
 					$graph->addCompressedTriple( "suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype" );
 				}
@@ -687,6 +734,7 @@ function addExtraVocabTrips( &$graph )
 "geo:lat	p	latitude",
 "geo:long	p	longitude",
 "occult:correspondsTo	p	corresponds to",
+"dcterms:description	p	description",
 
 "xsd:float	d	Floating-point number",
 "xsd:positiveInteger	d	Postitive Integer",
@@ -724,7 +772,7 @@ function renderResource( $graph, $resource )
 		$r.= "<div class='classLabel'>".$resource->label();
 		if( $resource->has("rdf:type") )
 		{
-			$r.=" <span class='classType'>[".$resource->all( "rdf:type" )->label()->join( ", " )."]</span>";
+			$r.=" <span class='classType'>[".$resource->all( "rdf:type" )->prettyLink()->join( ", " )."]</span>";
 		}
 		$r.= "</div>";
 	}
@@ -740,6 +788,8 @@ function renderResource( $graph, $resource )
 		if( $rel == "http://dbpedia.org/property/cctld" ) { $follow_inverse = true; }
 		if( $rel == "http://uri4uri.net/vocab#subDom" ) { $follow_inverse = true; }
 		if( $rel == "http://uri4uri.net/vocab#usedForSuffix" ) { $follow_inverse = true; }
+		if( $rel == "http://uri4uri.net/vocab#fragment" ) { $follow_inverse = true; }
+		if( $rel == "http://uri4uri.net/vocab#identifiedBy" ) { $follow_inverse = true; }
 #$r .= "<div>($rel)  ".$rel->nodeType()."</div>";
 #$r.="<p>$rel :: $follow_inverse</p>";
 		if( !$follow_inverse && $rel->nodeType() == "#inverseRelation" ) { continue; }
@@ -757,15 +807,20 @@ function renderResource( $graph, $resource )
 		foreach( $resource->all( $rel ) as $r2 )
 		{
 			$type = $r2->nodeType();
+			if( $rel == "http://uri4uri.net/vocab#whoIsRecord" ) 
+			{
+				$short.= "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
+				continue;
+			}
 			if( $type == "#literal" )
 			{
-				$short.= "<div class='relation'>$pred: \"<span class='literal'>$r2</span>\"</div>";
+				$short.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\"</div>";
 				continue;
 			}
 			if( substr( $type, 0, 4 ) == "http" )
 			{
 				$rt = $graph->resource($type);
-				$short.= "<div class='relation'>$pred: \"<span class='literal'>$r2</span>\" <span class='datatype'>[".$rt->prettyLink()."]</span></div>";
+				$short.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".$rt->prettyLink()."]</span></div>";
 				continue;
 			}
 			if( $r2->isType( "foaf:Document" ) )
@@ -780,8 +835,41 @@ function renderResource( $graph, $resource )
 		}
 
 	}
-	#$r .= "<div style='font-size:80%'>".$resource->dump()."</div>";
 	$r .= $short.$long;
+	#$r .= "<div style='font-size:80%'>".$resource->dump()."</div>";
+
+	if( $resource->has( "geo:lat" ) && $resource->has( "geo:long" ) )
+	{
+		global $mapid;
+		if( !@$mapid )
+		{
+			$mapid = 0;
+      			$r.= '<script src="http://openlayers.org/api/OpenLayers.js"></script>';
+		}
+		$mapid++;
+
+		$r.= '<div style="border:solid 1px #ccc;width:100%; height:200px; margin-top:1em !important" id="map'.$mapid.'"></div>
+<script>
+$(document).ready( function() {
+	var map = new OpenLayers.Map("map'.$mapid.'");
+	var wms = new OpenLayers.Layer.OSM();
+	map.addLayer(wms);
+	var lonLat = new OpenLayers.LonLat( '.$resource->getString( "geo:long" ).','.$resource->getString( "geo:lat" ).')
+         	.transform(
+            	new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            	map.getProjectionObject() // to Spherical Mercator Projection
+          	);
+	var zoom = 3;
+	var markers = new OpenLayers.Layer.Markers( "Markers" );
+	map.addLayer(markers);
+	markers.addMarker(new OpenLayers.Marker(lonLat));
+	map.setCenter( lonLat, zoom ); 
+} );
+</script>
+';
+
+	}
+
 	$r .= "</div>";
 	$r .= "</div>";
 	

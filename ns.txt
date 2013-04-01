@@ -5,40 +5,42 @@ Domain:c:Internet Domain
 DomainDatatype:d:Internet Domain Identifier
 Domain-Invalid:c:Invalid Internet Domain
 Domain-Valid:c:Valid Internet Domain
-filename:p:filename
 FilenameDatatype:d:URI Filename Part Datatype
-fragement:p:fragment
+filename:p:filename
+Format:c:File Format
+FragmentDatatype:d:Fragment Datatype
+fragment:p:fragment
 FragmentURI:c:URI with Fragement Identifier
 host:p:host
 IANAPage:p:IANA page
 IANARef:p:IANA reference
-identifiedBy:p:resource is identified by URI
+identifiedBy:p:identified by URI
 key:p:key
 length:p:length
-md5:p:md5 hash
 MD5HashDatatype:d:MD5 Hash Datatype
+md5:p:md5 hash
 Mimetype:c:Mimetype
 MimetypeDatatype:d:Mimetype Identifier
 noPortSpecified::No Port Specified
 pass:p:password
-path:p:path
 PathDatatype:d:URI Path Identifier
+path:p:path
 port:p:port
-query:p:query
 Query:c:URI Query Part
 QueryKey:c:URI Query Key
 QueryKVP:c:URI Query Key-Value Pair
-queryString:p:query string
+query:p:query
 QueryStringDatatype:d:URI Query String Identifier
+queryString:p:query string
 QueryValue:c:URI Query Value
 scheme:p:URI scheme
 sponsor:p:sponsor
 subDom:p:subdomain
-suffix:p:suffix
 Suffix:c:Filename Suffix
 SuffixDatatype:d:Filename Suffix Identifier
-TopLevelDomain:c:Top-Level Domain
+suffix:p:suffix
 TopLevelDomain-CountryCode:c:Country Top-Level Domain
+TopLevelDomain:c:Top-Level Domain
 TopLevelDomain-Generic:c:Generic Top-Level Domain
 TopLevelDomain-GenericRestricted:c:Restricted Generic Top-Level Domain
 TopLevelDomain-Infrastructure:c:Infrastructure Top-Level Domain
@@ -48,9 +50,15 @@ URI:c:URI
 URIDatatype:d:URI Identifier
 URIScheme:c:URI Scheme
 URISchemeDatatype:d:URI Scheme Identifier
-usedForSuffix:p:sometimes used for suffix
+Statement:c:Statement (reified)
+object:p:object:object identified by
+predicate:p:predicate:predicate identified by
+subject:p:subject:subject identified by
+trueAt:p:trueAt:statement true at
+usedForFormat:p:used for format
+usedForSuffix:p:used for suffix
 user:p:user
 value:p:value
 whoIsRecord:p:whois record
-whoIsServer:p:whois server
 WhoisServer:c:Whois Server
+whoIsServer:p:whois server

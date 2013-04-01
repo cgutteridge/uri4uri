@@ -75,6 +75,17 @@ h1 {
 h1 a {
  	color: #fff;
 }
+.gofaster {
+	float:right;
+	margin-right: 50px;
+ 	color: #fff;
+	font-family: 'Wellfleet', cursive;
+	font-size: 120%;
+	margin-top: 15px;
+}
+.gofaster a {
+ 	color: #fff;
+}
 .headline {
 	font-family: cursive;
 	font-size: 150%;
@@ -124,8 +135,20 @@ a.predicate {
 	color: #000;
 	font-weight: bold;
 }
-.literal { 
+.pre { 
+	font-family: monospace;
 	white-space: pre;
+}
+.code-block {
+	font-family: monospace;
+	white-space: pre;
+	border: solid 2px #666;
+	background-color: #66c;
+	color: #ccf;
+	overflow-x: auto;
+	padding: 1em;
+	margin-bottom:1em;
+	border-radius: 10px;
 }
 .classLabel {
 	padding: 5px 10px;
@@ -188,4 +211,21 @@ i {
 sup { 
 	font-size: 50%;
 	vertical-align: super;
+}
+.bookmarklet {
+	padding: 5px 15px 2px 15px;
+	background-color: #eee;		
+	margin: 0px 15px;
+ 	box-shadow:  1px  1px 5px #888888;
+	color: #006;
+	cursor: move;
+	border-radius: 4px;
+	display: inline-block;
+	border: solid 1px #000;
+}
+.bookmarklet:hover {
+	text-decoration: none;
+}
+.datatype {
+	font-size: 60%;
 }
