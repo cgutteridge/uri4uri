@@ -3,7 +3,7 @@ require_once( "../lib/arc2/ARC2.php" );
 require_once( "../lib/Graphite/Graphite.php" );
 
 $filepath = "/home/uri4uri/htdocs/data";
-$BASE = "http://uri4uri.net/";
+$BASE = "http://uri4uri.net";
 
 $show_title = true;
 #error_log( "Req: ".$_SERVER["REQUEST_URI"] );
@@ -12,7 +12,7 @@ $path = substr( $_SERVER["REQUEST_URI"], 0 );
 
 if( $path == "" )
 {
-	header( "Location: $BASE" );
+	header( "Location: $BASE/" );
 	exit;
 }
 
@@ -52,7 +52,7 @@ if( $path == "/" )
 	exit;
 }
 
-if( !preg_match( "/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|ttl|html|nt))?(\/(.*))?$/", $path, $b ) )
+if( !preg_match( "/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|debug|ttl|html|nt))?(\/(.*))?$/", $path, $b ) )
 {
 	serve404();
 	exit;
@@ -100,7 +100,7 @@ if( !isset( $format ) || $format == "")
 
 	if( $type == "uri" ) { $id = rawurlencode( rawurldecode($id) ); }
 	header( "HTTP/1.1 303 C.Elseware" );
-	header( "Location: $BASE$type.$format/$id" );
+	header( "Location: $BASE/$type.$format/$id" );
 	exit;
 }
 if( $type == "uri" ) { $graph = graphURI( $id ); }
@@ -114,7 +114,8 @@ else { serve404(); exit; }
 if( $format == "html" )
 {
 	header( "HTTP/1.1 200 OK" );
-	$doc = $graph->resource("");
+	$document_url = $BASE.$_SERVER["REQUEST_URI"];
+	$doc = $graph->resource($document_url);
 	$title = $doc->label();
 	$content = "";
 	if( $doc->has( "foaf:primaryTopic" ) )
@@ -123,11 +124,11 @@ if( $format == "html" )
 		#$content.= "<p>URI: <tt>$uri</tt></p>";
 	}
 	$content.= "<p><span style='font-weight:bold'>Download data:</span> ";
-	$content.= "<a href='$BASE$type.ttl/$id'>Turtle</a>";
+	$content.= "<a href='$BASE/$type.ttl/$id'>Turtle</a>";
 	$content.= " &bull; ";
-	$content.= "<a href='$BASE$type.nt/$id'>N-Triples</a>";
+	$content.= "<a href='$BASE/$type.nt/$id'>N-Triples</a>";
 	$content.= " &bull; ";
-	$content.= "<a href='$BASE$type.rdf/$id'>RDF XML</a>";
+	$content.= "<a href='$BASE/$type.rdf/$id'>RDF XML</a>";
 	$content.= "</p>";
 
 	if( $type == "vocab" )
@@ -198,6 +199,12 @@ elseif( $format == "ttl" )
 	header( "Content-type: text/turtle" );
 	print $graph->serialize( "Turtle" );
 }
+elseif( $format == "debug" )
+{
+	header( "HTTP/1.1 200 OK" );
+	header( "Content-type: text/plain" );
+	print_r( $graph->toArcTriples() );
+}
 else
 {
 	print "Weird error";
@@ -209,12 +216,12 @@ function initGraph()
 	global $BASE;
 
 	$graph = new Graphite();
-	$graph->ns( "uri",$BASE."uri/" );
-	$graph->ns( "uriv",$BASE."vocab#" );
-	$graph->ns( "scheme",$BASE."scheme/" );
-	$graph->ns( "domain",$BASE."domain/" );
-	$graph->ns( "suffix",$BASE."suffix/" );
-	$graph->ns( "mime",$BASE."mime/" );
+	$graph->ns( "uri","$BASE/uri/" );
+	$graph->ns( "uriv","$BASE/vocab#" );
+	$graph->ns( "scheme","$BASE/scheme/" );
+	$graph->ns( "domain","$BASE/domain/" );
+	$graph->ns( "suffix","$BASE/suffix/" );
+	$graph->ns( "mime","$BASE/mime/" );
 	$graph->ns( "occult", "http://data.totl.net/occult/" );
 	$graph->ns( "xtypes", "http://prefix.cc/xtypes/" );
 	$graph->ns( "vs","http://www.w3.org/2003/06/sw-vocab-status/ns#" );
@@ -310,9 +317,11 @@ function graphScheme( $scheme )
 
 function addBoilerplateTrips( &$graph, $uri, $title )
 {
-	$graph->addCompressedTriple( "", "rdf:type", "foaf:Document" );
-	$graph->addCompressedTriple( "", "dcterms:title", $title, "literal" );
-	$graph->addCompressedTriple( "", "foaf:primaryTopic", "$uri" );
+	global $BASE;
+	$document_url = $BASE.$_SERVER["REQUEST_URI"];
+	$graph->addCompressedTriple( $document_url, "rdf:type", "foaf:Document" );
+	$graph->addCompressedTriple( $document_url, "dcterms:title", $title, "literal" );
+	$graph->addCompressedTriple( $document_url, "foaf:primaryTopic", "$uri" );
 	
 # wikipedia data etc. not cc0
 #"	$graph->addCompressedTriple( "", "dcterms:license", "http://creativecommons.org/publicdomain/zero/1.0/" );

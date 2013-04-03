@@ -1,2 +1,14 @@
 lib/Graphite
 lib/arc2
+.bash_history
+.bash_logout
+.bash_profile
+.bashrc
+.emacs
+.gitconfig
+.kde
+.lesshst
+.ssh
+.viminfo
+.zshrc
+
