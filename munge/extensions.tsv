@@ -1,0 +1,407 @@
+http://dbpedia.org/resource/Au_file_format	.au	Au file format
+http://dbpedia.org/resource/Au_file_format	.snd	Au file format
+http://dbpedia.org/resource/AutoCAD_DXF	.dxf	AutoCAD DXF
+http://dbpedia.org/resource/Electronic_data_interchange	.edi	Electronic data interchange
+http://dbpedia.org/resource/Executable_and_Linkable_Format	.o, .so, .elf, .prx, .puff	Executable and Linkable Format
+http://dbpedia.org/resource/Graphics_Interchange_Format	.gif	Graphics Interchange Format
+http://dbpedia.org/resource/Active_Server_Pages	.asp	Active Server Pages
+http://dbpedia.org/resource/JavaScript	.js	JavaScript
+http://dbpedia.org/resource/JavaScript_Style_Sheets	.js	JavaScript Style Sheets
+http://dbpedia.org/resource/JScript_.NET	.js	JScript .NET
+http://dbpedia.org/resource/Gzip	.gz	Gzip
+http://dbpedia.org/resource/HTML	.html, .htm	HTML
+http://dbpedia.org/resource/HTML5	.html, .htm	HTML5
+http://dbpedia.org/resource/Distributed_GIS	.html, .htm	Distributed GIS
+http://dbpedia.org/resource/JPEG	.jif, .jfif, .jfi	JPEG
+http://dbpedia.org/resource/PCX	.pcx	PCX
+http://dbpedia.org/resource/ECMAScript	.es	ECMAScript
+http://dbpedia.org/resource/DocBook	.dbk, .xml	DocBook
+http://dbpedia.org/resource/Microsoft_Excel	.xls,	Microsoft Excel
+http://dbpedia.org/resource/Nl_(format)	.nl	Nl (format)
+http://dbpedia.org/resource/Portable_Document_Format	.xfdf	Portable Document Format
+http://dbpedia.org/resource/Portable_Network_Graphics	.png	Portable Network Graphics
+http://dbpedia.org/resource/Scalable_Vector_Graphics	.svg, .svgz	Scalable Vector Graphics
+http://dbpedia.org/resource/Simplified_molecular-input_line-entry_system	.smi	Simplified molecular-input line-entry system
+http://dbpedia.org/resource/Synchronized_Multimedia_Integration_Language	.smil	Synchronized Multimedia Integration Language
+http://dbpedia.org/resource/Windows_Media_Audio	.wma	Windows Media Audio
+http://dbpedia.org/resource/ARJ	.arj	ARJ
+http://dbpedia.org/resource/Adaptive_Transform_Acoustic_Coding	.aa3	Adaptive Transform Acoustic Coding
+http://dbpedia.org/resource/Adaptive_Transform_Acoustic_Coding	.oma	Adaptive Transform Acoustic Coding
+http://dbpedia.org/resource/AIML	.aiml	AIML
+http://dbpedia.org/resource/JPEG	.jpg, .jpeg, .jpe	JPEG
+http://dbpedia.org/resource/Multiple-image_Network_Graphics	.mng	Multiple-image Network Graphics
+http://dbpedia.org/resource/Ogg	.ogg, .ogv, .oga, .ogx, .spx, .opus,	Ogg
+http://dbpedia.org/resource/PostScript	.ps	PostScript
+http://dbpedia.org/resource/Portable_Document_Format	.pdf	Portable Document Format
+http://dbpedia.org/resource/PDF/A	.pdf	PDF/A
+http://dbpedia.org/resource/TrueType	.ttf &	TrueType
+http://dbpedia.org/resource/Vorbis	.ogg .oga	Vorbis
+http://dbpedia.org/resource/Broadcast_Wave_Format	.wav	Broadcast Wave Format
+http://dbpedia.org/resource/WAV	.wav	WAV
+http://dbpedia.org/resource/RealMedia	.rm	RealMedia
+http://dbpedia.org/resource/MP3	.mp3	MP3
+http://dbpedia.org/resource/Mp3HD	.mp3	Mp3HD
+http://dbpedia.org/resource/Portable_Document_Format	.fdf	Portable Document Format
+http://dbpedia.org/resource/Rich_Text_Format	.rtf	Rich Text Format
+http://dbpedia.org/resource/SQL	.sql	SQL
+http://dbpedia.org/resource/XSLT	.xsl, .xslt	XSLT
+http://dbpedia.org/resource/Audio_Video_Interleave	.avi	Audio Video Interleave
+http://dbpedia.org/resource/Adaptive_Transform_Acoustic_Coding	.at3	Adaptive Transform Acoustic Coding
+http://dbpedia.org/resource/Resource_Description_Framework	.rdf	Resource Description Framework
+http://dbpedia.org/resource/RealAudio	.ra, .ram	RealAudio
+http://dbpedia.org/resource/Speex	.spx	Speex
+http://dbpedia.org/resource/Shorten	.shn	Shorten
+http://dbpedia.org/resource/Audio_Interchange_File_Format	.aiff	Audio Interchange File Format
+http://dbpedia.org/resource/Audio_Interchange_File_Format	.aifc	Audio Interchange File Format
+http://dbpedia.org/resource/DivX	.divx	DivX
+http://dbpedia.org/resource/Microsoft_PowerPoint	.ppt, .pptx, .pps, or .ppsx	Microsoft PowerPoint
+http://dbpedia.org/resource/FLAC	.flac	FLAC
+http://dbpedia.org/resource/VRML	.wrl	VRML
+http://dbpedia.org/resource/JPEG_2000	.jp2, .j2k, .jpf, .jpx, .jpm, .mj2	JPEG 2000
+http://dbpedia.org/resource/Bzip2	.bz2	Bzip2
+http://dbpedia.org/resource/Netpbm_format	.ppm, .pgm, .pbm, .pnm	Netpbm format
+http://dbpedia.org/resource/Windows_Metafile	.wmf, .emf, .wmz, .emz	Windows Metafile
+http://dbpedia.org/resource/RSS	.rss, .xml	RSS
+http://dbpedia.org/resource/GeoRSS	.rss, .xml	GeoRSS
+http://dbpedia.org/resource/Audio_Interchange_File_Format	.aif	Audio Interchange File Format
+http://dbpedia.org/resource/Tar_(file_format)	.tar	Tar (file format)
+http://dbpedia.org/resource/Material_Exchange_Format	.mxf	Material Exchange Format
+http://dbpedia.org/resource/MPEG-1_Audio_Layer_II	.mp2	MPEG-1 Audio Layer II
+http://dbpedia.org/resource/XUL	.xul	XUL
+http://dbpedia.org/resource/Encapsulated_PostScript	.epsf	Encapsulated PostScript
+http://dbpedia.org/resource/Encapsulated_PostScript	.epsi	Encapsulated PostScript
+http://dbpedia.org/resource/XML_Metadata_Interchange	.xmi	XML Metadata Interchange
+http://dbpedia.org/resource/Tagged_Image_File_Format	.fp, .ct, .lw, .hc, .mp, .bp, .bl, .sd	Tagged Image File Format
+http://dbpedia.org/resource/Theora	.ogv, .ogg	Theora
+http://dbpedia.org/resource/Encapsulated_PostScript	.eps	Encapsulated PostScript
+http://dbpedia.org/resource/TIFF/EP	.tiff, .tif	TIFF/EP
+http://dbpedia.org/resource/Tagged_Image_File_Format	.tiff, .tif	Tagged Image File Format
+http://dbpedia.org/resource/XML_Schema_(W3C)	.xsd	XML Schema (W3C)
+http://dbpedia.org/resource/Zip_(file_format)	.zip	Zip (file format)
+http://dbpedia.org/resource/OpenType	.otf, .ttf	OpenType
+http://dbpedia.org/resource/Device_independent_file_format	.dvi	Device independent file format
+http://dbpedia.org/resource/Zip_(file_format)	.zipx	Zip (file format)
+http://dbpedia.org/resource/Geography_Markup_Language	.gml or .xml	Geography Markup Language
+http://dbpedia.org/resource/Advanced_Audio_Coding	.m4a, .m4b, .m4p, .m4v, .m4r, .3gp, .mp4, .aac	Advanced Audio Coding
+http://dbpedia.org/resource/FreeArc	.arc	FreeArc
+http://dbpedia.org/resource/WAR_file_format_(Sun)	.war	WAR file format (Sun)
+http://dbpedia.org/resource/Windows_Media_Video	.wmv	Windows Media Video
+http://dbpedia.org/resource/WMV_HD	.wmv	WMV HD
+http://dbpedia.org/resource/X3D	.x3d, .x3db, .x3dv	X3D
+http://dbpedia.org/resource/Digital_Picture_Exchange	.dpx	Digital Picture Exchange
+http://dbpedia.org/resource/Compress	.Z	Compress
+http://dbpedia.org/resource/FITS	.fits, .fit, .fts	FITS
+http://dbpedia.org/resource/XM_(file_format)	.xm	XM (file format)
+http://dbpedia.org/resource/VCard	.vcf, .vcard	VCard
+http://dbpedia.org/resource/Advanced_Systems_Format	.asf .wma .wmv	Advanced Systems Format
+http://dbpedia.org/resource/Shar	.shar	Shar
+http://dbpedia.org/resource/BMP_file_format	.bmp, .dib	BMP file format
+http://dbpedia.org/resource/Portable_Game_Notation	.pgn	Portable Game Notation
+http://dbpedia.org/resource/JAR_(file_format)	.jar	JAR (file format)
+http://dbpedia.org/resource/Truevision_TGA	.tpic	Truevision TGA
+http://dbpedia.org/resource/ICalendar	.ical; .ics; .ifb	ICalendar
+http://dbpedia.org/resource/Layered_Image_File_Format	.liff	Layered Image File Format
+http://dbpedia.org/resource/Web_Ontology_Language	.owx, .owl, .rdf	Web Ontology Language
+http://dbpedia.org/resource/Exchangeable_image_file_format	.JPG, .TIF, .WAV	Exchangeable image file format
+http://dbpedia.org/resource/DOC_(computing)	.doc	DOC (computing)
+http://dbpedia.org/resource/RAR	.rar, .rev, .r00, .r01	RAR
+http://dbpedia.org/resource/Cabinet_(file_format)	.cab	Cabinet (file format)
+http://dbpedia.org/resource/DGCA_(computing)	.dgc	DGCA (computing)
+http://dbpedia.org/resource/Truevision_TGA	.tga	Truevision TGA
+http://dbpedia.org/resource/GEDCOM	.ged	GEDCOM
+http://dbpedia.org/resource/Advanced_Stream_Redirector	.asx	Advanced Stream Redirector
+http://dbpedia.org/resource/ICalendar	.icalendar	ICalendar
+http://dbpedia.org/resource/ISO_image	.iso	ISO image
+http://dbpedia.org/resource/Computer_Graphics_Metafile	.cgm	Computer Graphics Metafile
+http://dbpedia.org/resource/Vector_Markup_Language	.htm or .html	Vector Markup Language
+http://dbpedia.org/resource/COFF	.o	COFF
+http://dbpedia.org/resource/XCOFF	.o	XCOFF
+http://dbpedia.org/resource/PICT	.pict, .pct, .pic	PICT
+http://dbpedia.org/resource/Extended_Vector_Animation	.eva	Extended Vector Animation
+http://dbpedia.org/resource/ICO_(file_format)	CUR	ICO (file format)
+http://dbpedia.org/resource/Deb_(file_format)	.deb	Deb (file format)
+http://dbpedia.org/resource/StuffIt	.sitx	StuffIt
+http://dbpedia.org/resource/Open_Financial_Exchange	.ofx	Open Financial Exchange
+http://dbpedia.org/resource/StuffIt	.sit	StuffIt
+http://dbpedia.org/resource/PostScript_Printer_Description	.ppd	PostScript Printer Description
+http://dbpedia.org/resource/Quicken_Interchange_Format	.qif	Quicken Interchange Format
+http://dbpedia.org/resource/.nfo	.nfo	.nfo
+http://dbpedia.org/resource/Nullsoft_Streaming_Video	.nsv	Nullsoft Streaming Video
+http://dbpedia.org/resource/ActionScript	.as	ActionScript
+http://dbpedia.org/resource/Parchive	.par, .par2, .par3, pa3, .p??	Parchive
+http://dbpedia.org/resource/Comma-separated_values	.csv or .txt	Comma-separated values
+http://dbpedia.org/resource/X_PixMap	.xpm	X PixMap
+http://dbpedia.org/resource/DOS_MZ_executable	.exe	DOS MZ executable
+http://dbpedia.org/resource/EXE	.exe	EXE
+http://dbpedia.org/resource/Atom_(standard)	.atom, .xml	Atom (standard)
+http://dbpedia.org/resource/Simple_file_verification	.sfv	Simple file verification
+http://dbpedia.org/resource/COM_file	.COM	COM file
+http://dbpedia.org/resource/OpenDocument	.ods, .fods	OpenDocument
+http://dbpedia.org/resource/OpenDocument	.odg, .fodg	OpenDocument
+http://dbpedia.org/resource/Smacker_video	.smk	Smacker video
+http://dbpedia.org/resource/XSL_Formatting_Objects	.xml	XSL Formatting Objects
+http://dbpedia.org/resource/Extensible_Application_Markup_Language	.xaml	Extensible Application Markup Language
+http://dbpedia.org/resource/ASP.NET	.aspx	ASP.NET
+http://dbpedia.org/resource/XCF_(file_format)	.xcf	XCF (file format)
+http://dbpedia.org/resource/Mach-O	.o, .dylib	Mach-O
+http://dbpedia.org/resource/OPML	.opml	OPML
+http://dbpedia.org/resource/.dwg	.dwg	.dwg
+http://dbpedia.org/resource/Musepack	.mpc, .mp+, .mpp	Musepack
+http://dbpedia.org/resource/DjVu	.djvu, .djv	DjVu
+http://dbpedia.org/resource/OpenDocument	.odt, .fodt	OpenDocument
+http://dbpedia.org/resource/OpenDocument	.odp, .fodp	OpenDocument
+http://dbpedia.org/resource/SWF	.swf	SWF
+http://dbpedia.org/resource/Chemical_Markup_Language	.cml	Chemical Markup Language
+http://dbpedia.org/resource/GPS_eXchange_Format	.gpx	GPS eXchange Format
+http://dbpedia.org/resource/MARC_standards	.mrc, .marc	MARC standards
+http://dbpedia.org/resource/RMVB	.rmvb	RMVB
+http://dbpedia.org/resource/ReStructuredText	.rst	ReStructuredText
+http://dbpedia.org/resource/Java_class_file	.class	Java class file
+http://dbpedia.org/resource/InkML	.ink, .inkml	InkML
+http://dbpedia.org/resource/MOD_(file_format)	.mod	MOD (file format)
+http://dbpedia.org/resource/ART_image_file_format	.art	ART image file format
+http://dbpedia.org/resource/Tiny_Tafel	.tt	Tiny Tafel
+http://dbpedia.org/resource/Adobe_Illustrator_Artwork	.ai	Adobe Illustrator Artwork
+http://dbpedia.org/resource/MXML	.mxml	MXML
+http://dbpedia.org/resource/BinHex	.hqx	BinHex
+http://dbpedia.org/resource/MacBinary	.bin	MacBinary
+http://dbpedia.org/resource/APNG	.png .apng	APNG
+http://dbpedia.org/resource/Adaptive_Multi-Rate_audio_codec	.amr	Adaptive Multi-Rate audio codec
+http://dbpedia.org/resource/LHA_(file_format)	.lzh, .lha	LHA (file format)
+http://dbpedia.org/resource/MHTML	.mht, .mhtml	MHTML
+http://dbpedia.org/resource/GCA_(file_format)	.gca	GCA (file format)
+http://dbpedia.org/resource/Blorb	.blorb, .blb, .gblorb, .glb, .zblorb, .zlb	Blorb
+http://dbpedia.org/resource/QuickTime_VR	.qtvr	QuickTime VR
+http://dbpedia.org/resource/Digital_Negative	.dng	Digital Negative
+http://dbpedia.org/resource/Wireless_Application_Protocol_Bitmap_Format	.wbmp	Wireless Application Protocol Bitmap Format
+http://dbpedia.org/resource/TTA_(codec)	.tta	TTA (codec)
+http://dbpedia.org/resource/Adaptive_Multi-Rate_Wideband	.awb	Adaptive Multi-Rate Wideband
+http://dbpedia.org/resource/JBIG	.jbg, .jbig	JBIG
+http://dbpedia.org/resource/WavPack	.wv	WavPack
+http://dbpedia.org/resource/S5_(file_format)	.xhtml, .html	S5 (file format)
+http://dbpedia.org/resource/Opera_Show_Format	.xhtml, .html	Opera Show Format
+http://dbpedia.org/resource/VOB	.VOB	VOB
+http://dbpedia.org/resource/Windows_Installer	.msi, .msp	Windows Installer
+http://dbpedia.org/resource/Qualcomm_code-excited_linear_prediction	.qcp	Qualcomm code-excited linear prediction
+http://dbpedia.org/resource/QCP	.qcp	QCP
+http://dbpedia.org/resource/MapInfo_Interchange_Format	.mif	MapInfo Interchange Format
+http://dbpedia.org/resource/Management_Information_Format	.mif	Management Information Format
+http://dbpedia.org/resource/XBRL	.xbrl, .xml	XBRL
+http://dbpedia.org/resource/M3U	.m3u or .m3u8 if UTF-8	M3U
+http://dbpedia.org/resource/PLS_(file_format)	.pls	PLS (file format)
+http://dbpedia.org/resource/Personal_Storage_Table	.pst	Personal Storage Table
+http://dbpedia.org/resource/ACE_(file_format)	.ace	ACE (file format)
+http://dbpedia.org/resource/NZB	.nzb	NZB
+http://dbpedia.org/resource/JHTML	.jhtml	JHTML
+http://dbpedia.org/resource/X_BitMap	.xbm	X BitMap
+http://dbpedia.org/resource/Linear_pulse-code_modulation	.L16, .WAV, .AIFF, .AU, .PCM	Linear pulse-code modulation
+http://dbpedia.org/resource/XML_Resource	.xrc	XML Resource
+http://dbpedia.org/resource/XPInstall	.xpi	XPInstall
+http://dbpedia.org/resource/DVR-MS	.DVR-MS	DVR-MS
+http://dbpedia.org/resource/COLLADA	.dae	COLLADA
+http://dbpedia.org/resource/MPEG_transport_stream	.ts	MPEG transport stream
+http://dbpedia.org/resource/ARC_(file_format)	.arc, .ark, .sue	ARC (file format)
+http://dbpedia.org/resource/Chemical_table_file	.mol, .sd, .sdf	Chemical table file
+http://dbpedia.org/resource/JSON	.json	JSON
+http://dbpedia.org/resource/TeX_font_metric	.tfm	TeX font metric
+http://dbpedia.org/resource/Wavefront_.obj_file	.obj	Wavefront .obj file
+http://dbpedia.org/resource/Relocatable_Object_Module_Format	.obj	Relocatable Object Module Format
+http://dbpedia.org/resource/Multimedia_Container_Format	.mcf, .av.mcf, .audio.mcf, .video.mcf	Multimedia Container Format
+http://dbpedia.org/resource/Wavefront_.obj_file	.mtl	Wavefront .obj file
+http://dbpedia.org/resource/Zoo_(file_format)	.zoo	Zoo (file format)
+http://dbpedia.org/resource/Microsoft_Compiled_HTML_Help	.chm	Microsoft Compiled HTML Help
+http://dbpedia.org/resource/WinHelp	.hlp	WinHelp
+http://dbpedia.org/resource/Open_eBook	.opf	Open eBook
+http://dbpedia.org/resource/Bink_Video	.bik	Bink Video
+http://dbpedia.org/resource/XML_Shareable_Playlist_Format	.xspf	XML Shareable Playlist Format
+http://dbpedia.org/resource/File_shortcut	.lnk	File shortcut
+http://dbpedia.org/resource/ICO_(file_format)	.ico	ICO (file format)
+http://dbpedia.org/resource/Dynamic-link_library	.dll	Dynamic-link library
+http://dbpedia.org/resource/Keyhole_Markup_Language	.kml, .kmz	Keyhole Markup Language
+http://dbpedia.org/resource/LDAP_Data_Interchange_Format	.ldif	LDAP Data Interchange Format
+http://dbpedia.org/resource/Microsoft_Reader	.lit	Microsoft Reader
+http://dbpedia.org/resource/SpreadsheetML	.XML	SpreadsheetML
+http://dbpedia.org/resource/Microsoft_Office_XML_formats	.XML	Microsoft Office XML formats
+http://dbpedia.org/resource/STL_(file_format)	.stl	STL (file format)
+http://dbpedia.org/resource/MDF_and_MDS_file_pair	.mdf	MDF and MDS file pair
+http://dbpedia.org/resource/Property_list	.plist	Property list
+http://dbpedia.org/resource/Tab-separated_values	.tsv, .tab	Tab-separated values
+http://dbpedia.org/resource/APP_(file_format)	.app	APP (file format)
+http://dbpedia.org/resource/Flash_Video	.flv, .f4v, .f4p, .f4a, .f4b	Flash Video
+http://dbpedia.org/resource/Torrent_file	.torrent	Torrent file
+http://dbpedia.org/resource/Unified_Emulator_Format	.uef	Unified Emulator Format
+http://dbpedia.org/resource/SubRip	.srt	SubRip
+http://dbpedia.org/resource/Open_XML_Paper_Specification	.oxps, .xps	Open XML Paper Specification
+http://dbpedia.org/resource/QuickTime_File_Format	.mov, .qt	QuickTime File Format
+http://dbpedia.org/resource/Shapefile	.shp, .shx, .dbf	Shapefile
+http://dbpedia.org/resource/MrSID	.sid	MrSID
+http://dbpedia.org/resource/New_Executable	.exe, .dll	New Executable
+http://dbpedia.org/resource/SubStation_Alpha	.ssa, .ass	SubStation Alpha
+http://dbpedia.org/resource/Cpio	.cpio	Cpio
+http://dbpedia.org/resource/A.out	.o, .so	A.out
+http://dbpedia.org/resource/ECOFF	.o, .so	ECOFF
+http://dbpedia.org/resource/Internet_Low_Bit_Rate_Codec	.lbc	Internet Low Bit Rate Codec
+http://dbpedia.org/resource/Notation3	.n3	Notation3
+http://dbpedia.org/resource/Raw_image_format	.nef, .nrw,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.eip, .erf,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.k25, .kdc,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.obm, .orf,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.crw, .cr2, .cap,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.mef, .mos, .mrw,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.pef, .ptx, .pxn,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.ari, .arw,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.bay,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.dcs, .dcr, .dng, .drf,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.fff,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.iiq,	Raw image format
+http://dbpedia.org/resource/Raw_image_format	.x3f	Raw image format
+http://dbpedia.org/resource/M4V	.m4v	M4V
+http://dbpedia.org/resource/Apple_Icon_Image_format	.icns	Apple Icon Image format
+http://dbpedia.org/resource/ECW_(file_format)	.ecw	ECW (file format)
+http://dbpedia.org/resource/.properties	.properties	.properties
+http://dbpedia.org/resource/NetWare_Loadable_Module	.nlm	NetWare Loadable Module
+http://dbpedia.org/resource/Rich_Text_Format_Directory	.rtfd	Rich Text Format Directory
+http://dbpedia.org/resource/CloneCD_Control_File	.ccd	CloneCD Control File
+http://dbpedia.org/resource/MicroDVD	.sub	MicroDVD
+http://dbpedia.org/resource/Windows_Imaging_Format	.wim .swm	Windows Imaging Format
+http://dbpedia.org/resource/Direct_Access_Archive	.daa	Direct Access Archive
+http://dbpedia.org/resource/Design_Web_Format	.dwf, .dwfx	Design Web Format
+http://dbpedia.org/resource/CorelDRAW	.cdr	CorelDRAW
+http://dbpedia.org/resource/Sol_(format)	.sol	Sol (format)
+http://dbpedia.org/resource/SQX	.sqx	SQX
+http://dbpedia.org/resource/ANI_(file_format)	.ani	ANI (file format)
+http://dbpedia.org/resource/SBML	.xml, .sbml	SBML
+http://dbpedia.org/resource/Windows_Media_Station	.nsc	Windows Media Station
+http://dbpedia.org/resource/Image_Cytometry_Standard	.ics, .ids	Image Cytometry Standard
+http://dbpedia.org/resource/Caltech_Intermediate_Form	.cif	Caltech Intermediate Form
+http://dbpedia.org/resource/AMV_video_format	.amv, .mtv	AMV video format
+http://dbpedia.org/resource/Joint_Committee_on_Atomic_and_Molecular_Physical_Data	.jdx, .dx	Joint Committee on Atomic and Molecular Physical Data
+http://dbpedia.org/resource/LRC_(file_format)	.lrc	LRC (file format)
+http://dbpedia.org/resource/HTML_Application	.hta	HTML Application
+http://dbpedia.org/resource/JAD_(file_format)	.jad	JAD (file format)
+http://dbpedia.org/resource/Silicon_Graphics_Image	.sgi	Silicon Graphics Image
+http://dbpedia.org/resource/Protein_Data_Bank_(file_format)	.pdb, .ent, .brk	Protein Data Bank (file format)
+http://dbpedia.org/resource/FictionBook	fb2, fb2.zip	FictionBook
+http://dbpedia.org/resource/JPEG_XR	.hdp, .jxr, .wdp	JPEG XR
+http://dbpedia.org/resource/SCXML	.scxml	SCXML
+http://dbpedia.org/resource/SNP_file_format	.snp	SNP file format
+http://dbpedia.org/resource/CCP4_(file_format)	.ccp4	CCP4 (file format)
+http://dbpedia.org/resource/Microsoft_Document_Imaging_Format	.mdi	Microsoft Document Imaging Format
+http://dbpedia.org/resource/Windows_Media_Player_Playlist	.wpl	Windows Media Player Playlist
+http://dbpedia.org/resource/.pkg	.pkg	.pkg
+http://dbpedia.org/resource/GRAMPS	.gpkg	GRAMPS
+http://dbpedia.org/resource/GRAMPS	.gramps	GRAMPS
+http://dbpedia.org/resource/.CSO	.cso	.CSO
+http://dbpedia.org/resource/Envoy_(WordPerfect)	.evy	Envoy (WordPerfect)
+http://dbpedia.org/resource/Windows_Script_File	.wsf	Windows Script File
+http://dbpedia.org/resource/Program_database	.pdb	Program database
+http://dbpedia.org/resource/ACT_(audio_format)	.act	ACT (audio format)
+http://dbpedia.org/resource/MapInfo_TAB_format	.tab	MapInfo TAB format
+http://dbpedia.org/resource/MRC_(file_format)	.mrc	MRC (file format)
+http://dbpedia.org/resource/Comic_book_archive	.cbr, .cbz, .cbt, .cba, .cb7	Comic book archive
+http://dbpedia.org/resource/Webarchive	.webarchive	Webarchive
+http://dbpedia.org/resource/Turtle_(syntax)	.ttl	Turtle (syntax)
+http://dbpedia.org/resource/Camera_Image_File_Format	.crw	Camera Image File Format
+http://dbpedia.org/resource/FlashPix	.fpx	FlashPix
+http://dbpedia.org/resource/ORF_format	.orf	ORF format
+http://dbpedia.org/resource/Cascading_Style_Sheets	.css	Cascading Style Sheets
+http://dbpedia.org/resource/VMDK	.vmdk	VMDK
+http://dbpedia.org/resource/SYBYL_line_notation	.sln	SYBYL line notation
+http://dbpedia.org/resource/SAMI	.smi, .sami	SAMI
+http://dbpedia.org/resource/Embedded_OpenType	.eot	Embedded OpenType
+http://dbpedia.org/resource/MPEG_program_stream	.mpg, .mpeg, .ps	MPEG program stream
+http://dbpedia.org/resource/MDF_and_MDS_file_pair	.mds	MDF and MDS file pair
+http://dbpedia.org/resource/VHD_(file_format)	.vhd	VHD (file format)
+http://dbpedia.org/resource/RIS_(file_format)	.ris	RIS (file format)
+http://dbpedia.org/resource/Uniform_Office_Format	.uof, .uot, .uos, .uop	Uniform Office Format
+http://dbpedia.org/resource/HTML5	.xhtml, .xht, .xml, .html, .htm	HTML5
+http://dbpedia.org/resource/Drawn_File	.drw	Drawn File
+http://dbpedia.org/resource/Core_Audio_Format	.caf	Core Audio Format
+http://dbpedia.org/resource/MPEG-1_Audio_Layer_I	.mp1	MPEG-1 Audio Layer I
+http://dbpedia.org/resource/Extensible_Forms_Description_Language	.xfdl	Extensible Forms Description Language
+http://dbpedia.org/resource/OMDoc	.omdoc	OMDoc
+http://dbpedia.org/resource/VivoActive	viv	VivoActive
+http://dbpedia.org/resource/Windows_Contacts	.contact	Windows Contacts
+http://dbpedia.org/resource/Xar_(archiver)	.xar	Xar (archiver)
+http://dbpedia.org/resource/Silo_(library)	.silo	Silo (library)
+http://dbpedia.org/resource/RGBE_image_format	.hdr	RGBE image format
+http://dbpedia.org/resource/MOI_(file_format)	.moi	MOI (file format)
+http://dbpedia.org/resource/SXML	.sxml, .scm	SXML
+http://dbpedia.org/resource/EPUB	.epub	EPUB
+http://dbpedia.org/resource/Computable_Document_Format	.cdf	Computable Document Format
+http://dbpedia.org/resource/Sparse_image	.sparseimage	Sparse image
+http://dbpedia.org/resource/CPT_(file_format)	.cpt	CPT (file format)
+http://dbpedia.org/resource/FicML	.ficml	FicML
+http://dbpedia.org/resource/SIS_(file_format)	.sis, .sisx	SIS (file format)
+http://dbpedia.org/resource/MBM_(file_format)	.mbm	MBM (file format)
+http://dbpedia.org/resource/Microsoft_Office_XML_formats	.VDX ,	Microsoft Office XML formats
+http://dbpedia.org/resource/FBX	.fbx	FBX
+http://dbpedia.org/resource/Xz	.xz	Xz
+http://dbpedia.org/resource/ArcXML	.axl	ArcXML
+http://dbpedia.org/resource/MAP_(file_format)	.map	MAP (file format)
+http://dbpedia.org/resource/Lzip	.lz	Lzip
+http://dbpedia.org/resource/WebM	.webm	WebM
+http://dbpedia.org/resource/XLIFF	.xlf	XLIFF
+http://dbpedia.org/resource/SQL_Server_Compact	.sdf	SQL Server Compact
+http://dbpedia.org/resource/WebP	.webp	WebP
+http://dbpedia.org/resource/Dalvik_(software)	.dex	Dalvik (software)
+http://dbpedia.org/resource/WWF_(file_format)	.wwf	WWF (file format)
+http://dbpedia.org/resource/.VQA	.vqa	.VQA
+http://dbpedia.org/resource/Progressive_Graphics_File	.pgf	Progressive Graphics File
+http://dbpedia.org/resource/SOAP_Service_Description_Language	.ssdl	SOAP Service Description Language
+http://dbpedia.org/resource/OpenRaster	.ora	OpenRaster
+http://dbpedia.org/resource/GENDEX	gendex.txt	GENDEX
+http://dbpedia.org/resource/EAS3	.eas	EAS3
+http://dbpedia.org/resource/Web_Open_Font_Format	.woff	Web Open Font Format
+http://dbpedia.org/resource/XProc	.xpl	XProc
+http://dbpedia.org/resource/APK_(file_format)	.apk	APK (file format)
+http://dbpedia.org/resource/OpenXDF	.xdf	OpenXDF
+http://dbpedia.org/resource/XML_Data_Package	.xdp	XML Data Package
+http://dbpedia.org/resource/Batch_file	.bat .cmd .btm	Batch file
+http://dbpedia.org/resource/QFX_(file_format)	.qfx	QFX (file format)
+http://dbpedia.org/resource/N-Triples	.nt	N-Triples
+http://dbpedia.org/resource/AXR	.hss .xml	AXR
+http://dbpedia.org/resource/CGNS	cgns	CGNS
+http://dbpedia.org/resource/ExifTool	.mie	ExifTool
+http://dbpedia.org/resource/Website_Parse_Template	.icdl	Website Parse Template
+http://dbpedia.org/resource/.m2ts	.m2ts, .MTS	.m2ts
+http://dbpedia.org/resource/XDMF	xmf, xdmf	XDMF
+http://dbpedia.org/resource/CDXML	.cdxml	CDXML
+http://dbpedia.org/resource/CDX_Format	.cdx	CDX Format
+http://dbpedia.org/resource/MT9	.mt9	MT9
+http://dbpedia.org/resource/XHTML	.xhtml, .xht,	XHTML
+http://dbpedia.org/resource/XHTML+RDFa	.xhtml, .xht,	XHTML+RDFa
+http://dbpedia.org/resource/MODCA	.mda, .ica, .mmr, .mca	MODCA
+http://dbpedia.org/resource/XHTML	.xml, .html, .htm	XHTML
+http://dbpedia.org/resource/XHTML+RDFa	.xml, .html, .htm	XHTML+RDFa
+http://dbpedia.org/resource/NetCDF	.nc, .cdf	NetCDF
+http://dbpedia.org/resource/REDCODE	.RDM	REDCODE
+http://dbpedia.org/resource/REDCODE	.R3D	REDCODE
+http://dbpedia.org/resource/REDCODE	.RDC	REDCODE
+http://dbpedia.org/resource/REDCODE	.R3D, .MOV, .rsx	REDCODE
+http://dbpedia.org/resource/REDCODE	.rsx	REDCODE
+http://dbpedia.org/resource/Hina-Di	.di	Hina-Di
+http://dbpedia.org/resource/SILK	.sil, .SIL	SILK
+http://dbpedia.org/resource/BSON	.bson	BSON
+http://dbpedia.org/resource/General_Exchange_Format	.gxf	General Exchange Format
+http://dbpedia.org/resource/Web_Services_Description_Language	.wsdl	Web Services Description Language
+http://dbpedia.org/resource/Question_Object_File_Format	.quox, .quiz	Question Object File Format
+http://dbpedia.org/resource/Office_Open_XML_file_formats	.docx, .docm	Office Open XML file formats
+http://dbpedia.org/resource/Office_Open_XML_file_formats	.pptx, .pptm	Office Open XML file formats
+http://dbpedia.org/resource/Office_Open_XML_file_formats	.xlsx, .xlsm	Office Open XML file formats
+http://dbpedia.org/resource/ActivePresentation	.ppt, .pptx, .pps, .ppsx, .pptm, .ppsm, .apt, .aptm	ActivePresentation
+http://dbpedia.org/resource/OpenDRIVE_(specification)	.xodr	OpenDRIVE (specification)
+http://dbpedia.org/resource/Rpmsg	.rpmsg	Rpmsg
+http://dbpedia.org/resource/Adobe_SWC_file	.swc	Adobe SWC file
+http://dbpedia.org/resource/EGG_(file_compression)	.egg	EGG (file compression)
+http://dbpedia.org/resource/QML	.qml	QML
+http://dbpedia.org/resource/Twitter_Markup_Language	.tml	Twitter Markup Language
+http://dbpedia.org/resource/CFS_(Compact_File_Set_file_format)	.cfs	CFS (Compact File Set file format)
+http://dbpedia.org/resource/Apple_Disk_Image	.dmg, .smi, .img	Apple Disk Image
+http://dbpedia.org/resource/RoadXML	.rnd	RoadXML
+http://dbpedia.org/resource/Cache_manifest_in_HTML5	.appcache	Cache manifest in HTML5
+http://dbpedia.org/resource/Microsoft_ASP.NET_Razor_view_engine	.CSHTML, .VBHTML	Microsoft ASP.NET Razor view engine
+http://dbpedia.org/resource/Additive_Manufacturing_File_Format	.amf	Additive Manufacturing File Format
+http://dbpedia.org/resource/Mallard_(documentation)	.page	Mallard (documentation)
+http://dbpedia.org/resource/WTV_(Windows_Recorded_TV_Show)	.wtv	WTV (Windows Recorded TV Show)
+http://dbpedia.org/resource/JSON-LD	.jsonld	JSON-LD
