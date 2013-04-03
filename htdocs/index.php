@@ -132,7 +132,7 @@ if( $format == "html" )
 
 		$sections = array( 
 			array( "Classes", "rdfs:Class", "classes" ),
-			array( "Properties", "rdfs:Property", "properties" ),
+			array( "Properties", "rdf:Property", "properties" ),
 			array( "Datatypes", "rdfs:Datatype", "datatypes" ),
 			array( "Concepts", "skos:Concept", "concepts" ),
 		);
@@ -246,7 +246,7 @@ function addVocabTrips( &$graph )
 	$tmap = array(
 		""=>"skos:Concept",
 		"c"=>"rdfs:Class",	
-		"p"=>"rdfs:Property",
+		"p"=>"rdf:Property",
 		"d"=>"rdfs:Datatype" );
 	foreach( $lines as $line )
 	{
@@ -387,6 +387,9 @@ function addURITrips( &$graph, $uri )
 		$graph->addCompressedTriple( "uri:$uri", "occult:correspondsTo", $thing_uri );
 		$graph->addCompressedTriple( $thing_uri, "rdfs:label", $thing_name, "literal" );
 	}
+	$col_uri = "http://cold.aksw.org/rdf.php?iri=".rawurlencode($uri);
+	$graph->addCompressedTriple( "uri:$uri", "rdfs:seeAlso", $col_uri );
+	$graph->addCompressedTriple( $col_uri, "rdf:type", "foaf:Document" );
 }
 
 function addHTTPSchemeTrips( &$graph, $uri )
@@ -735,6 +738,7 @@ function addExtraVocabTrips( &$graph )
 "geo:long	p	longitude",
 "occult:correspondsTo	p	corresponds to",
 "dcterms:description	p	description",
+"rdfs:seeAlso	p	see also",
 
 "xsd:float	d	Floating-point number",
 "xsd:positiveInteger	d	Postitive Integer",
@@ -744,13 +748,13 @@ function addExtraVocabTrips( &$graph )
 "skos:Concept	c	Concept",
 "http://dbpedia.org/ontology/Country	c	Country",
 "rdfs:Class	c	Class",
-"rdfs:Property	c	Property",
+"rdf:Property	c	Property",
 "rdfs:Datatype	c	Datatype",
 );
 	$tmap = array(
 		""=>"skos:Concept",
 		"c"=>"rdfs:Class",	
-		"p"=>"rdfs:Property",
+		"p"=>"rdf:Property",
 		"d"=>"rdfs:Datatype" );
 	foreach( $lines as $line )
 	{

@@ -61,7 +61,7 @@ $(document).ready( function() {
 	blur();
 } );
 </script>
-<div style='float: right; width: 30%; margin: 0 0 1em 1em; margin-top:2em'>
+<div style='float: right; width: 30%; margin: 0 0 1em 1em; margin-top:3em'>
 <div class='class'>
 <div class='class' style='background-color:#EEFFEE'>
 <div class='classLabel' style='background-color: #DDEEDD;'>Praise for uri4uri.net</div>
@@ -72,7 +72,11 @@ $(document).ready( function() {
 of linked data at one fell swoop, at the same time it makes the linked data cloud so much
 bigger, at a time when external observers could be forgiven for
 wondering the the the linked data explosion might be tapering off."</p>
-<p style='text-align:right'>Professor Sir Tim Berners-Lee,<br /><a href='http://lists.w3.org/Archives/Public/public-lod/2013Apr/0014.html'>public-lod mailing list</a></p>
+<div style='text-align:right'>
+<a href='http://lists.w3.org/Archives/Public/public-lod/2013Apr/0014.html'>Professor Sir Tim Berners-Lee</a><br />
+<span style='font-size:65%'>performer in London 2012 Olympics Opening Ceremony,<br />and computer programmer</span>
+</div>
+
 </div>
 </div>
 </div>
@@ -115,11 +119,11 @@ Figure 1. Comparison in size between uri4uri &amp; conventional linked data
 <a href='http://uri4uri.net/uri/tel:+2035989395'>tel:</a> or 
 <a href='http://uri4uri.net/uri/secondlife://Ancient%20Ireland/167/153'>secondlife:</a>.</p>
 <h3>Why are URIs with a fragment handled differently?</h3>
-<p>By definition nothing in a URI after a '#' is sent to the server. To make a resolvable URI about a URI with a # it must be encoded. We took the decision to use standard URL encoding on URIs placed after http://uri4uri.net/fragment/ but not http://uri4uri.net/fragment/. While this is a little inconsistent, it does mean that the majority of uri4uri URIs can be written without encoding, eg. a youtube video URL with no "#" would just be identified by 
-<a href="http://uri4uri.net/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ">http://uri4uri.net/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ</a> but the URI for http://www.w3.org/2004/02/skos/core#notation will be written as <a href='http://uri4uri.net/fragment.html/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation'>http://uri4uri.net/fragment.html/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation</a>.</p>
+<p>By definition nothing in a URI after a '#' is sent to the server. To make a resolvable URI about a URI with a # it must be encoded. We took the decision to use standard URL encoding on URIs placed after http://uri4uri.net/fragment/ but not http://uri4uri.net/uri/. While this is a little inconsistent, it does mean that the majority of uri4uri URIs can be written without encoding, eg. a youtube video URL with no "#" would just be identified by 
+<a href="http://uri4uri.net/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ">http://uri4uri.net/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ</a> but the URI for http://www.w3.org/2004/02/skos/core#notation will be written as <a href='http://uri4uri.net/fragment/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation'>http://uri4uri.net/fragment/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation</a>.</p>
 <h3>Is it recursive?</h3>
 <p>Yes, you can look-up uri4uri URIs in uri4uri: 
-<a href='http://uri4uri.net/uri.html/http://uri4uri.net/uri.html/http://uri4uri.net/'>http://uri4uri.net/uri.html/http://uri4uri.net/uri.html/http://uri4uri.net/</a>, but only to a depth of 64, for obvious reasons.</p>
+<a href='http://uri4uri.net/uri/http://uri4uri.net/uri/http://uri4uri.net/'>http://uri4uri.net/uri/http://uri4uri.net/uri/http://uri4uri.net/</a>, but only to a depth of 64, for obvious reasons.</p>
 <h3>Uncool URIs</h3>
 <p>Sir Professor TimBL has said to you "<a href='http://www.w3.org/Provider/Style/URI'>Cool URIs don't change</a>". This implies a sad corollary; "Uncool URIs do sometimes change". You may use the uri4uri URIs to describe your own metadata about a URI, including where, why and by whom it was assigned, and what it was the sameAs at a given moment or interval throughout its existence.</p>
 <p>A good example of this is the <a href='http://en.wikipedia.org/wiki/Paris'>Paris</a> article on the English Wikipedia. Initially this described Paris in Texas, but in 2006 this was changed to describe Paris in France to calm some complaints from Europe. This means that the meaning of the DBPedia URI 
