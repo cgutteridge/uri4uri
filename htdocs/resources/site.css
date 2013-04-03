@@ -57,7 +57,7 @@ table {
   font-family: 'Wellfleet';
   font-style: normal;
   font-weight: 400;
-  src: local('Wellfleet'), local('Wellfleet-Regular'), url(/wellfleet.woff) format('woff');
+  src: local('Wellfleet'), local('Wellfleet-Regular'), url(/resources/wellfleet.woff) format('woff');
 }
 
 

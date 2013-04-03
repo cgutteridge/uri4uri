@@ -1,8 +1,8 @@
 <?php
-require_once( "../arc2/ARC2.php" );
-require_once( "../Graphite/Graphite.php" );
+require_once( "../lib/arc2/ARC2.php" );
+require_once( "../lib/Graphite/Graphite.php" );
 
-$filepath = "/home/uri4uri/htdocs";
+$filepath = "/home/uri4uri/htdocs/data";
 $BASE = "http://uri4uri.net/";
 
 $show_title = true;
@@ -39,12 +39,20 @@ if( preg_match( "/^\/(homedev)?/", $path ) && @$_GET["uri"] )
 	header( "Location: $uri4uri" );
 	exit;
 }
+if( $path == "/aprilfools" )
+{
+	$title = 'uri4uri';
+	$show_title = false;
+	$content = file_get_contents( "ui/aprilfools.html" );
+	require_once( "ui/template.php" );
+	exit;
+}
 if( $path == "/" )
 {
 	$title = 'uri4uri';
 	$show_title = false;
-	$content = file_get_contents( "homepage.html" );
-	require_once( "template.php" );
+	$content = file_get_contents( "ui/homepage.html" );
+	require_once( "ui/template.php" );
 	exit;
 }
 
@@ -174,7 +182,7 @@ if( $format == "html" )
 		$content.= renderResource( $graph, $resource );
 		#$content .= "<div style='font-size:80%'>".$graph->dump()."</div>";
 	}
-	require_once( "template.php" );
+	require_once( "ui/template.php" );
 }
 elseif( $format == "rdf" )
 {
@@ -224,7 +232,7 @@ function serve404()
 	header( "HTTP/1.1 404 Not Found" );
 	$title = "404 Not Found";
 	$content =  "<p>See, it's things like this that are what Ted Nelson was trying to warn you about.</p>";
-	require_once( "template.php" );
+	require_once( "ui/template.php" );
 }
 
 function graphVocab( $id )
@@ -481,7 +489,7 @@ function addDomainTrips( &$graph, $domain )
 	$nowww_actual_domain = $domain;
 	if(substr(strtolower($nowww_actual_domain), 0, 4) == "www."){  $nowww_actual_domain = substr($actual_domain, 4);}
 
-	require_once( "whois.php" );
+	require_once( "../lib/whois.php" );
 	$whoisservers = whoisservers();
 	global $filepath;
 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang='en-gb'>
  <head>
-  <link href='/site.css' rel='stylesheet' type='text/css'>
+  <link href='/resources/site.css' rel='stylesheet' type='text/css'>
   <title><?php print $title; ?></title>
-  <script type='text/javascript' src='/jquery-1.9.1.min.js'></script>
+  <script type='text/javascript' src='/resources/jquery-1.9.1.min.js'></script>
   <meta charset="utf-8" />
  </head>
  <body>
