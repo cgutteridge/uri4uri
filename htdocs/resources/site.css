@@ -139,6 +139,10 @@ a.predicate {
 	font-family: monospace;
 	white-space: pre;
 }
+.code {
+	font-family: monospace;
+	white-space: pre;
+}
 .code-block {
 	font-family: monospace;
 	white-space: pre;
@@ -146,7 +150,7 @@ a.predicate {
 	background-color: #66c;
 	color: #ccf;
 	overflow-x: auto;
-	padding: 1em;
+	padding: 0.5em;
 	margin-bottom:1em;
 	border-radius: 10px;
 }

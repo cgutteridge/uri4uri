@@ -1,6 +1,6 @@
 
+<p style='margin: 2em 0em 2em 0em'>This site was created for fun on April 1st 2013 with a <a href='/aprilfools'>very over-the-top set of claims</a>, however it is a bit useful so we (<a href='http://data.southampton.ac.uk'>University of Southampton Linked Open Data team</a>) will keep it online indefintely.</p>
 <div style='text-align:center;'>
-<p>This site was created for fun on April 1st 2013 with a <a href='/aprilfools'>very over-the-top set of claims</a>, however it is a bit useful so we (<a href='http://data.southampton.ac.uk'>University of Southampton Linked Open Data team</a>) will keep it online indefintely.</p>
 
 <div class='class'>
 <div class='class'>
@@ -75,7 +75,26 @@ $(document).ready( function() {
 <h3>How does it work?</h3>
 <p>It just parses the URI part (using the PHP parse_url command) to get the parts, then uses some lookup tables for information about mime types, top level domains and so forth. This data was taken from IANA and dbpedia.</p>
 
-or the past 3 years our server farm has been working to caculate every possible URI, including <a href="http://uri4uri.net/uri/http://totl.net/">web addresses</a>, <a href="http://uri4uri.net/uri/mailto:webmaster@microsoft.com">email addresses</a>, <a href="http://uri4uri.net/uri/urn:isbn:817224164X">ISBNs</a> and even some support for <a href='http://uri4uri.net/uri/gopher://sdf.org:70/1/computers/apple/mac/hypercard'>Gopher</a>.</p> 
+or the past 3 years our server farm has been working to caculate every possible URI, including 
+<a href="http://uri4uri.net/uri/http%3A%2F%2Ftotl.net%2F">web addresses</a>, 
+<a href="http://uri4uri.net/uri/mailto%3Awebmaster%40microsoft.com">email addresses</a>, 
+<a href="http://uri4uri.net/uri/urn%3Aisbn%3A817224164X">ISBNs</a> and even some basic information on more obscure schemes such as
+<a href="http://uri4uri.net/uri/gopher%3A%2F%2Fsdf.org%3A70%2F1%2Fcomputers%2Fapple%2Fmac%2Fhypercard">Gopher</a>.</p> 
+
+<h3>URIs</h3>
+
+<p>The URIs on this site are in the format:</p>
+<p class='code'>http://uri4uri.net/&lt;type&gt;/&lt;identifier&gt;</p>
+<p>...where &lt;type&gt; is one of uri, scheme, domain, mime, suffix.</p>
+<p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF+XML or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, nt, html. These have URLs in the following formats:</p>
+<p class='code'>http://uri4uri.net/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</p>
+<p>Examples:</p>
+<p><a style='font-family:monospace' href='http://uri4uri.net/uri/http%3A%2F%2Fxkcd.com%2F123%2F'>http://uri4uri.net/uri/http%3A%2F%2Fxkcd.com%2F123%2F</a> - URI for  "http://xkcd.com/123/"<br />
+<a style='font-family:monospace' href='http://uri4uri.net/domain/totl.net'>http://uri4uri.net/domain/totl.net</a> - URI for the domain "totl.net"<br />
+<a style='font-family:monospace' href='http://uri4uri.net/suffix/pdf'>http://uri4uri.net/suffix/pdf</a> - URI for the suffix ".pdf"<br />
+<a style='font-family:monospace' href='http://uri4uri.net/scheme/ftp'>http://uri4uri.net/scheme/ftp</a> - URI for the URI scheme "ftp"<br />
+<a style='font-family:monospace' href='http://uri4uri.net/mime/text/plain'>http://uri4uri.net/mime/text/plain</a> - URI for the MIME Type "text/plain"
+</p>
 
 <h3>How big is it?</h3>
 <p>The results are generated on the fly, so this question is invalid. The answer is either zero or virtually infinite, depending on your point of view.</p>
@@ -131,6 +150,9 @@ _:b4
 
 <p>This, of course, assumes that owl:sameAs had the same definition in 2006. It is possible that an additional layer of abstraction is requred to allow a single statement to include URIs meanings from different dates. This work will depend on securing future funding.</p>
 -->
+<h3>Can I see the source code?</h3>
+<p>Sure, you can find the <a href='https://github.com/cgutteridge/uri4uri'>uri4uri source on github.com</a></p>
+
 <h3>Who are uri4uri.net?</h3>
 <p>This service has been conceived, created and maintained by <a href='http://users.ecs.soton.ac.uk/cjg'>Christopher Gutteridge</a>, a member of the University of Southampton Open Data team and founder of <a href='http://www.data.ac.uk'>data.ac.uk</a></p>
 <h3>How do we contact you?</h3>

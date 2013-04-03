@@ -1,0 +1,11 @@
+Live site: http://uri4uri.net/
+
+Source: https://github.com/cgutteridge/uri4uri
+
+Creator: Christopher Gutteridge <cjg@ecs.soton.ac.uk>
+
+This site was created as an April Fools joke, but it's actually
+quite nice code, so placed on github in case it's useful to people.
+
+To make it work you'll need to install Graphite & ARC2 in the lib
+folder.

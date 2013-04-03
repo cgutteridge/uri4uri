@@ -207,8 +207,9 @@ elseif( $format == "debug" )
 }
 else
 {
-	print "Weird error";
+	print "Unknown format (this can't happen)"; 
 }
+exit;
 
 
 function initGraph()

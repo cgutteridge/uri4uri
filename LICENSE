@@ -1,0 +1,12 @@
+This software is GPLv2. This applies to the following files:
+ htdocs/ui/aprilfools.html
+ htdocs/ui/template.php
+ htdocs/ui/homepage.html
+ htdocs/index.php
+ htdocs/resources/site.css
+ 
+The contents of the htdocs/data directory was built from data from dbpedia, IANA and various other sources. 
+
+The contents of the "munge" directory is an unholy horror of data munging done in haste. Here be dragons.
+
+
