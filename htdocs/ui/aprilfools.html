@@ -1,0 +1,178 @@
+
+<div class='class' style='margin-top:2em'>
+<div class='class' style='background-color:#FFFFcc'>
+<div class='classLabel' style='background-color:#FFDDcc'>April Fools!</div>
+<div class='class2'>
+This site was created by <a href='http://users.ecs.soton.ac.uk/people/cjg'>Christopher Gutteridge</a> (University of Southampton) for April 1st 2013. The below description is intended as humour, but the basic site remains as it's actually a bit useful so I'm going to rewrite it without the daft bits. You can read the discussion on the <a href='http://lists.w3.org/Archives/Public/public-lod/2013Apr/0000.html'>public-lod mailing list archive</a>. 
+</div>
+</div>
+</div>
+
+<div style='text-align:center;'>
+<p class='headline' style='margin:1em 0em 2em 0em'>"The single most important development in the history of the Semantic Web"</p>
+<p style='margin:0 auto 2em auto;width:80%'>uri4uri provides resolvable URIs to represent any URI. This is a major breakthrough in how the web works. This service will enable a raft of advances in web technology. Our database contains many useful facts about <i>every</i> URI.</p>
+<div class='class'>
+<div class='class'>
+<div class='classLabel'>Generate a URI for a URI</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" style='padding:4px;width:80%;border-radius:5px' name='uri' id='uri' value='' /> 
+</form>
+<div id='resultBlock' style='margin-top: 1em'>The URI for this URI is:<div id='result' style='margin-top:0.5em'></div></div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+$(document).ready( function() {
+	var default_text = "Enter any URI or URL";
+	var uri = $('#uri');
+	if( uri.val() == default_text )
+	{
+		uri.css( "color", "#999" );
+	}
+	uri.focus( function() {
+		uri.css( "color", "#000" );
+		if( uri.val() == default_text )
+		{
+			uri.val( "" );
+		}
+	} );
+ 	function blur() {
+		if( uri.val() == "" )
+		{
+			uri.val( default_text );
+		}
+		if( uri.val() == default_text )
+		{
+			uri.css( "color", "#999" );
+		}
+	}
+	function keyup() {
+		if( uri.val() == default_text || uri.val() == "" )
+		{
+			$('#resultBlock').hide();
+			return;
+		}
+			
+		uri4uri = "http://uri4uri.net/uri/"+uri.val();
+		if( /#/.test( uri.val() ) )
+		{
+			uri4uri = "http://uri4uri.net/fragment/"+encodeURIComponent(uri.val());
+		}
+		$('#result').html("<a href='"+uri4uri+"'>"+uri4uri+"</a>" );
+		$('#resultBlock').show();
+	}
+	uri.blur( blur );
+	uri.keyup( keyup );
+	keyup();
+	blur();
+} );
+</script>
+<div style='float: right; width: 30%; margin: 0 0 1em 1em; margin-top:3em'>
+<div class='class'>
+<div class='class' style='background-color:#EEFFEE'>
+<div class='classLabel' style='background-color: #DDEEDD;'>Praise for uri4uri.net</div>
+<div class='class2'>
+<p style='font-style:italic'>"At last!</p>
+
+<p style='font-style:italic'>Indeed -- not only does it solve all the core problems 
+of linked data at one fell swoop, at the same time it makes the linked data cloud so much
+bigger, at a time when external observers could be forgiven for
+wondering the the the linked data explosion might be tapering off."</p>
+<div style='text-align:right'>
+<a href='http://lists.w3.org/Archives/Public/public-lod/2013Apr/0014.html'>Professor Sir Tim Berners-Lee</a><br />
+<span style='font-size:65%'>performer in London 2012 Olympics Opening Ceremony,<br />and computer programmer</span>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<h3>How does it work?</h3>
+<p>For the past 3 years our server farm has been working to caculate every possible URI, including <a href="http://uri4uri.net/uri/http://totl.net/">web addresses</a>, <a href="http://uri4uri.net/uri/mailto:webmaster@microsoft.com">email addresses</a>, <a href="http://uri4uri.net/uri/urn:isbn:817224164X">ISBNs</a> and even some support for <a href='http://uri4uri.net/uri/gopher://sdf.org:70/1/computers/apple/mac/hypercard'>Gopher</a>. This has been a massive undertaking and would not have been possible even five years ago. The data store is intensely indexed so that the information can be retrieved virtually instantly. Ensuring excellent response times has been at the core of everything we do.</p>
+
+<h3>How big is it?</h3>
+<p>The complete database contains information on literally trillions of URIs. Each record is several kilobytes so the size is astronomical. Currently it stands at 5.7 <a href="http://en.wikipedia.org/wiki/Exabyte">Exabytes</a> and is growing by appoximately 3% per month. However, we use a combination of aggressive and pro-active compession techniques which reduce the total footprint to a much more manageable 78 <a href='http://en.wikipedia.org/wiki/Petabyte'>Petabytes</a>.</p>
+
+<p>What we can confidently state, is that this is the largest and most linked dataset in history. It dwarfs any other dataset in the <a href='http://lod-cloud.net/'>web of data</a>.</p>
+
+<div style='margin-top: 50px;text-align:center;'>
+Figure 1. Comparison in size between uri4uri &amp; conventional linked data
+<div style='margin-top:0.3em;padding:30px;display:inline-block;border-radius:10px;border: solid 2px #666; background-color: #fff'>
+<table><tr>
+
+<td style='vertical-align:middle'><a href='http://lod-cloud.net/'><img src='lod.jpg' alt='' title='The web of linked data' /></a>
+<div>The Web of Linked Data</div>
+</td>
+<td style='width:50px;'></td>
+<td>
+<svg style='width: 400px; height:400px'>
+<circle cx='200' cy='200' r='190' 
+	fill='#f8f8f8' stroke='#2F5CD0' stroke-width='4' />
+ <text x="45" y="220" font-size="70" fill="#000" >uri4uri.net</text>
+</svg>
+</tr></table>
+</div>
+</div>
+<h3>What is included</h3>
+<p>URIs, URI fragment identifiers, Internet Domains, Mime Types, File Suffixes, URI Schemes.</p>
+<h3>How do I find the URI4URI which identifies the URL of a page I'm viewing?</h3>
+<p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://uri4uri.net/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
+<h3>What parts of a URI are supported?</h3>
+<p>The majority of the effort has gone into calculating the components of 
+<a href='http://uri4uri.net/scheme/http'>http</a> and <a href='http://uri4uri.net/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='http://uri4uri.net/uri/http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2</a>, however other URI schemes are supported, eg.
+<a href='http://uri4uri.net/uri/tel:+2035989395'>tel:</a> or 
+<a href='http://uri4uri.net/uri/secondlife://Ancient%20Ireland/167/153'>secondlife:</a>.</p>
+<h3>Why are URIs with a fragment handled differently?</h3>
+<p>By definition nothing in a URI after a '#' is sent to the server. To make a resolvable URI about a URI with a # it must be encoded. We took the decision to use standard URL encoding on URIs placed after http://uri4uri.net/fragment/ but not http://uri4uri.net/uri/. While this is a little inconsistent, it does mean that the majority of uri4uri URIs can be written without encoding, eg. a youtube video URL with no "#" would just be identified by 
+<a href="http://uri4uri.net/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ">http://uri4uri.net/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ</a> but the URI for http://www.w3.org/2004/02/skos/core#notation will be written as <a href='http://uri4uri.net/fragment/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation'>http://uri4uri.net/fragment/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation</a>.</p>
+<h3>Is it recursive?</h3>
+<p>Yes, you can look-up uri4uri URIs in uri4uri: 
+<a href='http://uri4uri.net/uri/http://uri4uri.net/uri/http://uri4uri.net/'>http://uri4uri.net/uri/http://uri4uri.net/uri/http://uri4uri.net/</a>, but only to a depth of 64, for obvious reasons.</p>
+<h3>Uncool URIs</h3>
+<p>Sir Professor TimBL has said to you "<a href='http://www.w3.org/Provider/Style/URI'>Cool URIs don't change</a>". This implies a sad corollary; "Uncool URIs do sometimes change". You may use the uri4uri URIs to describe your own metadata about a URI, including where, why and by whom it was assigned, and what it was the sameAs at a given moment or interval throughout its existence.</p>
+<p>A good example of this is the <a href='http://en.wikipedia.org/wiki/Paris'>Paris</a> article on the English Wikipedia. Initially this described Paris in Texas, but in 2006 this was changed to describe Paris in France to calm some complaints from Europe. This means that the meaning of the DBPedia URI 
+<a href='http://dpbedia.org/resource/Paris'>http://dpbedia.org/resource/Paris</a>
+will have altered at that time. This can be expressed with a simple reified URI description:</p>
+
+<div class='code-block'>&lt;http://dpbedia.org/resource/Paris&gt; 
+	uriv:identifiedBy &lt;http://uri4uri.net/uri/http://dpbedia.org/resource/Paris&gt; .
+
+&lt;http://uri4uri.net/uri/http://dpbedia.org/resource/Paris&gt; 
+	a uriv:URI .
+	uriv:assignedBy &lt;http://dbpedia.org/resource/DBpedia&gt; .
+
+_:b1
+	a uriv:Statement ;
+	uriv:subject &lt;http://uri4uri.net/uri/http://dpbedia.org/resource/Paris&gt; ;
+	uriv:predicate &lt;http://uri4uri.net/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
+	uriv:object &lt;http://uri4uri.net/uri/sws.geonames.org/7174050/&gt; ;
+	uriv:trueAt _:b3 .
+
+_:b3
+	a tl:Interval .
+	tl:end "2006-04-01T12:30:21+08:00"^^xsd:dateTime .
+
+_:b2
+	a uriv:Statement ;
+	uriv:subject &lt;http://uri4uri.net/uri/http://dpbedia.org/resource/Paris&gt; ;
+	uriv:predicate &lt;http://uri4uri.net/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
+	uriv:object &lt;http://uri4uri.net/uri/sws.geonames.org/2988507/&gt; ;
+	uriv:trueAt _:b4 .
+
+_:b4
+	a tl:Interval .
+	tl:start "2006-04-01T12:30:22+08:00"^^xsd:dateTime .</div>
+	
+<p>subject, predicate, object and Statement in the uri4uri vocabulary have the same meaning to the reified URIs as the properties rdf:subject etc. have to normal resources. The <a href='http://purl.org/NET/c4dm/timeline.owl#'>timeline</a> terms are used to decribe when the triple was true.</p>	
+
+<p>This, of course, assumes that owl:sameAs had the same definition in 2006. It is possible that an additional layer of abstraction is requred to allow a single statement to include URIs meanings from different dates. This work will depend on securing future funding.</p>
+
+<h3>Who are uri4uri.net?</h3>
+<p>This service has been conceived, created and maintained by the award-winning team behind <a href='http://data.totl.net'>data.totl.net</a><sup>TM</sup>. You can trust us to do the smart thing. You can trust us to do the right thing.</p>
+<h3>How do we contact you?</h3>
+<p>Feel free to <a href='mailto:c@totl.net'>email us</a> with comments and suggestions.</p>

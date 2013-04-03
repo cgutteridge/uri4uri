@@ -1,0 +1,23 @@
+rdf:type	p	type
+foaf:primaryTopic	p	primary topic
+skos:notation	p	notation
+vs:term_status	p	term status
+foaf:page	p	page
+foaf:homepage	p	homepage
+http://dbpedia.org/property/cctld	p	country code top-level domain
+owl:sameAs	p	is the same as
+geo:lat	p	latitude
+geo:long	p	longitude
+dcterms:description	p	description
+rdfs:seeAlso	p	see also
+xsd:float	d	Floating-point number
+xsd:positiveInteger	d	Postitive Integer
+xsd:string	d	String
+xsd:anyURI	d	URI
+foaf:Document	c	Document
+foaf:Organization	c	Organization
+skos:Concept	c	Concept
+http://dbpedia.org/ontology/Country	c	Country
+rdfs:Class	c	Class
+rdf:Property	c	Property
+rdfs:Datatype	c	Datatype

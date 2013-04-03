@@ -29,13 +29,9 @@ if( $path == "/robots.txt" )
 	exit;
 }
 
-if( preg_match( "/^\/(homedev)?/", $path ) && @$_GET["uri"] )
+if( preg_match( "/^\/?/", $path ) && @$_GET["uri"] )
 {
-	$uri4uri = "http://uri4uri.net/uri/".$_GET["uri"];
-	if( preg_match( '/#/', $_GET["uri"] ) )
-	{
-		$uri4uri = "http://uri4uri.net/fragment/".urlencode($_GET["uri"]);
-	}
+	$uri4uri = "http://uri4uri.net/uri/".urlencode($_GET["uri"]);
 	header( "Location: $uri4uri" );
 	exit;
 }
@@ -56,7 +52,7 @@ if( $path == "/" )
 	exit;
 }
 
-if( !preg_match( "/^\/(vocab|uri|fragment|scheme|suffix|domain|mime)(\.(rdf|ttl|html|nt))?(\/(.*))?$/", $path, $b ) )
+if( !preg_match( "/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|ttl|html|nt))?(\/(.*))?$/", $path, $b ) )
 {
 	serve404();
 	exit;
@@ -102,12 +98,12 @@ if( !isset( $format ) || $format == "")
 	if( $wants == "text/turtle" ) { $format = "ttl"; }
 	if( $wants == "application/rdf+xml" ) { $format = "rdf"; }
 
+	if( $type == "uri" ) { $id = rawurlencode( rawurldecode($id) ); }
 	header( "HTTP/1.1 303 C.Elseware" );
 	header( "Location: $BASE$type.$format/$id" );
 	exit;
 }
 if( $type == "uri" ) { $graph = graphURI( $id ); }
-elseif( $type == "fragment" ) { $graph = graphFragment( $id ); }
 elseif( $type == "scheme" ) { $graph = graphScheme( $id ); }
 elseif( $type == "suffix" ) { $graph = graphSuffix( $id ); }
 elseif( $type == "domain" ) { $graph = graphDomain( $id ); }
@@ -218,7 +214,6 @@ function initGraph()
 	$graph->ns( "scheme",$BASE."scheme/" );
 	$graph->ns( "domain",$BASE."domain/" );
 	$graph->ns( "suffix",$BASE."suffix/" );
-	$graph->ns( "fragment",$BASE."fragment/" );
 	$graph->ns( "mime",$BASE."mime/" );
 	$graph->ns( "occult", "http://data.totl.net/occult/" );
 	$graph->ns( "xtypes", "http://prefix.cc/xtypes/" );
@@ -250,7 +245,7 @@ function graphVocab( $id )
 function addVocabTrips( &$graph )
 {
 	global $filepath;
-	$lines = file( "$filepath/ns.txt" );
+	$lines = file( "$filepath/ns.tsv" );
 	$tmap = array(
 		""=>"skos:Concept",
 		"c"=>"rdfs:Class",	
@@ -265,32 +260,13 @@ function addVocabTrips( &$graph )
 	}
 }
 
-function graphFragment( $fragment )
-{
-	$uri = urldecode( $fragment );
-	$graph = initGraph();
-
-	if( !preg_match( "/#/" , $uri ))
-	{
-		serve404();
-		exit;
-	}
-
-	addBoilerplateTrips( $graph, "fragment:".urlencode($uri), $uri );
-	addFragmentTrips( $graph, $uri );
-
-	return $graph;
-}
 
 function graphURI( $uri )
 {
-	if( preg_match( "/#/" , $uri ))
-	{
-		serve404();
-		exit;
-	}
+	$uri = rawurldecode( $uri );
+	$uriuri = "uri:".rawurlencode( $uri );
 	$graph = initGraph();
-	addBoilerplateTrips( $graph, "uri:$uri", $uri );
+	addBoilerplateTrips( $graph, $uriuri, $uri );
 	addURITrips( $graph, $uri );
 	return $graph;
 }
@@ -344,33 +320,27 @@ function addBoilerplateTrips( &$graph, $uri, $title )
 	
 }
 
-function addFragmentTrips( &$graph, $uri )
-{
-	list( $uri_part, $fragment_part ) = preg_split( '/#/', $uri, 2 );
-
-	$f_uri = "fragment:".urlencode( $uri );
-	$graph->addCompressedTriple( $uri, "uriv:identifiedBy", $f_uri );
-	$graph->addCompressedTriple( $f_uri, "rdf:type", "uriv:URI" );
-	$graph->addCompressedTriple( $f_uri, "rdf:type", "uriv:FragmentURI" );
-	$graph->addCompressedTriple( $f_uri, "skos:notation", $fragment_part, "uriv:FragmentDatatype" );
-	$graph->addCompressedTriple( "uri:$uri_part", "uriv:fragment", $f_uri );
-
-	addURITrips( $graph, $uri_part );
-
-}
 
 function addURITrips( &$graph, $uri )
 {
+	$uriuri = "uri:".rawurlencode( $uri );
 	$b = parse_url( $uri );
 
-	$graph->addCompressedTriple( $uri, "uriv:identifiedBy", "uri:$uri" );
-	$graph->addCompressedTriple( "uri:$uri", "rdf:type", "uriv:URI" );
-	$graph->addCompressedTriple( "uri:$uri", "skos:notation", $uri, "uriv:URIDatatype" );
-	$graph->addCompressedTriple( "uri:$uri", "uriv:length", strlen( $uri ), "xsd:positiveInteger" );
+	if( isset( $b["fragment"] ) )
+	{
+		list( $uri_part, $dummy ) = preg_split( '/#/', $uri );
+		$graph->addCompressedTriple( $uriuri, "rdf:type", "uriv:FragmentURI" );
+		$graph->addCompressedTriple( $uriuri, "uriv:fragment", $b["fragment"], "xsd:string" );
+		$graph->addCompressedTriple( $uriuri, "uriv:fragmentOf", "uri:".urlencode($uri_part) );
+	}
+
+	$graph->addCompressedTriple( $uri, "uriv:identifiedBy", $uriuri );
+	$graph->addCompressedTriple( $uriuri, "rdf:type", "uriv:URI" );
+	$graph->addCompressedTriple( $uriuri, "skos:notation", $uri, "xsd:anyURI" );
 
 	if( @$b["scheme"] )
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:scheme", "scheme:".$b["scheme"] );
+		$graph->addCompressedTriple( $uriuri, "uriv:scheme", "scheme:".$b["scheme"] );
 		addSchemeTrips( $graph, $b["scheme"] );
 		if( $b["scheme"] == "http" || $b["scheme"] == "https" || $b["scheme"] == "ftp" )
 		{
@@ -378,35 +348,16 @@ function addURITrips( &$graph, $uri )
 		}
 	} # end scheme
 	
-	$hash = md5( $uri );
-	$hash_number  = substr( base_convert($hash, 16, 10),0, 10);
-	$graph->addCompressedTriple( "uri:$uri", "uriv:md5", $hash, "uriv:MD5HashDatatype" );
-
-	# silly stuff
-	$chances = 4;
-	if( $hash_number % $chances == 0 )
-	{
-		$hash_number = floor( $hash_number / $chances );
-		global $filepath;
-		$thingys = file( "$filepath/occult.txt" );
-		$row = chop($thingys[ $hash_number % sizeof( $thingys ) ]);
-		list( $thing_uri, $thing_name ) = preg_split( "/\t/", $row );
-		
-		$graph->addCompressedTriple( "uri:$uri", "occult:correspondsTo", $thing_uri );
-		$graph->addCompressedTriple( $thing_uri, "rdfs:label", $thing_name, "literal" );
-	}
-	$col_uri = "http://cold.aksw.org/rdf.php?iri=".rawurlencode($uri);
-	$graph->addCompressedTriple( "uri:$uri", "rdfs:seeAlso", $col_uri );
-	$graph->addCompressedTriple( $col_uri, "rdf:type", "foaf:Document" );
 }
 
 function addHTTPSchemeTrips( &$graph, $uri )
 {
+	$uriuri = "uri:".rawurlencode( $uri );
 	$b = parse_url( $uri );
 
 	if( @$b["host"] )
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:host", "domain:".$b["host"] );
+		$graph->addCompressedTriple( $uriuri, "uriv:host", "domain:".$b["host"] );
 		addDomainTrips( $graph, $b["host"] );
 		if( @$b["scheme"] == "http" || @$b["scheme"] == "https" )
 		{
@@ -425,56 +376,56 @@ function addHTTPSchemeTrips( &$graph, $uri )
 
 	if( @$b["port"] )
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:port", $b["port"], "xsd:positiveInteger" );
+		$graph->addCompressedTriple( $uriuri, "uriv:port", $b["port"], "xsd:positiveInteger" );
 	}
 	else
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:port", "uriv:noPortSpecified" );
+		$graph->addCompressedTriple( $uriuri, "uriv:port", "uriv:noPortSpecified" );
 	}
 	
 	if( @$b["user"] )
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:user", $b["user"], "literal" );
+		$graph->addCompressedTriple( $uriuri, "uriv:user", $b["user"], "literal" );
 		if( @$b["pass"] )
 		{
-			$graph->addCompressedTriple( "uri:$uri", "uriv:pass", $b["pass"], "literal" );
+			$graph->addCompressedTriple( $uriuri, "uriv:pass", $b["pass"], "literal" );
 		}
-		$graph->addCompressedTriple( "uri:$uri", "uriv:account", "uri:$uri#account-".$b["user"] );
-		$graph->addCompressedTriple( "uri:$uri#account-".$b["user"], "rdf:type", "foaf:OnlineAccount" );
-		$graph->addCompressedTriple( "uri:$uri#account-".$b["user"], "rdfs:label", $b["user"], "xsd:string" );
+		$graph->addCompressedTriple( $uriuri, "uriv:account", "$uriuri#account-".$b["user"] );
+		$graph->addCompressedTriple( "$uriuri#account-".$b["user"], "rdf:type", "foaf:OnlineAccount" );
+		$graph->addCompressedTriple( "$uriuri#account-".$b["user"], "rdfs:label", $b["user"], "xsd:string" );
 	}
 
 	if( @$b["path"] )
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:path", $b["path"], "uriv:PathDatatype" );
+		$graph->addCompressedTriple( $uriuri, "uriv:path", $b["path"], "xsd:string" );
 		if( preg_match( "/\.([^#\.\/]+)($|#)/", $b["path"], $bits  ) )
 		{
-			$graph->addCompressedTriple( "uri:$uri", "uriv:suffix", "suffix:".$bits["1"] );
+			$graph->addCompressedTriple( $uriuri, "uriv:suffix", "suffix:".$bits["1"] );
 			addSuffixTrips( $graph, $bits[1] );
 		}
 		if( preg_match( "/\/([^#\/]+)($|#)/", $b["path"], $bits  ) )
 		{
-			$graph->addCompressedTriple( "uri:$uri", "uriv:filename", $bits["1"], "uriv:FilenameDatatype" );
+			$graph->addCompressedTriple( $uriuri, "uriv:filename", $bits["1"], "xsd:string" );
 		}
 	}
 
 	if( @$b["query"] )
 	{
-		$graph->addCompressedTriple( "uri:$uri", "uriv:queryString", $b["query"], "uriv:QueryStringDatatype" );
-		$graph->addCompressedTriple( "uri:$uri", "uriv:query", "uri:$uri#query" );
-		$graph->addCompressedTriple( "uri:$uri#query", "rdf:type", "uriv:Query" );
-		$graph->addCompressedTriple( "uri:$uri#query", "rdf:type", "rdf:Seq" );
+		$graph->addCompressedTriple( $uriuri, "uriv:queryString", $b["query"], "xsd:string" );
+		$graph->addCompressedTriple( $uriuri, "uriv:query", "$uriuri#query" );
+		$graph->addCompressedTriple( "$uriuri#query", "rdf:type", "uriv:Query" );
+		$graph->addCompressedTriple( "$uriuri#query", "rdf:type", "rdf:Seq" );
 		$i = 0;
 		foreach( preg_split( "/&/", $b["query"] ) as $kv )
 		{
 			++$i;
-			$graph->addCompressedTriple( "uri:$uri#query", "rdf:_$i", "uri:$uri#query-$i" );
-			$graph->addCompressedTriple( "uri:$uri#query-$i", "rdf:type", "uriv:QueryKVP" );
+			$graph->addCompressedTriple( "$uriuri#query", "rdf:_$i", "$uriuri#query-$i" );
+			$graph->addCompressedTriple( "$uriuri#query-$i", "rdf:type", "uriv:QueryKVP" );
 			if( preg_match( '/=/', $kv ) )
 			{
 				list( $key, $value ) = preg_split( '/=/', $kv, 2 );
-				$graph->addCompressedTriple( "uri:$uri#query-$i", "uriv:key", $key, "uriv:QueryKey" );
-				$graph->addCompressedTriple( "uri:$uri#query-$i", "uriv:value", $value, "uriv:QueryValue" );
+				$graph->addCompressedTriple( "$uriuri#query-$i", "uriv:key", $key, "xsd:string" );
+				$graph->addCompressedTriple( "$uriuri#query-$i", "uriv:value", $value, "xsd:string" );
 			}
 		}
 	}
@@ -543,13 +494,13 @@ function addDomainTrips( &$graph, $domain )
 
 		if( isset( $whoisservers["$domain"] ) )
 		{
-			$graph->addCompressedTriple( "domain:".$domain, "uriv:whoIsServer", "domain:".$whoisservers["$domain"] );
+			$graph->addCompressedTriple( "domain:".$domain, "uriv:hasWhoIsServer", "domain:".$whoisservers["$domain"] );
 			$graph->addCompressedTriple( "domain:".$whoisservers["$domain"], "rdf:type", "uriv:WhoisServer" );
 			
 			$lookup = LookupDomain($nowww_actual_domain,$whoisservers[$domain] );
 			if( @$lookup )
 			{
-				$graph->addCompressedTriple( "domain:$nowww_actual_domain", "uriv:whoIsRecord", $lookup, "literal" );
+				$graph->addCompressedTriple( "domain:$nowww_actual_domain", "uriv:whoIsRecord", $lookup, "xsd:string" );
 			}
 		}
 	}
@@ -563,7 +514,7 @@ function addDomainTrips( &$graph, $domain )
 		foreach( $tld as $place )
 		{
 			$graph->addCompressedTriple( $place["uri"], "http://dbpedia.org/property/cctld", "domain:$domain" );
-			$graph->addCompressedTriple( $place["uri"], "rdfs:label", $place["name"], "literal" );
+			$graph->addCompressedTriple( $place["uri"], "rdfs:label", $place["name"], "xsd:string" );
 			$graph->addCompressedTriple( $place["uri"], "rdf:type", "http://dbpedia.org/ontology/Country" );
 			$graph->addCompressedTriple( $place["uri"], "foaf:page", db2wiki( $place["uri"] ) );
 			$graph->addCompressedTriple( db2wiki( $place["uri"] ), "rdf:type", "foaf:Document" );
@@ -599,7 +550,7 @@ function addDomainTrips( &$graph, $domain )
 		$graph->addCompressedTriple( "domain:$domain", "rdf:type", "uriv:".$typemap[$zone["type"]] );
 		$graph->addCompressedTriple( "domain:$domain", "uriv:sponsor", "domain:$domain#sponsor" );
 		$graph->addCompressedTriple( "domain:$domain#sponsor", "rdf:type", "foaf:Organization" );
-		$graph->addCompressedTriple( "domain:$domain#sponsor", "rdfs:label", $zone["sponsor"], "literal" );
+		$graph->addCompressedTriple( "domain:$domain#sponsor", "rdfs:label", $zone["sponsor"], "xsd:string" );
 	}
 }
 
@@ -607,7 +558,7 @@ function addSuffixTrips( &$graph, $suffix )
 {
 	global $filepath;
 	$graph->addCompressedTriple( "suffix:$suffix", "rdf:type", "uriv:Suffix" );
-	$graph->addCompressedTriple( "suffix:$suffix", "rdfs:label", ".".$suffix, "literal" );
+	$graph->addCompressedTriple( "suffix:$suffix", "rdfs:label", ".".$suffix, "xsd:string" );
 	$graph->addCompressedTriple( "suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype" );
 
 	$exts = json_decode( file_get_contents( "$filepath/extensions.json" ), true );
@@ -733,32 +684,8 @@ function addSchemeTrips( &$graph, $scheme )
 
 function addExtraVocabTrips( &$graph )
 {
-	$lines = array( 
-"rdf:type	p	type",
-"foaf:primaryTopic	p	primary topic",
-"skos:notation	p	notation",
-"vs:term_status	p	term status",
-"foaf:page	p	page",
-"foaf:homepage	p	homepage",
-"http://dbpedia.org/property/cctld	p	country code top-level domain",
-"owl:sameAs	p	is the same as",
-"geo:lat	p	latitude",
-"geo:long	p	longitude",
-"occult:correspondsTo	p	corresponds to",
-"dcterms:description	p	description",
-"rdfs:seeAlso	p	see also",
-
-"xsd:float	d	Floating-point number",
-"xsd:positiveInteger	d	Postitive Integer",
-
-"foaf:Document	c	Document",
-"foaf:Organization	c	Organization",
-"skos:Concept	c	Concept",
-"http://dbpedia.org/ontology/Country	c	Country",
-"rdfs:Class	c	Class",
-"rdf:Property	c	Property",
-"rdfs:Datatype	c	Datatype",
-);
+	global $filepath;
+	$lines = file( "$filepath/nsextras.tsv" );
 	$tmap = array(
 		""=>"skos:Concept",
 		"c"=>"rdfs:Class",	
@@ -800,7 +727,7 @@ function renderResource( $graph, $resource )
 		if( $rel == "http://dbpedia.org/property/cctld" ) { $follow_inverse = true; }
 		if( $rel == "http://uri4uri.net/vocab#subDom" ) { $follow_inverse = true; }
 		if( $rel == "http://uri4uri.net/vocab#usedForSuffix" ) { $follow_inverse = true; }
-		if( $rel == "http://uri4uri.net/vocab#fragment" ) { $follow_inverse = true; }
+		#if( $rel == "http://uri4uri.net/vocab#fragmentOf" ) { $follow_inverse = true; }
 		if( $rel == "http://uri4uri.net/vocab#identifiedBy" ) { $follow_inverse = true; }
 #$r .= "<div>($rel)  ".$rel->nodeType()."</div>";
 #$r.="<p>$rel :: $follow_inverse</p>";
@@ -813,8 +740,8 @@ function renderResource( $graph, $resource )
 		{
 			$label = "#".$b[1];
 		}
-		if( $rel->nodeType() == "#inverseRelation" ) { $label = "is $label of"; }
 		$pred = "<a href='$rel' class='predicate'>$label</a>";
+		if( $rel->nodeType() == "#inverseRelation" ) { $pred = "is \"$pred\" of"; }
 
 		foreach( $resource->all( $rel ) as $r2 )
 		{

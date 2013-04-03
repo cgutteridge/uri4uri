@@ -1,0 +1,59 @@
+account:p:account
+delegationRecordPage:p:delegation record page
+Domain:c:Internet Domain
+DomainDatatype:d:Internet Domain Identifier
+Domain-Invalid:c:Invalid Internet Domain
+Domain-Valid:c:Valid Internet Domain
+filename:p:filename
+Format:c:File Format
+fragmentOf:p:fragment of
+fragment:p:fragment
+FragmentURI:c:URI with Fragement Identifier
+host:p:host
+IANAPage:p:IANA page
+IANARef:p:IANA reference
+identifiedBy:p:identified by URI
+key:p:key
+length:p:length
+md5:p:md5 hash
+Mimetype:c:Mimetype
+MimetypeDatatype:d:Mimetype Identifier
+noPortSpecified::No Port Specified
+pass:p:password
+path:p:path
+port:p:port
+Query:c:URI Query Part
+QueryKey:c:URI Query Key
+QueryKVP:c:URI Query Key-Value Pair
+query:p:query
+queryString:p:query string
+QueryValue:c:URI Query Value
+scheme:p:URI scheme
+sponsor:p:sponsor
+subDom:p:subdomain
+Suffix:c:Filename Suffix
+SuffixDatatype:d:Filename Suffix Identifier
+suffix:p:suffix
+TopLevelDomain-CountryCode:c:Country Top-Level Domain
+TopLevelDomain:c:Top-Level Domain
+TopLevelDomain-Generic:c:Generic Top-Level Domain
+TopLevelDomain-GenericRestricted:c:Restricted Generic Top-Level Domain
+TopLevelDomain-Infrastructure:c:Infrastructure Top-Level Domain
+TopLevelDomain-Sponsored:c:Sponsored Top-Level Domain
+TopLevelDomain-Test:c:Test Top-Level Domain
+URI:c:URI
+URIDatatype:d:URI Identifier
+URIScheme:c:URI Scheme
+URISchemeDatatype:d:URI Scheme Identifier
+Statement:c:Statement (reified)
+object:p:object:object identified by
+predicate:p:predicate:predicate identified by
+subject:p:subject:subject identified by
+trueAt:p:trueAt:statement true at
+usedForFormat:p:used for format
+usedForSuffix:p:used for suffix
+user:p:user
+value:p:value
+whoIsRecord:p:whois record
+WhoisServer:c:Whois Server
+hasWhoIsServer:p:whois server
