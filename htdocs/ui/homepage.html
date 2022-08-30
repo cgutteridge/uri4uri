@@ -1,5 +1,5 @@
 
-<p style='margin: 2em 0em 2em 0em'>This site was created for fun on April 1st 2013 with a <a href='/aprilfools'>very over-the-top set of claims</a>, however it is a bit useful so we (<a href='http://data.southampton.ac.uk'>University of Southampton Linked Open Data team</a>) will keep it online indefintely.</p>
+<p style='margin: 2em 0em 2em 0em'>This site was created for fun on April 1st 2013 by <a href='http://users.ecs.soton.ac.uk/people/cjg'>Christopher Gutteridge</a> (University of Southampton) with a <a href='/aprilfools'>very over-the-top set of claims</a>. Since July 2022, it is maintained by <a href="https://is4.site/">IS4</a>.</p>
 <div style='text-align:center;'>
 
 <div class='class'>
@@ -60,7 +60,7 @@ $(document).ready( function() {
 			$('#resultBlock').show();
 			return;
 		}
-		uri4uri = "http://uri4uri.net/uri/"+encodeURIComponent(v);
+		uri4uri = "http://purl.org/uri4uri/uri/"+encodeURIComponent(v);
 		$('#resultBlock').html("The URI for this URI is: <div style='margin-top:0.5em'><a href='"+uri4uri+"'>"+uri4uri+"</a></div>" );
 		$('#resultBlock').show();
 	}
@@ -75,25 +75,25 @@ $(document).ready( function() {
 <h3>How does it work?</h3>
 <p>It just parses the URI part (using the PHP parse_url command) to get the parts, then uses some lookup tables for information about mime types, top level domains and so forth. This data was taken from IANA and dbpedia.</p>
 
-or the past 3 years our server farm has been working to caculate every possible URI, including 
-<a href="http://uri4uri.net/uri/http%3A%2F%2Ftotl.net%2F">web addresses</a>, 
-<a href="http://uri4uri.net/uri/mailto%3Awebmaster%40microsoft.com">email addresses</a>, 
-<a href="http://uri4uri.net/uri/urn%3Aisbn%3A817224164X">ISBNs</a> and even some basic information on more obscure schemes such as
-<a href="http://uri4uri.net/uri/gopher%3A%2F%2Fsdf.org%3A70%2F1%2Fcomputers%2Fapple%2Fmac%2Fhypercard">Gopher</a>.</p> 
+<p>It accepts any possible URI, including 
+<a href="http://purl.org/uri4uri/uri/http%3A%2F%2Ftotl.net%2F">web addresses</a>, 
+<a href="http://purl.org/uri4uri/uri/mailto%3Awebmaster%40microsoft.com">email addresses</a>, 
+<a href="http://purl.org/uri4uri/uri/urn%3Aisbn%3A817224164X">ISBNs</a> as well as some more obscure schemes such as
+<a href="http://purl.org/uri4uri/uri/gopher%3A%2F%2Fsdf.org%3A70%2F1%2Fcomputers%2Fapple%2Fmac%2Fhypercard">Gopher</a>.</p> 
 
 <h3>URIs</h3>
 
 <p>The URIs on this site are in the format:</p>
-<p class='code'>http://uri4uri.net/&lt;type&gt;/&lt;identifier&gt;</p>
+<p class='code'>http://purl.org/uri4uri/&lt;type&gt;/&lt;identifier&gt;</p>
 <p>...where &lt;type&gt; is one of uri, scheme, domain, mime, suffix.</p>
 <p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF+XML or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, nt, html. These have URLs in the following formats:</p>
-<p class='code'>http://uri4uri.net/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</p>
+<p class='code'>http://purl.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</p>
 <p>Examples:</p>
-<p><a style='font-family:monospace' href='http://uri4uri.net/uri/http%3A%2F%2Fxkcd.com%2F123%2F'>http://uri4uri.net/uri/http%3A%2F%2Fxkcd.com%2F123%2F</a> - URI for  "http://xkcd.com/123/"<br />
-<a style='font-family:monospace' href='http://uri4uri.net/domain/totl.net'>http://uri4uri.net/domain/totl.net</a> - URI for the domain "totl.net"<br />
-<a style='font-family:monospace' href='http://uri4uri.net/suffix/pdf'>http://uri4uri.net/suffix/pdf</a> - URI for the suffix ".pdf"<br />
-<a style='font-family:monospace' href='http://uri4uri.net/scheme/ftp'>http://uri4uri.net/scheme/ftp</a> - URI for the URI scheme "ftp"<br />
-<a style='font-family:monospace' href='http://uri4uri.net/mime/text/plain'>http://uri4uri.net/mime/text/plain</a> - URI for the MIME Type "text/plain"
+<p><a style='font-family:monospace' href='http://purl.org/uri4uri/uri/http%3A%2F%2Fxkcd.com%2F123%2F'>http://purl.org/uri4uri/uri/http%3A%2F%2Fxkcd.com%2F123%2F</a> - URI for  "http://xkcd.com/123/"<br />
+<a style='font-family:monospace' href='http://purl.org/uri4uri/domain/totl.net'>http://purl.org/uri4uri/domain/totl.net</a> - URI for the domain "totl.net"<br />
+<a style='font-family:monospace' href='http://purl.org/uri4uri/suffix/pdf'>http://purl.org/uri4uri/suffix/pdf</a> - URI for the suffix ".pdf"<br />
+<a style='font-family:monospace' href='http://purl.org/uri4uri/scheme/ftp'>http://purl.org/uri4uri/scheme/ftp</a> - URI for the URI scheme "ftp"<br />
+<a style='font-family:monospace' href='http://purl.org/uri4uri/mime/text/plain'>http://purl.org/uri4uri/mime/text/plain</a> - URI for the MIME Type "text/plain"
 </p>
 
 <h3>How big is it?</h3>
@@ -103,12 +103,12 @@ or the past 3 years our server farm has been working to caculate every possible 
 <p>URIs, URI fragment identifiers, Internet Domains, Mime Types, File Suffixes, URI Schemes.</p>
 
 <h3>How do I find the URI4URI which identifies the URL of a page I'm viewing?</h3>
-<p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://uri4uri.net/uri/"+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
+<p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://purl.org/uri4uri/uri/"+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
 <h3>What parts of a URI are supported?</h3>
 <p>The majority of the effort has gone into calculating the components of 
-<a href='http://uri4uri.net/scheme/http'>http</a> and <a href='http://uri4uri.net/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='http://uri4uri.net/uri/http%3A%2F%2Ffoo%3Abar%40bbc.co.uk%3A80%2Findex.html%3Fa%3D1%26b%3D2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2</a>, however other URI schemes are supported, eg.
-<a href='http://uri4uri.net/uri/tel%3A%2B2035989395'>tel:</a> or 
-<a href='http://uri4uri.net/uri/secondlife%3A%2F%2FAncient%2520Ireland%2F167%2F153'>secondlife:</a>.</p>
+<a href='http://purl.org/uri4uri/scheme/http'>http</a> and <a href='http://purl.org/uri4uri/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='http://purl.org/uri4uri/uri/http%3A%2F%2Ffoo%3Abar%40bbc.co.uk%3A80%2Findex.html%3Fa%3D1%26b%3D2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2</a>, however other URI schemes are supported, eg.
+<a href='http://purl.org/uri4uri/uri/tel%3A%2B2035989395'>tel:</a> or 
+<a href='http://purl.org/uri4uri/uri/secondlife%3A%2F%2FAncient%2520Ireland%2F167%2F153'>secondlife:</a>.</p>
 
 <h3>Uncool URIs</h3>
 <p>Sir Professor TimBL has said to you "<a href='http://www.w3.org/Provider/Style/URI'>Cool URIs don't change</a>". This implies a sad corollary; "Uncool URIs do sometimes change". You may use the uri4uri URIs to describe your own metadata about a URI, including where, why and by whom it was assigned, and what it was the sameAs at a given moment or interval throughout its existence.</p>
@@ -118,17 +118,17 @@ or the past 3 years our server farm has been working to caculate every possible 
 will have altered at that time. This can be expressed with a simple reified URI description:</p>
 
 <div class='code-block'>&lt;http://dpbedia.org/resource/Paris&gt; 
-	uriv:identifiedBy &lt;http://uri4uri.net/uri/http://dpbedia.org/resource/Paris&gt; .
+	uriv:identifiedBy &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; .
 
-&lt;http://uri4uri.net/uri/http://dpbedia.org/resource/Paris&gt; 
+&lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; 
 	a uriv:URI .
 	uriv:assignedBy &lt;http://dbpedia.org/resource/DBpedia&gt; .
 
 _:b1
 	a uriv:Statement ;
-	uriv:subject &lt;http://uri4uri.net/uri/http://dpbedia.org/resource/Paris&gt; ;
-	uriv:predicate &lt;http://uri4uri.net/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
-	uriv:object &lt;http://uri4uri.net/uri/sws.geonames.org/7174050/&gt; ;
+	uriv:subject &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; ;
+	uriv:predicate &lt;http://purl.org/uri4uri/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
+	uriv:object &lt;http://purl.org/uri4uri/uri/sws.geonames.org/7174050/&gt; ;
 	uriv:trueAt _:b3 .
 
 _:b3
@@ -137,9 +137,9 @@ _:b3
 
 _:b2
 	a uriv:Statement ;
-	uriv:subject &lt;http://uri4uri.net/uri/http://dpbedia.org/resource/Paris&gt; ;
-	uriv:predicate &lt;http://uri4uri.net/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
-	uriv:object &lt;http://uri4uri.net/uri/sws.geonames.org/2988507/&gt; ;
+	uriv:subject &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; ;
+	uriv:predicate &lt;http://purl.org/uri4uri/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
+	uriv:object &lt;http://purl.org/uri4uri/uri/sws.geonames.org/2988507/&gt; ;
 	uriv:trueAt _:b4 .
 
 _:b4
@@ -151,9 +151,4 @@ _:b4
 <p>This, of course, assumes that owl:sameAs had the same definition in 2006. It is possible that an additional layer of abstraction is requred to allow a single statement to include URIs meanings from different dates. This work will depend on securing future funding.</p>
 -->
 <h3>Can I see the source code?</h3>
-<p>Sure, you can find the <a href='https://github.com/cgutteridge/uri4uri'>uri4uri source on github.com</a></p>
-
-<h3>Who are uri4uri.net?</h3>
-<p>This service has been conceived, created and maintained by <a href='http://users.ecs.soton.ac.uk/cjg'>Christopher Gutteridge</a>, a member of the University of Southampton Open Data team and founder of <a href='http://www.data.ac.uk'>data.ac.uk</a></p>
-<h3>How do we contact you?</h3>
-<p>Feel free to <a href='mailto:cjg@ecs.soton.ac.uk'>email me</a> with comments and suggestions.</p>
+<p>Sure, you can find the <a href='https://github.com/IllidanS4/uri4uri'>uri4uri source on github.com</a></p>

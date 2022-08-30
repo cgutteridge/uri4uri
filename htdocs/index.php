@@ -1,9 +1,14 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once( "../lib/arc2/ARC2.php" );
 require_once( "../lib/Graphite/Graphite.php" );
 
-$filepath = "/home/uri4uri/htdocs/data";
-$BASE = "http://uri4uri.net";
+$filepath = "/var/www/uri4uri/htdocs/data";
+$BASE = "http://uri4uri.is4.site";
+$PREFIX = "http://purl.org/uri4uri";
 
 $show_title = true;
 #error_log( "Req: ".$_SERVER["REQUEST_URI"] );
@@ -31,7 +36,7 @@ if( $path == "/robots.txt" )
 
 if( preg_match( "/^\/?/", $path ) && @$_GET["uri"] )
 {
-	$uri4uri = "http://uri4uri.net/uri/".urlencode($_GET["uri"]);
+	$uri4uri = "$BASE/uri/".urlencode($_GET["uri"]);
 	header( "Location: $uri4uri" );
 	exit;
 }
@@ -51,7 +56,6 @@ if( $path == "/" )
 	require_once( "ui/template.php" );
 	exit;
 }
-
 if( !preg_match( "/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|debug|ttl|html|nt))?(\/(.*))?$/", $path, $b ) )
 {
 	serve404();
@@ -114,7 +118,7 @@ else { serve404(); exit; }
 if( $format == "html" )
 {
 	header( "HTTP/1.1 200 OK" );
-	$document_url = $BASE.$_SERVER["REQUEST_URI"];
+	$document_url = $PREFIX.$_SERVER["REQUEST_URI"];
 	$doc = $graph->resource($document_url);
 	$title = $doc->label();
 	$content = "";
@@ -214,15 +218,15 @@ exit;
 
 function initGraph()
 {
-	global $BASE;
+	global $PREFIX;
 
 	$graph = new Graphite();
-	$graph->ns( "uri","$BASE/uri/" );
-	$graph->ns( "uriv","$BASE/vocab#" );
-	$graph->ns( "scheme","$BASE/scheme/" );
-	$graph->ns( "domain","$BASE/domain/" );
-	$graph->ns( "suffix","$BASE/suffix/" );
-	$graph->ns( "mime","$BASE/mime/" );
+	$graph->ns( "uri","$PREFIX/uri/" );
+	$graph->ns( "uriv","$PREFIX/vocab#" );
+	$graph->ns( "scheme","$PREFIX/scheme/" );
+	$graph->ns( "domain","$PREFIX/domain/" );
+	$graph->ns( "suffix","$PREFIX/suffix/" );
+	$graph->ns( "mime","$PREFIX/mime/" );
 	$graph->ns( "occult", "http://data.totl.net/occult/" );
 	$graph->ns( "xtypes", "http://prefix.cc/xtypes/" );
 	$graph->ns( "vs","http://www.w3.org/2003/06/sw-vocab-status/ns#" );
@@ -318,8 +322,8 @@ function graphScheme( $scheme )
 
 function addBoilerplateTrips( &$graph, $uri, $title )
 {
-	global $BASE;
-	$document_url = $BASE.$_SERVER["REQUEST_URI"];
+	global $PREFIX;
+	$document_url = $PREFIX.$_SERVER["REQUEST_URI"];
 	$graph->addCompressedTriple( $document_url, "rdf:type", "foaf:Document" );
 	$graph->addCompressedTriple( $document_url, "dcterms:title", $title, "literal" );
 	$graph->addCompressedTriple( $document_url, "foaf:primaryTopic", "$uri" );
@@ -712,6 +716,7 @@ function addExtraVocabTrips( &$graph )
 
 function renderResource( $graph, $resource )
 {
+	global $PREFIX;
 	$type = $resource->nodeType();
 	$r = "";
 
@@ -735,10 +740,10 @@ function renderResource( $graph, $resource )
 		if( $rel == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" ) { continue; }
 		$follow_inverse = false;
 		if( $rel == "http://dbpedia.org/property/cctld" ) { $follow_inverse = true; }
-		if( $rel == "http://uri4uri.net/vocab#subDom" ) { $follow_inverse = true; }
-		if( $rel == "http://uri4uri.net/vocab#usedForSuffix" ) { $follow_inverse = true; }
-		#if( $rel == "http://uri4uri.net/vocab#fragmentOf" ) { $follow_inverse = true; }
-		if( $rel == "http://uri4uri.net/vocab#identifiedBy" ) { $follow_inverse = true; }
+		if( $rel == "$PREFIX/vocab#subDom" ) { $follow_inverse = true; }
+		if( $rel == "$PREFIX/vocab#usedForSuffix" ) { $follow_inverse = true; }
+		#if( $rel == "$PREFIX/vocab#fragmentOf" ) { $follow_inverse = true; }
+		if( $rel == "$PREFIX/vocab#identifiedBy" ) { $follow_inverse = true; }
 #$r .= "<div>($rel)  ".$rel->nodeType()."</div>";
 #$r.="<p>$rel :: $follow_inverse</p>";
 		if( !$follow_inverse && $rel->nodeType() == "#inverseRelation" ) { continue; }
@@ -756,7 +761,7 @@ function renderResource( $graph, $resource )
 		foreach( $resource->all( $rel ) as $r2 )
 		{
 			$type = $r2->nodeType();
-			if( $rel == "http://uri4uri.net/vocab#whoIsRecord" ) 
+			if( $rel == "$PREFIX/vocab#whoIsRecord" ) 
 			{
 				$short.= "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
 				continue;
@@ -772,7 +777,7 @@ function renderResource( $graph, $resource )
 				$short.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".$rt->prettyLink()."]</span></div>";
 				continue;
 			}
-			if( $r2->isType( "foaf:Document" ) )
+			if( $r2 instanceof Graphite_Resource && $r2->isType( "foaf:Document" ) )
 			{
 				$short.= "<div class='relation'>$pred: ".$r2->prettyLink()."</div>";
 				continue;
