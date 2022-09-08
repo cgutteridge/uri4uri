@@ -1,8 +1,9 @@
-Live site: http://uri4uri.net/
+Live site: https://uri4uri.is4.site/
 
-Source: https://github.com/cgutteridge/uri4uri
+Source: https://github.com/IllidanS4/uri4uri
 
 Creator: Christopher Gutteridge <cjg@ecs.soton.ac.uk>
+Maintainer: IS4
 
 This site was created as an April Fools joke, but it's actually
 quite nice code, so placed on github in case it's useful to people.
