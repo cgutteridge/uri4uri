@@ -6,9 +6,14 @@ foaf:page	p	page
 foaf:homepage	p	homepage
 http://dbpedia.org/property/cctld	p	country code top-level domain
 owl:sameAs	p	is the same as
+owl:equivalentClass	p	is equivalent class to
+owl:equivalentProperty	p	is equivalent property to
 geo:lat	p	latitude
 geo:long	p	longitude
 dcterms:description	p	description
+dcterms:replaces	p	replaces
+skos:exactMatch	p	exactly matches
+skos:broader	p	broader concept
 rdfs:seeAlso	p	see also
 xsd:float	d	Floating-point number
 xsd:positiveInteger	d	Postitive Integer
