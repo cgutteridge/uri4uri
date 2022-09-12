@@ -32,6 +32,7 @@ if($path == "/robots.txt")
 	print "Disallow: /uri.rdf/\n"; 
 	print "Disallow: /uri.ttl/\n"; 
 	print "Disallow: /uri.nt/\n"; 
+	print "Disallow: /uri.jsonld/\n"; 
 	print "Disallow: /uri/\n"; 
 	exit;
 }
