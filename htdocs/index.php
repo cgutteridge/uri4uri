@@ -157,12 +157,13 @@ if( $format == "html" )
 		$content.="<p><strong style='font-weight:bold'>Jump to:</strong> ".join( " &bull; ", $skips )."</p>";
 		$content.= "<style type='text/css'>.class .class { margin: 4em 0;} .class .class .class { margin: 1em 0; }</style>";
 		$content.= "<div class='class'><div class='class2'>";
+		$prefix_length = strlen("$PREFIX/vocab#");
 		foreach( $sections as $s )
 		{
 			$html = array();
 			foreach( $l[$s[2]] as $resource ) 
 			{ 
-				$html[$resource->toString()]= "<a name='".substr( $resource->toString(),25)."'></a>".renderResource( $graph, $resource ); 
+				$html[$resource->toString()]= "<a name='".substr( $resource->toString(),$prefix_length)."'></a>".renderResource( $graph, $resource ); 
 			}
 			ksort($html);
 			$content.= "<a name='".$s[2]."' /><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
