@@ -28,12 +28,10 @@ if($path == "/robots.txt")
 	header("Content-type: text/plain");
 	print "User-agent: *\n";
 	# prevent robots triggering a who-is
-	print "Disallow: /uri.html/\n"; 
-	print "Disallow: /uri.rdf/\n"; 
-	print "Disallow: /uri.ttl/\n"; 
-	print "Disallow: /uri.nt/\n"; 
-	print "Disallow: /uri.jsonld/\n"; 
-	print "Disallow: /uri/\n"; 
+	print "Disallow: /domain\n";
+	print "\n";
+	print "User-agent: ia_archiver\n";
+	print "Allow: /\n"; 
 	exit;
 }
 
@@ -335,7 +333,7 @@ function graphDomain($domain)
 	$graph = initGraph();
 	$uri = $graph->expandURI("domain:$domain");
 	addBoilerplateTrips($graph, "domain:$domain", $uri);
-	addDomainTrips($graph, $domain);
+	addDomainTrips($graph, $domain, true);
 	return $graph;
 }
 
@@ -412,7 +410,7 @@ function addHTTPSchemeTrips(&$graph, $uri)
 	if(@$b["host"])
 	{
 		$graph->addCompressedTriple($uriuri, "uriv:host", "domain:".$b["host"]);
-		addDomainTrips($graph, $b["host"]);
+		addDomainTrips($graph, $b["host"], false);
 		if(@$b["scheme"] == "http" || @$b["scheme"] == "https")
 		{
 			$homepage = $b["scheme"]."://".$b["host"];
@@ -488,7 +486,7 @@ function addHTTPSchemeTrips(&$graph, $uri)
 
 
 
-function addDomainTrips(&$graph, $domain)
+function addDomainTrips(&$graph, $domain, $do_whois)
 {	
 	$actual_domain = $domain;
 	$nowww_actual_domain = $domain;
@@ -546,7 +544,7 @@ function addDomainTrips(&$graph, $domain)
 		$graph->addCompressedTriple("domain:".$domain, "rdfs:label", $domain, "literal");
 		$graph->addCompressedTriple("domain:".$domain, "skos:notation", $domain, "uriv:DomainDatatype");
 
-		if(isset($whoisservers["$domain"]))
+		if($do_whois && isset($whoisservers["$domain"]))
 		{
 			$graph->addCompressedTriple("domain:".$domain, "uriv:hasWhoIsServer", "domain:".$whoisservers["$domain"]);
 			$graph->addCompressedTriple("domain:".$whoisservers["$domain"], "rdf:type", "uriv:WhoisServer");
