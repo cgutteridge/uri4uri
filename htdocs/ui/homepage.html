@@ -60,8 +60,8 @@ $(document).ready( function() {
 			$('#resultBlock').show();
 			return;
 		}
-		uri4uri = "http://purl.org/uri4uri/uri/"+encodeURIComponent(v);
-		$('#resultBlock').html("The URI for this URI is: <div style='margin-top:0.5em'><a href='"+uri4uri+"'>"+uri4uri+"</a></div>" );
+		v = encodeURIComponent(v);
+		$('#resultBlock').html("The URI for this URI is: <div style='margin-top:0.5em'><a href='/uri/"+v+"'>http://purl.org/uri4uri/uri/"+v+"</a></div>" );
 		$('#resultBlock').show();
 	}
 	uri.blur( blur );
@@ -76,10 +76,10 @@ $(document).ready( function() {
 <p>It just parses the URI part (using the PHP parse_url command) to get the parts, then uses some lookup tables for information about mime types, top level domains and so forth. This data was taken from IANA and dbpedia.</p>
 
 <p>It accepts any possible URI, including 
-<a href="http://purl.org/uri4uri/uri/http%3A%2F%2Ftotl.net%2F">web addresses</a>, 
-<a href="http://purl.org/uri4uri/uri/mailto%3Awebmaster%40microsoft.com">email addresses</a>, 
-<a href="http://purl.org/uri4uri/uri/urn%3Aisbn%3A817224164X">ISBNs</a> as well as some more obscure schemes such as
-<a href="http://purl.org/uri4uri/uri/gopher%3A%2F%2Fsdf.org%3A70%2F1%2Fcomputers%2Fapple%2Fmac%2Fhypercard">Gopher</a>.</p> 
+<a href="/uri/http%3A%2F%2Ftotl.net%2F">web addresses</a>, 
+<a href="/uri/mailto%3Awebmaster%40microsoft.com">email addresses</a>, 
+<a href="/uri/urn%3Aisbn%3A817224164X">ISBNs</a> as well as some more obscure schemes such as
+<a href="/uri/gopher%3A%2F%2Fsdf.org%3A70%2F1%2Fcomputers%2Fapple%2Fmac%2Fhypercard">Gopher</a>.</p> 
 
 <h3>URIs</h3>
 
@@ -89,11 +89,11 @@ $(document).ready( function() {
 <p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF+XML or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, nt, html. These have URLs in the following formats:</p>
 <p class='code'>http://purl.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</p>
 <p>Examples:</p>
-<p><a style='font-family:monospace' href='http://purl.org/uri4uri/uri/http%3A%2F%2Fxkcd.com%2F123%2F'>http://purl.org/uri4uri/uri/http%3A%2F%2Fxkcd.com%2F123%2F</a> - URI for  "http://xkcd.com/123/"<br />
-<a style='font-family:monospace' href='http://purl.org/uri4uri/domain/totl.net'>http://purl.org/uri4uri/domain/totl.net</a> - URI for the domain "totl.net"<br />
-<a style='font-family:monospace' href='http://purl.org/uri4uri/suffix/pdf'>http://purl.org/uri4uri/suffix/pdf</a> - URI for the suffix ".pdf"<br />
-<a style='font-family:monospace' href='http://purl.org/uri4uri/scheme/ftp'>http://purl.org/uri4uri/scheme/ftp</a> - URI for the URI scheme "ftp"<br />
-<a style='font-family:monospace' href='http://purl.org/uri4uri/mime/text/plain'>http://purl.org/uri4uri/mime/text/plain</a> - URI for the MIME Type "text/plain"
+<p><a style='font-family:monospace' href='/uri/http%3A%2F%2Fxkcd.com%2F123%2F'>http://purl.org/uri4uri/uri/http%3A%2F%2Fxkcd.com%2F123%2F</a> - URI for  "http://xkcd.com/123/"<br />
+<a style='font-family:monospace' href='/domain/totl.net'>http://purl.org/uri4uri/domain/totl.net</a> - URI for the domain "totl.net"<br />
+<a style='font-family:monospace' href='/suffix/pdf'>http://purl.org/uri4uri/suffix/pdf</a> - URI for the suffix ".pdf"<br />
+<a style='font-family:monospace' href='/scheme/ftp'>http://purl.org/uri4uri/scheme/ftp</a> - URI for the URI scheme "ftp"<br />
+<a style='font-family:monospace' href='/mime/text/plain'>http://purl.org/uri4uri/mime/text/plain</a> - URI for the MIME Type "text/plain"
 </p>
 
 <h3>How big is it?</h3>
@@ -106,9 +106,9 @@ $(document).ready( function() {
 <p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://purl.org/uri4uri/uri/"+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
 <h3>What parts of a URI are supported?</h3>
 <p>The majority of the effort has gone into calculating the components of 
-<a href='http://purl.org/uri4uri/scheme/http'>http</a> and <a href='http://purl.org/uri4uri/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='http://purl.org/uri4uri/uri/http%3A%2F%2Ffoo%3Abar%40bbc.co.uk%3A80%2Findex.html%3Fa%3D1%26b%3D2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2</a>, however other URI schemes are supported, eg.
-<a href='http://purl.org/uri4uri/uri/tel%3A%2B2035989395'>tel:</a> or 
-<a href='http://purl.org/uri4uri/uri/secondlife%3A%2F%2FAncient%2520Ireland%2F167%2F153'>secondlife:</a>.</p>
+<a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http%3A%2F%2Ffoo%3Abar%40bbc.co.uk%3A80%2Findex.html%3Fa%3D1%26b%3D2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2</a>, however other URI schemes are supported, eg.
+<a href='/uri/tel%3A%2B2035989395'>tel:</a> or 
+<a href='/uri/secondlife%3A%2F%2FAncient%2520Ireland%2F167%2F153'>secondlife:</a>.</p>
 
 <h3>Uncool URIs</h3>
 <p>Sir Professor TimBL has said to you "<a href='http://www.w3.org/Provider/Style/URI'>Cool URIs don't change</a>". This implies a sad corollary; "Uncool URIs do sometimes change". You may use the uri4uri URIs to describe your own metadata about a URI, including where, why and by whom it was assigned, and what it was the sameAs at a given moment or interval throughout its existence.</p>
