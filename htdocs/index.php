@@ -823,6 +823,8 @@ function renderResource($graph, $resource)
 		if($rel == "http://www.w3.org/2000/01/rdf-schema#label") { continue; }
 		if($rel == "http://www.w3.org/2000/01/rdf-schema#isDefinedBy") { continue; }
 		if($rel == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") { continue; }
+		if($rel == "http://www.w3.org/2004/02/skos/core#exactMatch") { continue; }
+		if($rel == "http://purl.org/dc/terms/replaces") { continue; }
 		$follow_inverse = false;
 		if($rel == "http://dbpedia.org/property/cctld") { $follow_inverse = true; }
 		if($rel == "$PREFIX/vocab#subDom") { $follow_inverse = true; }
