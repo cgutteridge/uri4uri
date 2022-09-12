@@ -7,9 +7,10 @@ require_once( "../lib/arc2/ARC2.php" );
 require_once( "../lib/Graphite/Graphite.php" );
 
 $filepath = "/var/www/uri4uri/htdocs/data";
-$BASE = "http://uri4uri.is4.site";
+$BASE = "";
 $PREFIX = "http://purl.org/uri4uri";
 $PREFIX_OLD = "http://uri4uri.net";
+$ARCHIVE_BASE = "//web.archive.org/web/20220000000000/";
 
 $show_title = true;
 #error_log( "Req: ".$_SERVER["REQUEST_URI"] );
@@ -743,6 +744,43 @@ function addExtraVocabTrips( &$graph )
 	}
 }
 
+function substituteLink( $uri )
+{
+	global $BASE;
+	global $PREFIX;
+	global $PREFIX_OLD;
+	global $ARCHIVE_BASE;
+	if( substr( $uri, 0, strlen($PREFIX) ) === $PREFIX )
+	{
+		return $BASE.substr( $uri, strlen($PREFIX) );
+	}
+	if( substr( $uri, 0, strlen($PREFIX_OLD) ) === $PREFIX_OLD )
+	{
+		return $ARCHIVE_BASE.$uri;
+	}
+	return $uri;
+}
+
+function resourceLink( $resource, $attributes = "" )
+{
+	$uri = $resource->url();
+	$uri_href = substituteLink($uri);
+	return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($uri)."</a>";
+}
+
+function prettyResourceLink( $resource, $attributes = "" )
+{
+	$uri = $resource->url();
+	$uri_href = substituteLink($uri);
+	$label = $uri;
+	if( $resource->hasLabel() ) { $label = $resource->label(); }
+	else if( preg_match( '/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $uri, $b ) )
+	{
+		$label = "#".$b[1];
+	}
+	return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($label)."</a>";
+}
+
 function renderResource( $graph, $resource )
 {
 	global $PREFIX;
@@ -755,12 +793,12 @@ function renderResource( $graph, $resource )
 		$r.= "<div class='classLabel'>".$resource->label();
 		if( $resource->has("rdf:type") )
 		{
-			$r.=" <span class='classType'>[".$resource->all( "rdf:type" )->prettyLink()->join( ", " )."]</span>";
+			$r.=" <span class='classType'>[".$resource->all( "rdf:type" )->map(function($r) { return prettyResourceLink($r); })->join( ", " )."]</span>";
 		}
 		$r.= "</div>";
 	}
 	$r.="<div class='class2'>";
-	$r.="<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".$resource->link()."</span></div>";
+	$r.="<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></div>";
 	$short = $long = "";
 	foreach( $resource->relations() as $rel )
 	{
@@ -784,7 +822,7 @@ function renderResource( $graph, $resource )
 		{
 			$label = "#".$b[1];
 		}
-		$pred = "<a href='$rel' class='predicate'>$label</a>";
+		$pred = prettyResourceLink($rel, " class='predicate'");
 		if( $rel->nodeType() == "#inverseRelation" ) { $pred = "is \"$pred\" of"; }
 
 		foreach( $resource->all( $rel ) as $r2 )
@@ -803,12 +841,12 @@ function renderResource( $graph, $resource )
 			if( substr( $type, 0, 4 ) == "http" )
 			{
 				$rt = $graph->resource($type);
-				$short.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".$rt->prettyLink()."]</span></div>";
+				$short.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span></div>";
 				continue;
 			}
 			if( $r2 instanceof Graphite_Resource && $r2->isType( "foaf:Document" ) )
 			{
-				$short.= "<div class='relation'>$pred: ".$r2->prettyLink()."</div>";
+				$short.= "<div class='relation'>$pred: ".prettyResourceLink($r2)."</div>";
 				continue;
 			}
 			$long.= "<table class='relation'><tr>";
