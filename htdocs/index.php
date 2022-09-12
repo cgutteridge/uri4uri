@@ -9,6 +9,7 @@ require_once( "../lib/Graphite/Graphite.php" );
 $filepath = "/var/www/uri4uri/htdocs/data";
 $BASE = "http://uri4uri.is4.site";
 $PREFIX = "http://purl.org/uri4uri";
+$PREFIX_OLD = "http://uri4uri.net";
 
 $show_title = true;
 #error_log( "Req: ".$_SERVER["REQUEST_URI"] );
@@ -219,6 +220,7 @@ exit;
 function initGraph()
 {
 	global $PREFIX;
+	global $PREFIX_OLD;
 
 	$graph = new Graphite();
 	$graph->ns( "uri","$PREFIX/uri/" );
@@ -227,6 +229,12 @@ function initGraph()
 	$graph->ns( "domain","$PREFIX/domain/" );
 	$graph->ns( "suffix","$PREFIX/suffix/" );
 	$graph->ns( "mime","$PREFIX/mime/" );
+	$graph->ns( "olduri","$PREFIX_OLD/uri/" );
+	$graph->ns( "olduriv","$PREFIX_OLD/vocab#" );
+	$graph->ns( "oldscheme","$PREFIX_OLD/scheme/" );
+	$graph->ns( "olddomain","$PREFIX_OLD/domain/" );
+	$graph->ns( "oldsuffix","$PREFIX_OLD/suffix/" );
+	$graph->ns( "oldmime","$PREFIX_OLD/mime/" );
 	$graph->ns( "occult", "http://data.totl.net/occult/" );
 	$graph->ns( "xtypes", "http://prefix.cc/xtypes/" );
 	$graph->ns( "vs","http://www.w3.org/2003/06/sw-vocab-status/ns#" );
@@ -254,11 +262,26 @@ function graphVocab( $id )
 	return $graph;
 }
 
+function linkOldConcept( &$graph, $term, $type )
+{
+	static $linkmap = array(
+		"c"=>"owl:equivalentClass",	
+		"p"=>"owl:equivalentProperty",
+		"d"=>"owl:equivalentClass" );
+	$oldterm = "old$term";
+	$graph->addCompressedTriple( $term, "dcterms:replaces", $oldterm );
+	$graph->addCompressedTriple( $term, "skos:exactMatch", $oldterm );
+	if( isset($linkmap[$type]) )
+	{
+		$graph->addCompressedTriple( $term, $linkmap[$type], $oldterm );
+	}
+}
+
 function addVocabTrips( &$graph )
 {
 	global $filepath;
 	$lines = file( "$filepath/ns.tsv" );
-	$tmap = array(
+	static $tmap = array(
 		""=>"skos:Concept",
 		"c"=>"rdfs:Class",	
 		"p"=>"rdf:Property",
@@ -266,9 +289,11 @@ function addVocabTrips( &$graph )
 	foreach( $lines as $line )
 	{
 		list( $term, $type, $name ) = preg_split( "/:/", chop( $line ) );
-		$graph->addCompressedTriple( "uriv:$term", "rdf:type", $tmap[$type] );
-		$graph->addCompressedTriple( "uriv:$term", "rdfs:isDefinedBy", "uriv:" );
-		$graph->addCompressedTriple( "uriv:$term", "rdfs:label", $name, "literal" );
+		$term = "uriv:$term";
+		$graph->addCompressedTriple( $term, "rdf:type", $tmap[$type] );
+		$graph->addCompressedTriple( $term, "rdfs:isDefinedBy", "uriv:" );
+		$graph->addCompressedTriple( $term, "rdfs:label", $name, "literal" );
+		linkOldConcept( $graph, $term, $type );
 	}
 }
 
@@ -323,10 +348,13 @@ function graphScheme( $scheme )
 function addBoilerplateTrips( &$graph, $uri, $title )
 {
 	global $PREFIX;
+	global $PREFIX_OLD;
 	$document_url = $PREFIX.$_SERVER["REQUEST_URI"];
 	$graph->addCompressedTriple( $document_url, "rdf:type", "foaf:Document" );
 	$graph->addCompressedTriple( $document_url, "dcterms:title", $title, "literal" );
 	$graph->addCompressedTriple( $document_url, "foaf:primaryTopic", "$uri" );
+	
+	linkOldConcept( $graph, $uri, "" );
 	
 # wikipedia data etc. not cc0
 #"	$graph->addCompressedTriple( "", "dcterms:license", "http://creativecommons.org/publicdomain/zero/1.0/" );
