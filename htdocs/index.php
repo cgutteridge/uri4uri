@@ -106,7 +106,7 @@ if( !isset( $format ) || $format == "")
 	if( $wants == "application/ld+json" ) { $format = "jsonld"; }
 
 	if( $type == "uri" ) { $id = rawurlencode( rawurldecode($id) ); }
-	header( "HTTP/1.1 303 C.Elseware" );
+	http_response_code(303);
 	header( "Location: $BASE/$type.$format/$id" );
 	exit;
 }
@@ -120,7 +120,7 @@ else { serve404(); exit; }
 
 if( $format == "html" )
 {
-	header( "HTTP/1.1 200 OK" );
+	http_response_code(200);
 	$document_url = $PREFIX.$_SERVER["REQUEST_URI"];
 	$doc = $graph->resource($document_url);
 	$title = $doc->label();
@@ -193,31 +193,31 @@ if( $format == "html" )
 }
 elseif( $format == "rdf" )
 {
-	header( "HTTP/1.1 200 OK" );
+	http_response_code(200);
 	header( "Content-type: application/rdf+xml" );
 	print $graph->serialize( "RDFXML" );
 }
 elseif( $format == "nt" )
 {
-	header( "HTTP/1.1 200 OK" );
+	http_response_code(200);
 	header( "Content-type: text/plain" );
 	print $graph->serialize( "NTriples" );
 }
 elseif( $format == "ttl" )
 {
-	header( "HTTP/1.1 200 OK" );
+	http_response_code(200);
 	header( "Content-type: text/turtle" );
 	print $graph->serialize( "Turtle" );
 }
 elseif( $format == "jsonld" )
 {
-	header( "HTTP/1.1 200 OK" );
+	http_response_code(200);
 	header( "Content-type: application/ld+json" );
 	print $graph->serialize( "JSONLD" );
 }
 elseif( $format == "debug" )
 {
-	header( "HTTP/1.1 200 OK" );
+	http_response_code(200);
 	header( "Content-type: text/plain" );
 	print_r( $graph->toArcTriples() );
 }
@@ -255,7 +255,7 @@ function initGraph()
 
 function serve404()
 {
-	header( "HTTP/1.1 404 Not Found" );
+	http_response_code(404);
 	$title = "404 Not Found";
 	$content =  "<p>See, it's things like this that are what Ted Nelson was trying to warn you about.</p>";
 	require_once( "ui/template.php" );
