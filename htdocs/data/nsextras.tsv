@@ -13,6 +13,7 @@ geo:long	p	longitude
 dcterms:description	p	description
 dcterms:replaces	p	replaces
 skos:exactMatch	p	exactly matches
+skos:broader	p	broader concept
 rdfs:seeAlso	p	see also
 xsd:float	d	Floating-point number
 xsd:positiveInteger	d	Postitive Integer

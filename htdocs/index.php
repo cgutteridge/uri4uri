@@ -678,7 +678,17 @@ function addMimeTrips(&$graph, $mime, $rec=true)
 			$graph->addCompressedTriple(db2wiki($format_uri), "rdf:type", "foaf:Document");
 		}
 	}
-
+	
+	@list(, $suffix_type) = explode("+", $mime, 2);
+	if(!empty($suffix_type))
+	{
+		static $suffix_map = array("ber"=>"application/ber-stream", "der"=>"application/der-stream", "wbxml"=>"application/vnd.wap.wbxml");
+		$base_mime = @$suffix_map[$suffix_type] ?? "application/$suffix_type";
+		$graph->addCompressedTriple("mime:$mime", "skos:broader", "mime:$base_mime");
+		$graph->addCompressedTriple("mime:$base_mime", "rdf:type", "uriv:Mimetype");
+		$graph->addCompressedTriple("mime:$base_mime", "rdfs:label", $base_mime, "literal");
+		$graph->addCompressedTriple("mime:$base_mime", "skos:notation", $base_mime, "uriv:MimetypeDatatype");
+	}
 
 	$lines = file("$filepath/mime.types");
 	foreach($lines as $line)
