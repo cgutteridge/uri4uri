@@ -58,7 +58,7 @@ if( $path == "/" )
 	require_once( "ui/template.php" );
 	exit;
 }
-if( !preg_match( "/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|debug|ttl|html|nt))?(\/(.*))?$/", $path, $b ) )
+if( !preg_match( "/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|debug|ttl|html|nt|jsonld))?(\/(.*))?$/", $path, $b ) )
 {
 	serve404();
 	exit;
@@ -71,7 +71,7 @@ if( !isset( $format ) || $format == "")
 
 	if( isset( $_SERVER["HTTP_ACCEPT"] ) )
 	{
-		$o = array( 'text/html'=>0, "text/turtle"=>0.02, "application/rdf+xml"=>0.01 );
+		$o = array( 'text/html'=>0, "text/turtle"=>0.02, "application/ld+json"=>0.015, "application/rdf+xml"=>0.01 );
 	
         	$opts = preg_split( "/\s*,\s*/", $_SERVER["HTTP_ACCEPT"] );
 	
@@ -103,6 +103,7 @@ if( !isset( $format ) || $format == "")
 	$format = "html";
 	if( $wants == "text/turtle" ) { $format = "ttl"; }
 	if( $wants == "application/rdf+xml" ) { $format = "rdf"; }
+	if( $wants == "application/ld+json" ) { $format = "jsonld"; }
 
 	if( $type == "uri" ) { $id = rawurlencode( rawurldecode($id) ); }
 	header( "HTTP/1.1 303 C.Elseware" );
@@ -134,7 +135,9 @@ if( $format == "html" )
 	$content.= " &bull; ";
 	$content.= "<a href='$BASE/$type.nt/$id'>N-Triples</a>";
 	$content.= " &bull; ";
-	$content.= "<a href='$BASE/$type.rdf/$id'>RDF XML</a>";
+	$content.= "<a href='$BASE/$type.rdf/$id'>RDF/XML</a>";
+	$content.= " &bull; ";
+	$content.= "<a href='$BASE/$type.jsonld/$id'>JSON-LD</a>";
 	$content.= "</p>";
 
 	if( $type == "vocab" )
@@ -205,6 +208,12 @@ elseif( $format == "ttl" )
 	header( "HTTP/1.1 200 OK" );
 	header( "Content-type: text/turtle" );
 	print $graph->serialize( "Turtle" );
+}
+elseif( $format == "jsonld" )
+{
+	header( "HTTP/1.1 200 OK" );
+	header( "Content-type: application/ld+json" );
+	print $graph->serialize( "JSONLD" );
 }
 elseif( $format == "debug" )
 {
