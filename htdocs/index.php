@@ -758,7 +758,7 @@ function addSchemeTrips(&$graph, $scheme)
 	{
 		$graph->addCompressedTriple("scheme:".$scheme, "foaf:page", $s["url"]);
 		$graph->addCompressedTriple("scheme:".$scheme, "uriv:IANAPage", $s["url"]);
-		$graph->addCompressedTriple($s["uri"], "rdf:type", "foaf:Document");
+		$graph->addCompressedTriple($s["url"], "rdf:type", "foaf:Document");
 	}
 	foreach($s["refs"] as $url=>$label)
 	{
