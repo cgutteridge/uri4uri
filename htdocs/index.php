@@ -35,9 +35,17 @@ if($path == "/robots.txt")
 	exit;
 }
 
+function urlencode_minimal($str)
+{
+	return preg_replace_callback("/[^!$&-;=@A-Z_a-z~\u{00A0}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFEF}]+/u", function($matches)
+	{
+		return rawurlencode($matches[0]);
+	}, $str);
+}
+
 if(preg_match("/^\/?/", $path) && @$_GET["uri"])
 {
-	$uri4uri = "$BASE/uri/".urlencode($_GET["uri"]);
+	$uri4uri = "$BASE/uri/".urlencode_minimal($_GET["uri"]);
 	header("Location: $uri4uri");
 	exit;
 }
@@ -62,10 +70,29 @@ if(!preg_match("/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|debug|ttl|html|
 	serve404();
 	exit;
 }
-@list($dummy1, $type, $dummy2, $format, $dummy3, $id) = $b;
+@list(, $type, , $format, , $id) = $b;
 
-if(!isset($format) || $format == "")
-{	
+if($type == "uri")
+{
+	$decoded_id = rawurldecode($id);
+	$reencoded_id = urlencode_minimal($decoded_id);
+	if($id !== $reencoded_id)
+	{
+		if(empty($format))
+		{
+			http_response_code(301);
+			header("Location: $BASE/$type/$reencoded_id");
+		}else{
+			http_response_code(301);
+			header("Location: $BASE/$type.$format/$reencoded_id");
+		}
+		exit;
+	}
+	$id = $decoded_id;
+}
+
+if(empty($format))
+{
 	$wants = "text/turtle";
 
 	if(isset($_SERVER["HTTP_ACCEPT"]))
@@ -104,7 +131,6 @@ if(!isset($format) || $format == "")
 	if($wants == "application/rdf+xml") { $format = "rdf"; }
 	if($wants == "application/ld+json") { $format = "jsonld"; }
 
-	if($type == "uri") { $id = rawurlencode(rawurldecode($id)); }
 	http_response_code(303);
 	header("Location: $BASE/$type.$format/$id");
 	exit;
@@ -310,8 +336,7 @@ function addVocabTrips(&$graph)
 
 function graphURI($uri)
 {
-	$uri = rawurldecode($uri);
-	$uriuri = "uri:".rawurlencode($uri);
+	$uriuri = "uri:".urlencode_minimal($uri);
 	$graph = initGraph();
 	addBoilerplateTrips($graph, $uriuri, $uri);
 	addURITrips($graph, $uri);
@@ -375,7 +400,7 @@ function addBoilerplateTrips(&$graph, $uri, $title)
 
 function addURITrips(&$graph, $uri)
 {
-	$uriuri = "uri:".rawurlencode($uri);
+	$uriuri = "uri:".urlencode_minimal($uri);
 	$b = parse_url($uri);
 
 	if(isset($b["fragment"]))
@@ -404,7 +429,7 @@ function addURITrips(&$graph, $uri)
 
 function addHTTPSchemeTrips(&$graph, $uri)
 {
-	$uriuri = "uri:".rawurlencode($uri);
+	$uriuri = "uri:".urlencode_minimal($uri);
 	$b = parse_url($uri);
 
 	if(@$b["host"])

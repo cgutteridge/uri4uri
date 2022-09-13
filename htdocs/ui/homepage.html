@@ -60,7 +60,8 @@ $(document).ready( function() {
 			$('#resultBlock').show();
 			return;
 		}
-		v = encodeURIComponent(v);
+		v = v.replace(/[^!$&-;=@A-Z_a-z~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+/ug, encodeURIComponent)
+			.replace(/[&<>']/g, m => '&#' + match.charCodeAt(0) + ';');
 		$('#resultBlock').html("The URI for this URI is: <div style='margin-top:0.5em'><a href='/uri/"+v+"'>http://purl.org/uri4uri/uri/"+v+"</a></div>" );
 		$('#resultBlock').show();
 	}
@@ -89,7 +90,7 @@ $(document).ready( function() {
 <p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF+XML or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, nt, html. These have URLs in the following formats:</p>
 <p class='code'>http://purl.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</p>
 <p>Examples:</p>
-<p><a style='font-family:monospace' href='/uri/http%3A%2F%2Fxkcd.com%2F123%2F'>http://purl.org/uri4uri/uri/http%3A%2F%2Fxkcd.com%2F123%2F</a> - URI for  "http://xkcd.com/123/"<br />
+<p><a style='font-family:monospace' href='/uri/http://xkcd.com/123/'>http://purl.org/uri4uri/uri/http://xkcd.com/123/</a> - URI for  "http://xkcd.com/123/"<br />
 <a style='font-family:monospace' href='/domain/totl.net'>http://purl.org/uri4uri/domain/totl.net</a> - URI for the domain "totl.net"<br />
 <a style='font-family:monospace' href='/suffix/pdf'>http://purl.org/uri4uri/suffix/pdf</a> - URI for the suffix ".pdf"<br />
 <a style='font-family:monospace' href='/scheme/ftp'>http://purl.org/uri4uri/scheme/ftp</a> - URI for the URI scheme "ftp"<br />
@@ -106,9 +107,9 @@ $(document).ready( function() {
 <p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://purl.org/uri4uri/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
 <h3>What parts of a URI are supported?</h3>
 <p>The majority of the effort has gone into calculating the components of 
-<a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http%3A%2F%2Ffoo%3Abar%40bbc.co.uk%3A80%2Findex.html%3Fa%3D1%26b%3D2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2</a>, however other URI schemes are supported, eg.
-<a href='/uri/tel%3A%2B2035989395'>tel:</a> or 
-<a href='/uri/secondlife%3A%2F%2FAncient%2520Ireland%2F167%2F153'>secondlife:</a>.</p>
+<a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2</a>, however other URI schemes are supported, eg.
+<a href='/uri/tel:+2035989395'>tel:</a> or 
+<a href='/uri/secondlife://Ancient Ireland/167/153'>secondlife:</a>.</p>
 
 <h3>Uncool URIs</h3>
 <p>Sir Professor TimBL has said to you "<a href='http://www.w3.org/Provider/Style/URI'>Cool URIs don't change</a>". This implies a sad corollary; "Uncool URIs do sometimes change". You may use the uri4uri URIs to describe your own metadata about a URI, including where, why and by whom it was assigned, and what it was the sameAs at a given moment or interval throughout its existence.</p>
