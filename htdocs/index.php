@@ -51,6 +51,31 @@ function urlencode_utf8($str)
 	}, $str);
 }
 
+function parse_url_fixed($uri)
+{
+	$has_query = strpos($uri, '?') !== false;
+	$has_fragment = strpos($uri, '#') !== false;
+	
+	if(!$has_query && !$has_fragment)
+	{
+		$uri = "$uri?";
+	}
+	
+	$result = parse_url($uri);
+	
+	if($has_query && !isset($result['query']))
+	{
+		$result['query'] = '';
+	}
+	
+	if($has_fragment && !isset($result['fragment']))
+	{
+		$result['fragment'] = '';
+	}
+	
+	return $result;
+}
+
 if(preg_match("/^\/?/", $path) && @$_GET["uri"])
 {
 	$uri4uri = "$BASE/uri/".urlencode_minimal($_GET["uri"]);
@@ -406,7 +431,7 @@ function addBoilerplateTrips(&$graph, $uri, $title)
 function addURITrips(&$graph, $uri)
 {
 	$uriuri = "uri:".urlencode_minimal($uri);
-	$b = parse_url($uri);
+	$b = parse_url_fixed($uri);
 
 	if(isset($b["fragment"]))
 	{
@@ -435,7 +460,7 @@ function addURITrips(&$graph, $uri)
 function addHTTPSchemeTrips(&$graph, $uri)
 {
 	$uriuri = "uri:".urlencode_minimal($uri);
-	$b = parse_url($uri);
+	$b = parse_url_fixed($uri);
 
 	if(@$b["host"])
 	{
@@ -491,7 +516,7 @@ function addHTTPSchemeTrips(&$graph, $uri)
 		}
 	}
 
-	if(@$b["query"])
+	if(isset($b["query"]))
 	{
 		$graph->addCompressedTriple($uriuri, "uriv:queryString", $b["query"], "xsd:string");
 		$graph->addCompressedTriple($uriuri, "uriv:query", "$uriuri#query");
