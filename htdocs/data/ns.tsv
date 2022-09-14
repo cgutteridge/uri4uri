@@ -8,7 +8,7 @@ filename:p:filename
 Format:c:File Format
 fragmentOf:p:fragment of
 fragment:p:fragment
-FragmentURI:c:URI with Fragement Identifier
+FragmentURI:c:URI with Fragment Identifier
 host:p:host
 IANAPage:p:IANA page
 IANARef:p:IANA reference
