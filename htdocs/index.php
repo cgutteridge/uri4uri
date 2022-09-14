@@ -162,7 +162,7 @@ if(empty($format))
 	if($wants == "application/ld+json") { $format = "jsonld"; }
 
 	http_response_code(303);
-	header("Location: $BASE/$type.$format/$id");
+	header("Location: $BASE/$type.$format/$reencoded_id");
 	exit;
 }
 if($type == "uri") { $graph = graphURI($id); }
@@ -186,13 +186,14 @@ if($format == "html")
 		#$content.= "<p>URI: <tt>$uri</tt></p>";
 	}
 	$content.= "<p><span style='font-weight:bold'>Download data:</span> ";
-	$content.= "<a href='$BASE/$type.ttl/$id'>Turtle</a>";
+	$id_href = htmlspecialchars($reencoded_id);
+	$content.= "<a href='$BASE/$type.ttl/$id_href'>Turtle</a>";
 	$content.= " &bull; ";
-	$content.= "<a href='$BASE/$type.nt/$id'>N-Triples</a>";
+	$content.= "<a href='$BASE/$type.nt/$id_href'>N-Triples</a>";
 	$content.= " &bull; ";
-	$content.= "<a href='$BASE/$type.rdf/$id'>RDF/XML</a>";
+	$content.= "<a href='$BASE/$type.rdf/$id_href'>RDF/XML</a>";
 	$content.= " &bull; ";
-	$content.= "<a href='$BASE/$type.jsonld/$id'>JSON-LD</a>";
+	$content.= "<a href='$BASE/$type.jsonld/$id_href'>JSON-LD</a>";
 	$content.= "</p>";
 
 	if($type == "vocab")
