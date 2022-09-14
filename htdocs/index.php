@@ -438,7 +438,7 @@ function addURITrips(&$graph, $uri)
 		list($uri_part, $dummy) = preg_split('/#/', $uri);
 		$graph->addCompressedTriple($uriuri, "rdf:type", "uriv:FragmentURI");
 		$graph->addCompressedTriple($uriuri, "uriv:fragment", $b["fragment"], "xsd:string");
-		$graph->addCompressedTriple($uriuri, "uriv:fragmentOf", "uri:".urlencode($uri_part));
+		$graph->addCompressedTriple($uriuri, "uriv:fragmentOf", "uri:".urlencode_minimal($uri_part));
 	}
 
 	$graph->addCompressedTriple($uri, "uriv:identifiedBy", $uriuri);
