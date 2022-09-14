@@ -43,6 +43,14 @@ function urlencode_minimal($str)
 	}, $str);
 }
 
+function urlencode_utf8($str)
+{
+	return preg_replace_callback("/[\u{0080}-\u{FFFF}]+/u", function($matches)
+	{
+		return rawurlencode($matches[0]);
+	}, $str);
+}
+
 if(preg_match("/^\/?/", $path) && @$_GET["uri"])
 {
 	$uri4uri = "$BASE/uri/".urlencode_minimal($_GET["uri"]);
@@ -72,24 +80,21 @@ if(!preg_match("/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|debug|ttl|html|
 }
 @list(, $type, , $format, , $id) = $b;
 
-if($type == "uri")
+$decoded_id = rawurldecode($id);
+$reencoded_id = urlencode_minimal($decoded_id);
+if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id))
 {
-	$decoded_id = rawurldecode($id);
-	$reencoded_id = urlencode_minimal($decoded_id);
-	if($id !== $reencoded_id)
+	if(empty($format))
 	{
-		if(empty($format))
-		{
-			http_response_code(301);
-			header("Location: $BASE/$type/$reencoded_id");
-		}else{
-			http_response_code(301);
-			header("Location: $BASE/$type.$format/$reencoded_id");
-		}
-		exit;
+		http_response_code(301);
+		header("Location: $BASE/$type/$reencoded_id");
+	}else{
+		http_response_code(301);
+		header("Location: $BASE/$type.$format/$reencoded_id");
 	}
-	$id = $decoded_id;
+	exit;
 }
+$id = $decoded_id;
 
 if(empty($format))
 {
