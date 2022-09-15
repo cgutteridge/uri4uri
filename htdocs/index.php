@@ -664,76 +664,83 @@ function addDomainTrips(&$graph, $domain, $do_whois)
 
 function addSuffixTrips(&$graph, $suffix)
 {
-	global $filepath;
+	global $PREFIX;
 	$graph->addCompressedTriple("suffix:$suffix", "rdf:type", "uriv:Suffix");
 	$graph->addCompressedTriple("suffix:$suffix", "rdfs:label", ".".$suffix, "xsd:string");
 	$graph->addCompressedTriple("suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype");
 
-	$exts = json_decode(file_get_contents("$filepath/extensions.json"), true);
-	if(isset($exts[$suffix]))
-	{
-		foreach($exts[$suffix] as $format_uri=>$format_info)
-		{
-			$graph->addCompressedTriple("suffix:$suffix", "uriv:usedForFormat", $format_uri);
-			$graph->addCompressedTriple($format_uri, "rdfs:label", $format_info["label"], "literal", "en");
-			$graph->addCompressedTriple($format_uri, "rdf:type", "uriv:Format");
-			if(isset($format_info["desc"]) && $format_info["desc"]!="")
-			{
-				$desc = preg_replace("/\. .*$/", ".", $format_info["desc"]);
-				$graph->addCompressedTriple($format_uri, "dcterms:description", $desc, "literal", "en");
-			}
-			$graph->addCompressedTriple($format_uri, "foaf:page", db2wiki($format_uri));
-			$graph->addCompressedTriple(db2wiki($format_uri), "rdf:type", "foaf:Document");
-		}
-	}
+	$suffix_lower = strtolower($suffix);
+	$suffix_upper = strtoupper($suffix);
 
-
-	$lines = file("$filepath/mime.types");
-	foreach($lines as $line)
-	{
-		$line = chop($line);
-		if(preg_match("/^#/", $line)) { continue; }
-		if(preg_match("/^([^\t]+)\t+([^\t]+)/", $line, $b))
-		{
-			list($null, $mime, $types) = $b;
-			foreach(preg_split("/ /", $types) as $type)
-			{
-				if($type == $suffix)
-				{
-					$graph->addCompressedTriple("mime:$mime", "uriv:usedForSuffix", "suffix:$suffix");
-					$graph->addCompressedTriple("mime:$mime", "rdf:type", "uriv:Mimetype");
-					$graph->addCompressedTriple("mime:$mime", "rdfs:label", $mime, "literal");
-					$graph->addCompressedTriple("mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype");
-				}
-			}
-		}	
+	$query = <<<EOF
+PREFIX uriv: <$PREFIX/vocab#>
+CONSTRUCT {
+	<$PREFIX/suffix/$suffix> uriv:usedForFormat ?format .
+	?format a uriv:Format .
+	?format rdfs:label ?formatLabel .
+	?format skos:altLabel ?formatAltLabel .
+	?format dct:description ?formatDescription .
+	?format foaf:page ?page .
+	?page a foaf:Document .
+	?mime uriv:usedForSuffix <$PREFIX/suffix/$suffix> .
+	?mime uriv:usedForFormat ?format .
+	?mime a uriv:Mimetype .
+	?mime rdfs:label ?mime_str .
+	?mime skos:notation ?mime_notation .
+} WHERE {
+	{ ?format wdt:P1195 "$suffix_lower" . } UNION { ?format wdt:P1195 "$suffix_upper" . }
+	OPTIONAL { { ?format wdt:P973 ?page . } UNION { ?format wdt:P856 ?page . } UNION { ?format wdt:P1343/wdt:P953 ?page . } }
+	OPTIONAL {
+		?format wdt:P1163 ?mime_str .
+		FILTER isLiteral(?mime_str)
+		BIND(STRDT(?mime_str, uriv:MimetypeDatatype) AS ?mime_notation)
+		BIND(URI(CONCAT("$PREFIX/mime/", ?mime_str)) AS ?mime)
 	}
+	SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+}
+EOF;
+	$url = 'https://query.wikidata.org/sparql?query='.rawurlencode($query);
+	$graph->load($url);
 }
 
 function addMimeTrips(&$graph, $mime, $rec=true)
 {
-	global $filepath;
+	global $PREFIX;
 	$graph->addCompressedTriple("mime:$mime", "rdf:type", "uriv:Mimetype");
 	$graph->addCompressedTriple("mime:$mime", "rdfs:label", $mime, "literal");
 	$graph->addCompressedTriple("mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype");
-
-	$suffix = json_decode(file_get_contents("$filepath/mime.json"), true);
-	if(isset($suffix[$mime]))
-	{
-		foreach($suffix[$mime] as $format_uri=>$format_info)
-		{
-			$graph->addCompressedTriple("mime:$mime", "uriv:usedForFormat", $format_uri);
-			$graph->addCompressedTriple($format_uri, "rdfs:label", $format_info["label"], "literal", "en");
-			$graph->addCompressedTriple($format_uri, "rdf:type", "uriv:Format");
-			if(isset($format_info["desc"]))
-			{
-				$desc = preg_replace("/\. .*$/", ".", $format_info["desc"]);
-				$graph->addCompressedTriple($format_uri, "dcterms:description", $desc, "literal", "en");
-			}
-			$graph->addCompressedTriple($format_uri, "foaf:page", db2wiki($format_uri));
-			$graph->addCompressedTriple(db2wiki($format_uri), "rdf:type", "foaf:Document");
-		}
+	
+	$query = <<<EOF
+PREFIX uriv: <$PREFIX/vocab#>
+CONSTRUCT {
+	<$PREFIX/mime/$mime> uriv:usedForFormat ?format .
+	?format a uriv:Format .
+	?format rdfs:label ?formatLabel .
+	?format skos:altLabel ?formatAltLabel .
+	?format dct:description ?formatDescription .
+	?format foaf:page ?page .
+	?page a foaf:Document .
+	<$PREFIX/mime/$mime> uriv:usedForSuffix ?suffix .
+	?suffix uriv:usedForFormat ?format .
+	?suffix a uriv:Suffix .
+	?suffix rdfs:label ?suffix_label .
+	?suffix skos:notation ?suffix_notation .
+} WHERE {
+	?format wdt:P1163 "$mime" .
+	OPTIONAL { { ?format wdt:P973 ?page . } UNION { ?format wdt:P856 ?page . } UNION { ?format wdt:P1343/wdt:P953 ?page . } }
+	OPTIONAL {
+		?format wdt:P1195 ?suffix_strcs .
+		FILTER isLiteral(?suffix_strcs)
+		BIND(LCASE(STR(?suffix_strcs)) AS ?suffix_str)
+		BIND(CONCAT(".", ?suffix_str) AS ?suffix_label)
+		BIND(STRDT(?suffix_str, uriv:SuffixDatatype) AS ?suffix_notation)
+		BIND(URI(CONCAT("$PREFIX/suffix/", ?suffix_str)) AS ?suffix)
 	}
+	SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+}
+EOF;
+	$url = 'https://query.wikidata.org/sparql?query='.rawurlencode($query);
+	$graph->load($url);
 	
 	@list(, $suffix_type) = explode("+", $mime, 2);
 	if(!empty($suffix_type))
@@ -744,26 +751,6 @@ function addMimeTrips(&$graph, $mime, $rec=true)
 		$graph->addCompressedTriple("mime:$base_mime", "rdf:type", "uriv:Mimetype");
 		$graph->addCompressedTriple("mime:$base_mime", "rdfs:label", $base_mime, "literal");
 		$graph->addCompressedTriple("mime:$base_mime", "skos:notation", $base_mime, "uriv:MimetypeDatatype");
-	}
-
-	$lines = file("$filepath/mime.types");
-	foreach($lines as $line)
-	{
-		$line = chop($line);
-		if(preg_match("/^#/", $line)) { continue; }
-		if(preg_match("/^([^\t]+)\t+([^\t]+)/", $line, $b))
-		{
-			list($null, $amime, $types) = $b;
-			if($amime == $mime)
-			{
-				foreach(preg_split("/ /", $types) as $suffix)
-				{
-					$graph->addCompressedTriple("mime:$mime", "uriv:usedForSuffix", "suffix:$suffix");
-					$graph->addCompressedTriple("suffix:$suffix", "rdfs:label", ".".$suffix, "literal");
-					$graph->addCompressedTriple("suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype");
-				}
-			}
-		}	
 	}
 }
 
