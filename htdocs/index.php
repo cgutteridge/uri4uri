@@ -689,7 +689,19 @@ CONSTRUCT {
 	?mime skos:notation ?mime_notation .
 } WHERE {
 	{ ?format wdt:P1195 "$suffix_lower" . } UNION { ?format wdt:P1195 "$suffix_upper" . }
-	OPTIONAL { { ?format wdt:P973 ?page . } UNION { ?format wdt:P856 ?page . } UNION { ?format wdt:P1343/wdt:P953 ?page . } }
+	OPTIONAL {
+		{ ?format wdt:P973 ?page . }
+		UNION { ?format wdt:P856 ?page . }
+		UNION { ?format wdt:P1343/wdt:P953 ?page . }
+		UNION {
+			?format ?prop ?page_id .
+			?prop_res wikibase:directClaim ?prop .
+			?prop_res wikibase:propertyType wikibase:ExternalId .
+			?prop_res wdt:P1896 ?source_website .
+			?prop_res wdt:P1630 ?formatter .
+			BIND(URI(REPLACE(STR(?page_id), "^(.*)$", STR(?formatter))) AS ?page)
+		}
+	}
 	OPTIONAL {
 		?format wdt:P1163 ?mime_str .
 		FILTER isLiteral(?mime_str)
@@ -727,7 +739,19 @@ CONSTRUCT {
 	?suffix skos:notation ?suffix_notation .
 } WHERE {
 	?format wdt:P1163 "$mime" .
-	OPTIONAL { { ?format wdt:P973 ?page . } UNION { ?format wdt:P856 ?page . } UNION { ?format wdt:P1343/wdt:P953 ?page . } }
+	OPTIONAL {
+		{ ?format wdt:P973 ?page . }
+		UNION { ?format wdt:P856 ?page . }
+		UNION { ?format wdt:P1343/wdt:P953 ?page . }
+		UNION {
+			?format ?prop ?page_id .
+			?prop_res wikibase:directClaim ?prop .
+			?prop_res wikibase:propertyType wikibase:ExternalId .
+			?prop_res wdt:P1896 ?source_website .
+			?prop_res wdt:P1630 ?formatter .
+			BIND(URI(REPLACE(STR(?page_id), "^(.*)$", STR(?formatter))) AS ?page)
+		}
+	}
 	OPTIONAL {
 		?format wdt:P1195 ?suffix_strcs .
 		FILTER isLiteral(?suffix_strcs)
