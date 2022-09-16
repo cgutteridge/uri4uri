@@ -709,6 +709,10 @@ CONSTRUCT {
     UNION { ?format wdt:P856 ?page . }
     UNION { ?format wdt:P1343/wdt:P953 ?page . }
     UNION {
+      ?page schema:about ?format .
+      ?page schema:isPartOf <https://en.wikipedia.org/>
+    }
+    UNION {
       ?format ?prop ?page_id .
       ?prop_res wikibase:directClaim ?prop .
       ?prop_res wikibase:propertyType wikibase:ExternalId .
@@ -756,6 +760,10 @@ CONSTRUCT {
     { ?format wdt:P973 ?page . }
     UNION { ?format wdt:P856 ?page . }
     UNION { ?format wdt:P1343/wdt:P953 ?page . }
+    UNION {
+      ?page schema:about ?format .
+      ?page schema:isPartOf <https://en.wikipedia.org/>
+    }
     UNION {
       ?format ?prop ?page_id .
       ?prop_res wikibase:directClaim ?prop .
