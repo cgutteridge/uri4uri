@@ -360,7 +360,7 @@ function linkOldConcept($graph, $term, $type)
 function addVocabTrips($graph)
 {
   global $filepath;
-  $lines = file("$filepath/ns.tsv");
+  $lines = file("$filepath/ns.csv");
   static $tmap = array(
     ""=>"skos:Concept",
     "c"=>"rdfs:Class",  
@@ -368,7 +368,7 @@ function addVocabTrips($graph)
     "d"=>"rdfs:Datatype");
   foreach($lines as $line)
   {
-    list($term, $type, $name) = preg_split("/:/", chop($line));
+    list($term, $type, $name) = explode(",", rtrim($line));
     $term = "uriv:$term";
     $graph->addCompressedTriple($term, "rdf:type", $tmap[$type]);
     $graph->addCompressedTriple($term, "rdfs:isDefinedBy", "uriv:");
@@ -834,7 +834,7 @@ function addSchemeTrips($graph, $scheme)
 function addExtraVocabTrips($graph)
 {
   global $filepath;
-  $lines = file("$filepath/nsextras.tsv");
+  $lines = file("$filepath/nsextras.csv");
   $tmap = array(
     ""=>"skos:Concept",
     "c"=>"rdfs:Class",  
@@ -842,7 +842,7 @@ function addExtraVocabTrips($graph)
     "d"=>"rdfs:Datatype");
   foreach($lines as $line)
   {
-    list($term, $type, $name) = preg_split("/	/", chop($line));
+    list($term, $type, $name) = explode(",", rtrim($line));
     $graph->addCompressedTriple("$term", "rdf:type", $tmap[$type]);
     $graph->addCompressedTriple("$term", "rdfs:isDefinedBy", "uriv:");
     $graph->addCompressedTriple("$term", "rdfs:label", $name, "literal");
