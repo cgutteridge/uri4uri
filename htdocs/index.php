@@ -930,10 +930,21 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     
     $rel_key = $rel->nodeType().$rel->toString();
     $rel_followed = isset($followed_relations[$rel_key]);
-
+    
+    $res_keys = array();
+    $res_map = array();
     foreach($resource->all($rel) as $r2)
     {
-      if($r2->toString() === $parent) continue;
+      $key = $r2->toString();
+      if($key === $parent) continue;
+      $res_keys[] = $key;
+      $res_map[$key] = $r2;
+    }
+    natsort($res_keys);
+
+    foreach($res_keys as $key)
+    {
+      $r2 = $res_map[$key];
       $type = $r2->nodeType();
       if($rel == "$PREFIX/vocab#whoIsRecord") 
       {
