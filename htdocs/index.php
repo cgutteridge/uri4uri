@@ -135,35 +135,47 @@ $id = $decoded_id;
 
 if(empty($format))
 {
-  $wants = "text/turtle";
+  $wants = "text/html";
 
   if(isset($_SERVER["HTTP_ACCEPT"]))
   {
-    $o = array('text/html'=>0, "text/turtle"=>0.02, "application/ld+json"=>0.015, "application/rdf+xml"=>0.01);
+    static $weights = array('text/html' => 0, "text/turtle" => 0.02, "application/ld+json" => 0.015, "application/rdf+xml" => 0.01);
   
-    $opts = preg_split("/\s*,\s*/", $_SERVER["HTTP_ACCEPT"]);
-  
+    $opts = explode(',', $_SERVER["HTTP_ACCEPT"]);
+    $accepts = array();
     foreach($opts as $opt)
     {
-      $optparts = preg_split("/;/", $opt);
+      $optparts = explode(';', trim($opt));
       $mime = array_shift($optparts);
-      if(!isset($o[$mime])) { continue; }
+      if(!isset($weights[$mime])) continue;
         
-      $o[$mime] = 1;
+      $q = 1;
       foreach($optparts as $optpart)
       {
-        list($k,$v) = preg_split("/=/", $optpart);
-        if($k == "q") { $o[$mime] = $v; }
+        @list($k, $v) = explode('=', $optpart);
+        if($k === 'q')
+        {
+          $q = floatval($v);
+          break;          
+        }          
       }
+      $accepts[$mime] = array($q, $weights[$mime]);
     }
   
-    $top_score = 0;
-    foreach($o as $mime=>$score)
+    if(!empty($accepts))
     {
-      if($score > $top_score) 
+      uasort($accepts, function($a, $b)
       {
-        $top_score = $score;
+        if($a[0] == $b[0])
+        {
+          return ($a[1] < $b[1]) ? 1 : -1;
+        }
+        return ($a[0] < $b[0]) ? 1 : -1;
+      });
+      foreach($accepts as $mime => $weight)
+      {
         $wants = $mime;
+        break;
       }
     }
   }
