@@ -258,6 +258,7 @@ if($format == "html")
   }
   $content = ob_get_contents();
   ob_end_clean();
+  $head_content = "  <script type='application/ld+json'>".$graph->serialize("JSONLD")."</script>";
   require_once("ui/template.php");
 }
 elseif($format == "rdf")

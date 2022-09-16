@@ -4,7 +4,10 @@
   <link href='/resources/site.css' rel='stylesheet' type='text/css'>
   <title><?php print $title; ?></title>
   <script type='text/javascript' src='/resources/jquery-1.9.1.min.js'></script>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
+<?php
+if(!empty($head_content)) echo $head_content;
+?>
  </head>
  <body>
    <?php 
