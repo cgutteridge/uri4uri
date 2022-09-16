@@ -368,12 +368,15 @@ function addVocabTrips($graph)
     "d"=>"rdfs:Datatype");
   foreach($lines as $line)
   {
-    list($term, $type, $name) = explode(",", rtrim($line));
+    list($term, $type, $status, $name) = explode(",", rtrim($line));
     $term = "uriv:$term";
     $graph->addCompressedTriple($term, "rdf:type", $tmap[$type]);
     $graph->addCompressedTriple($term, "rdfs:isDefinedBy", "uriv:");
     $graph->addCompressedTriple($term, "rdfs:label", $name, "literal");
-    linkOldConcept($graph, $term, $type);
+    if($status === 'old')
+    {
+      linkOldConcept($graph, $term, $type);
+    }
   }
 }
 
@@ -470,7 +473,12 @@ function addURITrips($graph, $uri)
     $graph->addCompressedTriple($uriuri, "uriv:fragmentOf", "uri:".urlencode_minimal($uri_part));
   }
 
-  $graph->addCompressedTriple($uriuri, "rdf:type", "uriv:URI");
+  if(isset($b["scheme"]))
+  {
+    $graph->addCompressedTriple($uriuri, "rdf:type", "uriv:URI");
+  }else{
+    $graph->addCompressedTriple($uriuri, "rdf:type", "uriv:RelativeURI");
+  }
   $graph->addCompressedTriple($uriuri, "skos:notation", $uri, "xsd:anyURI");
 
   if(@$b["scheme"])
