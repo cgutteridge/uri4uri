@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 require_once("../lib/arc2/ARC2.php");
 require_once("../lib/Graphite/Graphite.php");
 
-$filepath = "/var/www/uri4uri/htdocs/data";
+$filepath = __DIR__."/data";
 $BASE = "";
 $PREFIX = "http://purl.org/uri4uri";
 $PREFIX_OLD = "http://uri4uri.net";
