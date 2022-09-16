@@ -26,12 +26,12 @@ if($path == "")
 if($path == "/robots.txt")
 {
   header("Content-type: text/plain");
-  print "User-agent: *\n";
+  echo "User-agent: *\n";
   # prevent robots triggering a who-is
-  print "Disallow: /domain\n";
-  print "\n";
-  print "User-agent: ia_archiver\n";
-  print "Allow: /\n"; 
+  echo "Disallow: /domain\n";
+  echo "\n";
+  echo "User-agent: ia_archiver\n";
+  echo "Allow: /\n"; 
   exit;
 }
 
@@ -191,22 +191,21 @@ if($format == "html")
   $document_url = $PREFIX.$_SERVER["REQUEST_URI"];
   $doc = $graph->resource($document_url);
   $title = $doc->label();
-  $content = "";
   if($doc->has("foaf:primaryTopic"))
   {
     $uri = $doc->getString("foaf:primaryTopic");
-    #$content.= "<p>URI: <tt>$uri</tt></p>";
   }
-  $content.= "<p><span style='font-weight:bold'>Download data:</span> ";
+  ob_start();
+  echo "<p><span style='font-weight:bold'>Download data:</span> ";
   $id_href = htmlspecialchars($reencoded_id);
-  $content.= "<a href='$BASE/$type.ttl/$id_href'>Turtle</a>";
-  $content.= " &bull; ";
-  $content.= "<a href='$BASE/$type.nt/$id_href'>N-Triples</a>";
-  $content.= " &bull; ";
-  $content.= "<a href='$BASE/$type.rdf/$id_href'>RDF/XML</a>";
-  $content.= " &bull; ";
-  $content.= "<a href='$BASE/$type.jsonld/$id_href'>JSON-LD</a>";
-  $content.= "</p>";
+  echo "<a href='$BASE/$type.ttl/$id_href'>Turtle</a>";
+  echo " &bull; ";
+  echo "<a href='$BASE/$type.nt/$id_href'>N-Triples</a>";
+  echo " &bull; ";
+  echo "<a href='$BASE/$type.rdf/$id_href'>RDF/XML</a>";
+  echo " &bull; ";
+  echo "<a href='$BASE/$type.jsonld/$id_href'>JSON-LD</a>";
+  echo "</p>";
 
   $visited = array();
   if($type == "vocab")
@@ -227,9 +226,9 @@ if($format == "html")
       $skips []= "<a href='#".$s[2]."'>".$s[0]."</a>";
     }
     addExtraVocabTrips($graph);
-    $content.="<p><strong style='font-weight:bold'>Jump to:</strong> ".join(" &bull; ", $skips)."</p>";
-    $content.= "<style type='text/css'>.class .class { margin: 4em 0;} .class .class .class { margin: 1em 0; }</style>";
-    $content.= "<div class='class'><div class='class2'>";
+    echo "<p><strong style='font-weight:bold'>Jump to:</strong> ".join(" &bull; ", $skips)."</p>";
+    echo "<style type='text/css'>.class .class { margin: 4em 0;} .class .class .class { margin: 1em 0; }</style>";
+    echo "<div class='class'><div class='class2'>";
     $prefix_length = strlen("$PREFIX/vocab#");
     foreach($sections as $s)
     {
@@ -239,12 +238,12 @@ if($format == "html")
         $html[$resource->toString()]= "<a name='".substr($resource->toString(),$prefix_length)."'></a>".renderResource($graph, $resource, $visited); 
       }
       ksort($html);
-      $content.= "<a name='".$s[2]."' /><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
-      $content.= join("", $html);  
-      $content.= "</div></div>";
+      echo "<a name='".$s[2]."' /><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
+      echo join("", $html);  
+      echo "</div></div>";
     }
 
-    $content.= "</div></div>";
+    echo "</div></div>";
   }
   else
   { 
@@ -255,34 +254,35 @@ if($format == "html")
     {
       $thingy_type =" <span class='classType'>[".$resource->all("rdf:type")->label()->join(", ")."]</span>";
     }
-    $content.= renderResource($graph, $resource, $visited, $document_url);
-    #$content .= "<div style='font-size:80%'>".$graph->dump()."</div>";
+    renderResource($graph, $resource, $visited, $document_url);
   }
+  $content = ob_get_contents();
+  ob_end_clean();
   require_once("ui/template.php");
 }
 elseif($format == "rdf")
 {
   http_response_code(200);
   header("Content-type: application/rdf+xml");
-  print $graph->serialize("RDFXML");
+  echo $graph->serialize("RDFXML");
 }
 elseif($format == "nt")
 {
   http_response_code(200);
   header("Content-type: text/plain");
-  print $graph->serialize("NTriples");
+  echo $graph->serialize("NTriples");
 }
 elseif($format == "ttl")
 {
   http_response_code(200);
   header("Content-type: text/turtle");
-  print $graph->serialize("Turtle");
+  echo $graph->serialize("Turtle");
 }
 elseif($format == "jsonld")
 {
   http_response_code(200);
   header("Content-type: application/ld+json");
-  print $graph->serialize("JSONLD");
+  echo $graph->serialize("JSONLD");
 }
 elseif($format == "debug")
 {
@@ -292,7 +292,7 @@ elseif($format == "debug")
 }
 else
 {
-  print "Unknown format (this can't happen)"; 
+  echo "Unknown format (this can't happen)"; 
 }
 exit;
 
@@ -898,20 +898,19 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
 {
   global $PREFIX;
   $type = $resource->nodeType();
-  $r = "";
   $visited_nodes[$resource->toString()] = $resource;
-  $r.="<div class='class'>";
+  echo "<div class='class'>";
   if($resource->hasLabel())
   {
-    $r.= "<div class='classLabel'>".$resource->label();
+    echo "<div class='classLabel'>".$resource->label();
     if($resource->has("rdf:type"))
     {
-      $r.=" <span class='classType'>[".$resource->all("rdf:type")->map(function($r) { return prettyResourceLink($r); })->join(", ")."]</span>";
+      echo " <span class='classType'>[".$resource->all("rdf:type")->map(function($r) { return prettyResourceLink($r); })->join(", ")."]</span>";
     }
-    $r.= "</div>";
+    echo "</div>";
   }
-  $r.="<div class='class2'>";
-  $r.="<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></div>";
+  echo "<div class='class2'>";
+  echo "<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></div>";
   foreach($resource->relations() as $rel)
   {
     if($rel == "http://www.w3.org/2000/01/rdf-schema#label") { continue; }
@@ -948,35 +947,35 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
       $type = $r2->nodeType();
       if($rel == "$PREFIX/vocab#whoIsRecord") 
       {
-        $r.= "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
+        echo "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
         continue;
       }
       if($type == "#literal")
       {
-        $r.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\"</div>";
+        echo "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\"</div>";
         continue;
       }
       if(substr($type, 0, 4) == "http")
       {
         $rt = $graph->resource($type);
-        $r.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span></div>";
+        echo "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span></div>";
         continue;
       }
       if($rel_followed || isset($visited_nodes[$r2->toString()]) || ($r2 instanceof Graphite_Resource && $r2->isType("foaf:Document")))
       {
-        $r.= "<div class='relation'>$pred: ".prettyResourceLink($r2)."</div>";
+        echo "<div class='relation'>$pred: ".prettyResourceLink($r2)."</div>";
         continue;
       }
-      $r.= "<table class='relation'><tr>";
-      $r.= "<th>$pred:</th>";
+      echo "<table class='relation'><tr>";
+      echo "<th>$pred:</th>";
       $followed_inner = $followed_relations;
       $followed_inner[$rel_key] = $rel;
-      $r.= "<td class='object'>".renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner)."</td>";
-      $r.= "</tr></table>";  
+      echo "<td class='object'>";
+      renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner);
+      echo "</td></tr></table>";  
     }
 
   }
-  #$r .= "<div style='font-size:80%'>".$resource->dump()."</div>";
 
   if($resource->has("geo:lat") && $resource->has("geo:long"))
   {
@@ -984,11 +983,11 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     if(!@$mapid)
     {
       $mapid = 0;
-      $r.= '<script src="http://openlayers.org/api/OpenLayers.js"></script>';
+      echo '<script src="http://openlayers.org/api/OpenLayers.js"></script>';
     }
     $mapid++;
 
-    $r.= '<div style="border:solid 1px #ccc;width:100%; height:200px; margin-top:1em !important" id="map'.$mapid.'"></div>
+    echo '<div style="border:solid 1px #ccc;width:100%; height:200px; margin-top:1em !important" id="map'.$mapid.'"></div>
 <script>
 $(document).ready(function() {
   var map = new OpenLayers.Map("map'.$mapid.'");
@@ -1010,11 +1009,8 @@ $(document).ready(function() {
 
   }
 
-  $r .= "</div>";
-  $r .= "</div>";
-  
-
-  return $r;
+  echo "</div>";
+  echo "</div>";
 }
 
 function db2wiki($dbpedia_uri)
