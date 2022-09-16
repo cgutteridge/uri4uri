@@ -628,360 +628,360 @@ function addDomainTrips(&$graph, $domain, $do_whois)
       $graph->addCompressedTriple($place["uri"], "foaf:page", db2wiki($place["uri"]));
       $graph->addCompressedTriple(db2wiki($place["uri"]), "rdf:type", "foaf:Document");
       if(isset($place["tld_uri"]))
-  		{
-				$graph->addCompressedTriple("domain:".$domain, "owl:sameAs", $place["tld_uri"]);
-				$graph->addCompressedTriple("domain:".$domain, "foaf:page", db2wiki($place["tld_uri"]));
-				$graph->addCompressedTriple(db2wiki($place["tld_uri"]), "rdf:type", "foaf:Document");
-			}
-			if(isset($place["point"]))
-			{
-				list($lat, $long) = preg_split("/\s+/", trim($place["point"]));
-				$lat = sprintf("%0.5f",$lat);
-				$long = sprintf("%0.5f",$long);
-				$graph->addCompressedTriple($place["uri"], "geo:lat", $lat, "xsd:float");
-				$graph->addCompressedTriple($place["uri"], "geo:long", $long, "xsd:float");
-			}
-		}
-	}
-	if(isset($zones["$domain"]))
-	{
-		$zone = $zones["$domain"] ;
-		$graph->addCompressedTriple("domain:$domain", "uriv:delegationRecordPage", "http://www.iana.org".$zone["url"]);
-		$graph->addCompressedTriple("domain:$domain", "foaf:page", "http://www.iana.org".$zone["url"]);
-		$graph->addCompressedTriple("http://www.iana.org".$zone["url"], "rdf:type", "foaf:Document");
-		$typemap = array(
+      {
+        $graph->addCompressedTriple("domain:".$domain, "owl:sameAs", $place["tld_uri"]);
+        $graph->addCompressedTriple("domain:".$domain, "foaf:page", db2wiki($place["tld_uri"]));
+        $graph->addCompressedTriple(db2wiki($place["tld_uri"]), "rdf:type", "foaf:Document");
+      }
+      if(isset($place["point"]))
+      {
+        list($lat, $long) = preg_split("/\s+/", trim($place["point"]));
+        $lat = sprintf("%0.5f",$lat);
+        $long = sprintf("%0.5f",$long);
+        $graph->addCompressedTriple($place["uri"], "geo:lat", $lat, "xsd:float");
+        $graph->addCompressedTriple($place["uri"], "geo:long", $long, "xsd:float");
+      }
+    }
+  }
+  if(isset($zones["$domain"]))
+  {
+    $zone = $zones["$domain"] ;
+    $graph->addCompressedTriple("domain:$domain", "uriv:delegationRecordPage", "http://www.iana.org".$zone["url"]);
+    $graph->addCompressedTriple("domain:$domain", "foaf:page", "http://www.iana.org".$zone["url"]);
+    $graph->addCompressedTriple("http://www.iana.org".$zone["url"], "rdf:type", "foaf:Document");
+    $typemap = array(
 "country-code"=>"TopLevelDomain-CountryCode",
 "generic"=>"TopLevelDomain-Generic",
 "generic-restricted"=>"TopLevelDomain-GenericRestricted",
 "infrastructure"=>"TopLevelDomain-Infrastructure",
 "sponsored"=>"TopLevelDomain-Sponsored",
 "test"=>"TopLevelDomain-Test");
-		$graph->addCompressedTriple("domain:$domain", "rdf:type", "uriv:".$typemap[$zone["type"]]);
-		$graph->addCompressedTriple("domain:$domain", "uriv:sponsor", "domain:$domain#sponsor");
-		$graph->addCompressedTriple("domain:$domain#sponsor", "rdf:type", "foaf:Organization");
-		$graph->addCompressedTriple("domain:$domain#sponsor", "rdfs:label", $zone["sponsor"], "xsd:string");
-	}
+    $graph->addCompressedTriple("domain:$domain", "rdf:type", "uriv:".$typemap[$zone["type"]]);
+    $graph->addCompressedTriple("domain:$domain", "uriv:sponsor", "domain:$domain#sponsor");
+    $graph->addCompressedTriple("domain:$domain#sponsor", "rdf:type", "foaf:Organization");
+    $graph->addCompressedTriple("domain:$domain#sponsor", "rdfs:label", $zone["sponsor"], "xsd:string");
+  }
 }
 
 function addSuffixTrips(&$graph, $suffix)
 {
-	global $PREFIX;
-	$graph->addCompressedTriple("suffix:$suffix", "rdf:type", "uriv:Suffix");
-	$graph->addCompressedTriple("suffix:$suffix", "rdfs:label", ".".$suffix, "xsd:string");
-	$graph->addCompressedTriple("suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype");
+  global $PREFIX;
+  $graph->addCompressedTriple("suffix:$suffix", "rdf:type", "uriv:Suffix");
+  $graph->addCompressedTriple("suffix:$suffix", "rdfs:label", ".".$suffix, "xsd:string");
+  $graph->addCompressedTriple("suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype");
 
-	$suffix_lower = strtolower($suffix);
-	$suffix_upper = strtoupper($suffix);
+  $suffix_lower = strtolower($suffix);
+  $suffix_upper = strtoupper($suffix);
 
-	$query = <<<EOF
+  $query = <<<EOF
 PREFIX uriv: <$PREFIX/vocab#>
 CONSTRUCT {
-	<$PREFIX/suffix/$suffix> uriv:usedForFormat ?format .
-	?format a uriv:Format .
-	?format rdfs:label ?formatLabel .
-	?format skos:altLabel ?formatAltLabel .
-	?format dct:description ?formatDescription .
-	?format foaf:page ?page .
-	?page a foaf:Document .
-	?mime uriv:usedForSuffix <$PREFIX/suffix/$suffix> .
-	?mime uriv:usedForFormat ?format .
-	?mime a uriv:Mimetype .
-	?mime rdfs:label ?mime_str .
-	?mime skos:notation ?mime_notation .
+  <$PREFIX/suffix/$suffix> uriv:usedForFormat ?format .
+  ?format a uriv:Format .
+  ?format rdfs:label ?formatLabel .
+  ?format skos:altLabel ?formatAltLabel .
+  ?format dct:description ?formatDescription .
+  ?format foaf:page ?page .
+  ?page a foaf:Document .
+  ?mime uriv:usedForSuffix <$PREFIX/suffix/$suffix> .
+  ?mime uriv:usedForFormat ?format .
+  ?mime a uriv:Mimetype .
+  ?mime rdfs:label ?mime_str .
+  ?mime skos:notation ?mime_notation .
 } WHERE {
-	{ ?format wdt:P1195 "$suffix_lower" . } UNION { ?format wdt:P1195 "$suffix_upper" . }
-	OPTIONAL {
-		{ ?format wdt:P973 ?page . }
-		UNION { ?format wdt:P856 ?page . }
-		UNION { ?format wdt:P1343/wdt:P953 ?page . }
-		UNION {
-			?format ?prop ?page_id .
-			?prop_res wikibase:directClaim ?prop .
-			?prop_res wikibase:propertyType wikibase:ExternalId .
-			?prop_res wdt:P1896 ?source_website .
-			?prop_res wdt:P1630 ?formatter .
-			BIND(URI(REPLACE(STR(?page_id), "^(.*)$", STR(?formatter))) AS ?page)
-		}
-	}
-	OPTIONAL {
-		?format wdt:P1163 ?mime_str .
-		FILTER (isLiteral(?mime_str) && STR(?mime_str) != "application/octet-stream")
-		BIND(STRDT(?mime_str, uriv:MimetypeDatatype) AS ?mime_notation)
-		BIND(URI(CONCAT("$PREFIX/mime/", ?mime_str)) AS ?mime)
-	}
-	SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  { ?format wdt:P1195 "$suffix_lower" . } UNION { ?format wdt:P1195 "$suffix_upper" . }
+  OPTIONAL {
+    { ?format wdt:P973 ?page . }
+    UNION { ?format wdt:P856 ?page . }
+    UNION { ?format wdt:P1343/wdt:P953 ?page . }
+    UNION {
+      ?format ?prop ?page_id .
+      ?prop_res wikibase:directClaim ?prop .
+      ?prop_res wikibase:propertyType wikibase:ExternalId .
+      ?prop_res wdt:P1896 ?source_website .
+      ?prop_res wdt:P1630 ?formatter .
+      BIND(URI(REPLACE(STR(?page_id), "^(.*)$", STR(?formatter))) AS ?page)
+    }
+  }
+  OPTIONAL {
+    ?format wdt:P1163 ?mime_str .
+    FILTER (isLiteral(?mime_str) && STR(?mime_str) != "application/octet-stream")
+    BIND(STRDT(?mime_str, uriv:MimetypeDatatype) AS ?mime_notation)
+    BIND(URI(CONCAT("$PREFIX/mime/", ?mime_str)) AS ?mime)
+  }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
 EOF;
-	$url = 'https://query.wikidata.org/sparql?query='.rawurlencode($query);
-	$graph->load($url);
+  $url = 'https://query.wikidata.org/sparql?query='.rawurlencode($query);
+  $graph->load($url);
 }
 
 function addMimeTrips(&$graph, $mime, $rec=true)
 {
-	global $PREFIX;
-	$graph->addCompressedTriple("mime:$mime", "rdf:type", "uriv:Mimetype");
-	$graph->addCompressedTriple("mime:$mime", "rdfs:label", $mime, "literal");
-	$graph->addCompressedTriple("mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype");
-	
-	$query = <<<EOF
+  global $PREFIX;
+  $graph->addCompressedTriple("mime:$mime", "rdf:type", "uriv:Mimetype");
+  $graph->addCompressedTriple("mime:$mime", "rdfs:label", $mime, "literal");
+  $graph->addCompressedTriple("mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype");
+  
+  $query = <<<EOF
 PREFIX uriv: <$PREFIX/vocab#>
 CONSTRUCT {
-	<$PREFIX/mime/$mime> uriv:usedForFormat ?format .
-	?format a uriv:Format .
-	?format rdfs:label ?formatLabel .
-	?format skos:altLabel ?formatAltLabel .
-	?format dct:description ?formatDescription .
-	?format foaf:page ?page .
-	?page a foaf:Document .
-	<$PREFIX/mime/$mime> uriv:usedForSuffix ?suffix .
-	?suffix uriv:usedForFormat ?format .
-	?suffix a uriv:Suffix .
-	?suffix rdfs:label ?suffix_label .
-	?suffix skos:notation ?suffix_notation .
+  <$PREFIX/mime/$mime> uriv:usedForFormat ?format .
+  ?format a uriv:Format .
+  ?format rdfs:label ?formatLabel .
+  ?format skos:altLabel ?formatAltLabel .
+  ?format dct:description ?formatDescription .
+  ?format foaf:page ?page .
+  ?page a foaf:Document .
+  <$PREFIX/mime/$mime> uriv:usedForSuffix ?suffix .
+  ?suffix uriv:usedForFormat ?format .
+  ?suffix a uriv:Suffix .
+  ?suffix rdfs:label ?suffix_label .
+  ?suffix skos:notation ?suffix_notation .
 } WHERE {
-	?format wdt:P1163 "$mime" .
-	OPTIONAL {
-		{ ?format wdt:P973 ?page . }
-		UNION { ?format wdt:P856 ?page . }
-		UNION { ?format wdt:P1343/wdt:P953 ?page . }
-		UNION {
-			?format ?prop ?page_id .
-			?prop_res wikibase:directClaim ?prop .
-			?prop_res wikibase:propertyType wikibase:ExternalId .
-			?prop_res wdt:P1896 ?source_website .
-			?prop_res wdt:P1630 ?formatter .
-			BIND(URI(REPLACE(STR(?page_id), "^(.*)$", STR(?formatter))) AS ?page)
-		}
-	}
-	OPTIONAL {
-		?format wdt:P1195 ?suffix_strcs .
-		FILTER isLiteral(?suffix_strcs)
-		BIND(LCASE(STR(?suffix_strcs)) AS ?suffix_str)
-		BIND(CONCAT(".", ?suffix_str) AS ?suffix_label)
-		BIND(STRDT(?suffix_str, uriv:SuffixDatatype) AS ?suffix_notation)
-		BIND(URI(CONCAT("$PREFIX/suffix/", ?suffix_str)) AS ?suffix)
-	}
-	SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  ?format wdt:P1163 "$mime" .
+  OPTIONAL {
+    { ?format wdt:P973 ?page . }
+    UNION { ?format wdt:P856 ?page . }
+    UNION { ?format wdt:P1343/wdt:P953 ?page . }
+    UNION {
+      ?format ?prop ?page_id .
+      ?prop_res wikibase:directClaim ?prop .
+      ?prop_res wikibase:propertyType wikibase:ExternalId .
+      ?prop_res wdt:P1896 ?source_website .
+      ?prop_res wdt:P1630 ?formatter .
+      BIND(URI(REPLACE(STR(?page_id), "^(.*)$", STR(?formatter))) AS ?page)
+    }
+  }
+  OPTIONAL {
+    ?format wdt:P1195 ?suffix_strcs .
+    FILTER isLiteral(?suffix_strcs)
+    BIND(LCASE(STR(?suffix_strcs)) AS ?suffix_str)
+    BIND(CONCAT(".", ?suffix_str) AS ?suffix_label)
+    BIND(STRDT(?suffix_str, uriv:SuffixDatatype) AS ?suffix_notation)
+    BIND(URI(CONCAT("$PREFIX/suffix/", ?suffix_str)) AS ?suffix)
+  }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
 EOF;
-	$url = 'https://query.wikidata.org/sparql?query='.rawurlencode($query);
-	$graph->load($url);
-	
-	@list(, $suffix_type) = explode("+", $mime, 2);
-	if(!empty($suffix_type))
-	{
-		static $suffix_map = array("ber"=>"application/ber-stream", "der"=>"application/der-stream", "wbxml"=>"application/vnd.wap.wbxml");
-		$base_mime = @$suffix_map[$suffix_type] ?? "application/$suffix_type";
-		$graph->addCompressedTriple("mime:$mime", "skos:broader", "mime:$base_mime");
-		$graph->addCompressedTriple("mime:$base_mime", "rdf:type", "uriv:Mimetype");
-		$graph->addCompressedTriple("mime:$base_mime", "rdfs:label", $base_mime, "literal");
-		$graph->addCompressedTriple("mime:$base_mime", "skos:notation", $base_mime, "uriv:MimetypeDatatype");
-	}
+  $url = 'https://query.wikidata.org/sparql?query='.rawurlencode($query);
+  $graph->load($url);
+  
+  @list(, $suffix_type) = explode("+", $mime, 2);
+  if(!empty($suffix_type))
+  {
+    static $suffix_map = array("ber"=>"application/ber-stream", "der"=>"application/der-stream", "wbxml"=>"application/vnd.wap.wbxml");
+    $base_mime = @$suffix_map[$suffix_type] ?? "application/$suffix_type";
+    $graph->addCompressedTriple("mime:$mime", "skos:broader", "mime:$base_mime");
+    $graph->addCompressedTriple("mime:$base_mime", "rdf:type", "uriv:Mimetype");
+    $graph->addCompressedTriple("mime:$base_mime", "rdfs:label", $base_mime, "literal");
+    $graph->addCompressedTriple("mime:$base_mime", "skos:notation", $base_mime, "uriv:MimetypeDatatype");
+  }
 }
 
 
 function addSchemeTrips(&$graph, $scheme)
 {
-	global $filepath;
-	$schemes = json_decode(file_get_contents("$filepath/schemes.json"), true);
-	$graph->addCompressedTriple("scheme:".$scheme, "rdf:type", "uriv:URIScheme");
-	$graph->addCompressedTriple("scheme:".$scheme, "skos:notation", $scheme, "uriv:URISchemeDatatype");
+  global $filepath;
+  $schemes = json_decode(file_get_contents("$filepath/schemes.json"), true);
+  $graph->addCompressedTriple("scheme:".$scheme, "rdf:type", "uriv:URIScheme");
+  $graph->addCompressedTriple("scheme:".$scheme, "skos:notation", $scheme, "uriv:URISchemeDatatype");
 
-	$s = @$schemes[$scheme];
-	if(!isset($s)) { return; }
+  $s = @$schemes[$scheme];
+  if(!isset($s)) { return; }
 
-	$graph->addCompressedTriple("scheme:".$scheme, "rdfs:label", $s["name"], "literal");
-	$tmap = array(
-		"permenent"=>"stable",
-		"provisional"=>"testing",
-		"historical"=>"archaic"
-	);
-	$graph->addCompressedTriple("scheme:".$scheme, "vs:term_status", $tmap[$s["type"]], "literal");
-	if(@$s["url"])
-	{
-		$graph->addCompressedTriple("scheme:".$scheme, "foaf:page", $s["url"]);
-		$graph->addCompressedTriple("scheme:".$scheme, "uriv:IANAPage", $s["url"]);
-		$graph->addCompressedTriple($s["url"], "rdf:type", "foaf:Document");
-	}
-	foreach($s["refs"] as $url=>$label)
-	{
-		$graph->addCompressedTriple("scheme:".$scheme, "foaf:page", $url);
-		$graph->addCompressedTriple("scheme:".$scheme, "uriv:IANARef", $url);
-		$graph->addCompressedTriple($url, "rdf:type", "foaf:Document");
-		$graph->addCompressedTriple($url, "rdfs:label", $label, "literal");
-	}
+  $graph->addCompressedTriple("scheme:".$scheme, "rdfs:label", $s["name"], "literal");
+  $tmap = array(
+    "permenent"=>"stable",
+    "provisional"=>"testing",
+    "historical"=>"archaic"
+  );
+  $graph->addCompressedTriple("scheme:".$scheme, "vs:term_status", $tmap[$s["type"]], "literal");
+  if(@$s["url"])
+  {
+    $graph->addCompressedTriple("scheme:".$scheme, "foaf:page", $s["url"]);
+    $graph->addCompressedTriple("scheme:".$scheme, "uriv:IANAPage", $s["url"]);
+    $graph->addCompressedTriple($s["url"], "rdf:type", "foaf:Document");
+  }
+  foreach($s["refs"] as $url=>$label)
+  {
+    $graph->addCompressedTriple("scheme:".$scheme, "foaf:page", $url);
+    $graph->addCompressedTriple("scheme:".$scheme, "uriv:IANARef", $url);
+    $graph->addCompressedTriple($url, "rdf:type", "foaf:Document");
+    $graph->addCompressedTriple($url, "rdfs:label", $label, "literal");
+  }
 }
 
 function addExtraVocabTrips(&$graph)
 {
-	global $filepath;
-	$lines = file("$filepath/nsextras.tsv");
-	$tmap = array(
-		""=>"skos:Concept",
-		"c"=>"rdfs:Class",	
-		"p"=>"rdf:Property",
-		"d"=>"rdfs:Datatype");
-	foreach($lines as $line)
-	{
-		list($term, $type, $name) = preg_split("/	/", chop($line));
-		$graph->addCompressedTriple("$term", "rdf:type", $tmap[$type]);
-		$graph->addCompressedTriple("$term", "rdfs:isDefinedBy", "uriv:");
-		$graph->addCompressedTriple("$term", "rdfs:label", $name, "literal");
-	}
+  global $filepath;
+  $lines = file("$filepath/nsextras.tsv");
+  $tmap = array(
+    ""=>"skos:Concept",
+    "c"=>"rdfs:Class",  
+    "p"=>"rdf:Property",
+    "d"=>"rdfs:Datatype");
+  foreach($lines as $line)
+  {
+    list($term, $type, $name) = preg_split("/	/", chop($line));
+    $graph->addCompressedTriple("$term", "rdf:type", $tmap[$type]);
+    $graph->addCompressedTriple("$term", "rdfs:isDefinedBy", "uriv:");
+    $graph->addCompressedTriple("$term", "rdfs:label", $name, "literal");
+  }
 }
 
 function substituteLink($uri)
 {
-	global $BASE;
-	global $PREFIX;
-	global $PREFIX_OLD;
-	global $ARCHIVE_BASE;
-	if(substr($uri, 0, strlen($PREFIX)) === $PREFIX)
-	{
-		return $BASE.substr($uri, strlen($PREFIX));
-	}
-	if(substr($uri, 0, strlen($PREFIX_OLD)) === $PREFIX_OLD)
-	{
-		return $ARCHIVE_BASE.$uri;
-	}
-	return $uri;
+  global $BASE;
+  global $PREFIX;
+  global $PREFIX_OLD;
+  global $ARCHIVE_BASE;
+  if(substr($uri, 0, strlen($PREFIX)) === $PREFIX)
+  {
+    return $BASE.substr($uri, strlen($PREFIX));
+  }
+  if(substr($uri, 0, strlen($PREFIX_OLD)) === $PREFIX_OLD)
+  {
+    return $ARCHIVE_BASE.$uri;
+  }
+  return $uri;
 }
 
 function resourceLink($resource, $attributes = "")
 {
-	$uri = $resource->url();
-	$uri_href = substituteLink($uri);
-	return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($uri)."</a>";
+  $uri = $resource->url();
+  $uri_href = substituteLink($uri);
+  return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($uri)."</a>";
 }
 
 function prettyResourceLink($resource, $attributes = "")
 {
-	$uri = $resource->url();
-	$uri_href = substituteLink($uri);
-	$label = $uri;
-	if($resource->hasLabel()) { $label = $resource->label(); }
-	else if(preg_match('/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $uri, $b))
-	{
-		$label = "#".$b[1];
-	}
-	return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($label)."</a>";
+  $uri = $resource->url();
+  $uri_href = substituteLink($uri);
+  $label = $uri;
+  if($resource->hasLabel()) { $label = $resource->label(); }
+  else if(preg_match('/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $uri, $b))
+  {
+    $label = "#".$b[1];
+  }
+  return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($label)."</a>";
 }
 
 function renderResource($graph, $resource, &$visited_nodes, $parent = null, $followed_relations = array())
 {
-	global $PREFIX;
-	$type = $resource->nodeType();
-	$r = "";
-	$visited_nodes[$resource->toString()] = $resource;
-	$r.="<div class='class'>";
-	if($resource->hasLabel())
-	{
-		$r.= "<div class='classLabel'>".$resource->label();
-		if($resource->has("rdf:type"))
-		{
-			$r.=" <span class='classType'>[".$resource->all("rdf:type")->map(function($r) { return prettyResourceLink($r); })->join(", ")."]</span>";
-		}
-		$r.= "</div>";
-	}
-	$r.="<div class='class2'>";
-	$r.="<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></div>";
-	foreach($resource->relations() as $rel)
-	{
-		if($rel == "http://www.w3.org/2000/01/rdf-schema#label") { continue; }
-		if($rel == "http://www.w3.org/2000/01/rdf-schema#isDefinedBy") { continue; }
-		if($rel == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") { continue; }
-		if($rel == "http://www.w3.org/2004/02/skos/core#exactMatch") { continue; }
-		if($rel == "http://purl.org/dc/terms/replaces") { continue; }
+  global $PREFIX;
+  $type = $resource->nodeType();
+  $r = "";
+  $visited_nodes[$resource->toString()] = $resource;
+  $r.="<div class='class'>";
+  if($resource->hasLabel())
+  {
+    $r.= "<div class='classLabel'>".$resource->label();
+    if($resource->has("rdf:type"))
+    {
+      $r.=" <span class='classType'>[".$resource->all("rdf:type")->map(function($r) { return prettyResourceLink($r); })->join(", ")."]</span>";
+    }
+    $r.= "</div>";
+  }
+  $r.="<div class='class2'>";
+  $r.="<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></div>";
+  foreach($resource->relations() as $rel)
+  {
+    if($rel == "http://www.w3.org/2000/01/rdf-schema#label") { continue; }
+    if($rel == "http://www.w3.org/2000/01/rdf-schema#isDefinedBy") { continue; }
+    if($rel == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") { continue; }
+    if($rel == "http://www.w3.org/2004/02/skos/core#exactMatch") { continue; }
+    if($rel == "http://purl.org/dc/terms/replaces") { continue; }
 
-		$label = $rel->label();
-		if(preg_match('/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $rel, $b))
-		{
-			$label = "#".$b[1];
-		}
-		$pred = prettyResourceLink($rel, " class='predicate'");
-		if($rel->nodeType() == "#inverseRelation") { $pred = "is \"$pred\" of"; }
-		
-		$rel_key = $rel->nodeType().$rel->toString();
-		$rel_followed = isset($followed_relations[$rel_key]);
+    $label = $rel->label();
+    if(preg_match('/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $rel, $b))
+    {
+      $label = "#".$b[1];
+    }
+    $pred = prettyResourceLink($rel, " class='predicate'");
+    if($rel->nodeType() == "#inverseRelation") { $pred = "is \"$pred\" of"; }
+    
+    $rel_key = $rel->nodeType().$rel->toString();
+    $rel_followed = isset($followed_relations[$rel_key]);
 
-		foreach($resource->all($rel) as $r2)
-		{
-			if($r2->toString() === $parent) continue;
-			$type = $r2->nodeType();
-			if($rel == "$PREFIX/vocab#whoIsRecord") 
-			{
-				$r.= "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
-				continue;
-			}
-			if($type == "#literal")
-			{
-				$r.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\"</div>";
-				continue;
-			}
-			if(substr($type, 0, 4) == "http")
-			{
-				$rt = $graph->resource($type);
-				$r.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span></div>";
-				continue;
-			}
-			if($rel_followed || isset($visited_nodes[$r2->toString()]) || ($r2 instanceof Graphite_Resource && $r2->isType("foaf:Document")))
-			{
-				$r.= "<div class='relation'>$pred: ".prettyResourceLink($r2)."</div>";
-				continue;
-			}
-			$r.= "<table class='relation'><tr>";
-			$r.= "<th>$pred:</th>";
-			$followed_inner = $followed_relations;
-			$followed_inner[$rel_key] = $rel;
-			$r.= "<td class='object'>".renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner)."</td>";
-			$r.= "</tr></table>";	
-		}
+    foreach($resource->all($rel) as $r2)
+    {
+      if($r2->toString() === $parent) continue;
+      $type = $r2->nodeType();
+      if($rel == "$PREFIX/vocab#whoIsRecord") 
+      {
+        $r.= "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
+        continue;
+      }
+      if($type == "#literal")
+      {
+        $r.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\"</div>";
+        continue;
+      }
+      if(substr($type, 0, 4) == "http")
+      {
+        $rt = $graph->resource($type);
+        $r.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span></div>";
+        continue;
+      }
+      if($rel_followed || isset($visited_nodes[$r2->toString()]) || ($r2 instanceof Graphite_Resource && $r2->isType("foaf:Document")))
+      {
+        $r.= "<div class='relation'>$pred: ".prettyResourceLink($r2)."</div>";
+        continue;
+      }
+      $r.= "<table class='relation'><tr>";
+      $r.= "<th>$pred:</th>";
+      $followed_inner = $followed_relations;
+      $followed_inner[$rel_key] = $rel;
+      $r.= "<td class='object'>".renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner)."</td>";
+      $r.= "</tr></table>";  
+    }
 
-	}
-	#$r .= "<div style='font-size:80%'>".$resource->dump()."</div>";
+  }
+  #$r .= "<div style='font-size:80%'>".$resource->dump()."</div>";
 
-	if($resource->has("geo:lat") && $resource->has("geo:long"))
-	{
-		global $mapid;
-		if(!@$mapid)
-		{
-			$mapid = 0;
-			$r.= '<script src="http://openlayers.org/api/OpenLayers.js"></script>';
-		}
-		$mapid++;
+  if($resource->has("geo:lat") && $resource->has("geo:long"))
+  {
+    global $mapid;
+    if(!@$mapid)
+    {
+      $mapid = 0;
+      $r.= '<script src="http://openlayers.org/api/OpenLayers.js"></script>';
+    }
+    $mapid++;
 
-		$r.= '<div style="border:solid 1px #ccc;width:100%; height:200px; margin-top:1em !important" id="map'.$mapid.'"></div>
+    $r.= '<div style="border:solid 1px #ccc;width:100%; height:200px; margin-top:1em !important" id="map'.$mapid.'"></div>
 <script>
 $(document).ready(function() {
-	var map = new OpenLayers.Map("map'.$mapid.'");
-	var wms = new OpenLayers.Layer.OSM();
-	map.addLayer(wms);
-	var lonLat = new OpenLayers.LonLat('.$resource->getString("geo:long").','.$resource->getString("geo:lat").')
-	 	.transform(
-			new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-			map.getProjectionObject() // to Spherical Mercator Projection
-		);
-	var zoom = 3;
-	var markers = new OpenLayers.Layer.Markers("Markers");
-	map.addLayer(markers);
-	markers.addMarker(new OpenLayers.Marker(lonLat));
-	map.setCenter(lonLat, zoom); 
+  var map = new OpenLayers.Map("map'.$mapid.'");
+  var wms = new OpenLayers.Layer.OSM();
+  map.addLayer(wms);
+  var lonLat = new OpenLayers.LonLat('.$resource->getString("geo:long").','.$resource->getString("geo:lat").')
+     .transform(
+      new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+      map.getProjectionObject() // to Spherical Mercator Projection
+    );
+  var zoom = 3;
+  var markers = new OpenLayers.Layer.Markers("Markers");
+  map.addLayer(markers);
+  markers.addMarker(new OpenLayers.Marker(lonLat));
+  map.setCenter(lonLat, zoom); 
 });
 </script>
 ';
 
-	}
+  }
 
-	$r .= "</div>";
-	$r .= "</div>";
-	
+  $r .= "</div>";
+  $r .= "</div>";
+  
 
-	return $r;
+  return $r;
 }
 
 function db2wiki($dbpedia_uri)
 {
-	$db_pre = "http://dbpedia.org/resource/";
-	$wiki_pre = "http://en.wikipedia.org/wiki/";
-	return $wiki_pre.substr($dbpedia_uri, strlen($db_pre));
+  $db_pre = "http://dbpedia.org/resource/";
+  $wiki_pre = "http://en.wikipedia.org/wiki/";
+  return $wiki_pre.substr($dbpedia_uri, strlen($db_pre));
 }
