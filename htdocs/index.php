@@ -941,40 +941,49 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     }
     natsort($res_keys);
 
+    $close_element = null;
     foreach($res_keys as $key)
     {
       $r2 = $res_map[$key];
       $type = $r2->nodeType();
       if($rel == "$PREFIX/vocab#whoIsRecord") 
       {
-        echo "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
-        continue;
-      }
-      if($type == "#literal")
+        $value = "\"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"";
+      }else if($type == "#literal")
       {
-        echo "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\"</div>";
-        continue;
-      }
-      if(substr($type, 0, 4) == "http")
+        $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\"";
+      }else if(substr($type, 0, 4) == "http")
       {
         $rt = $graph->resource($type);
-        echo "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span></div>";
-        continue;
-      }
-      if($rel_followed || isset($visited_nodes[$r2->toString()]) || ($r2 instanceof Graphite_Resource && $r2->isType("foaf:Document")))
+        $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span>";
+      }else if($rel_followed || isset($visited_nodes[$r2->toString()]) || ($r2 instanceof Graphite_Resource && $r2->isType("foaf:Document")))
       {
-        echo "<div class='relation'>$pred: ".prettyResourceLink($r2)."</div>";
+        $value = prettyResourceLink($r2);
+      }else{
+        if($close_element !== 'table')
+        {
+          if($close_element) echo "</$close_element>";
+          echo "<table class='relation'>";
+          $close_element = 'table';
+        }
+        echo "<tr>";
+        echo "<th>$pred:</th>";
+        $followed_inner = $followed_relations;
+        $followed_inner[$rel_key] = $rel;
+        echo "<td class='object'>";
+        renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner);
+        echo "</td></tr>";
         continue;
       }
-      echo "<table class='relation'><tr>";
-      echo "<th>$pred:</th>";
-      $followed_inner = $followed_relations;
-      $followed_inner[$rel_key] = $rel;
-      echo "<td class='object'>";
-      renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner);
-      echo "</td></tr></table>";  
+      if($close_element !== 'ul></div')
+      {
+        if($close_element) echo "</$close_element>";
+        echo "<div class='relation'>$pred: <ul class='value-list'>";
+        $close_element = 'ul></div';
+      }
+      echo "<li>$value</li>";
     }
-
+    if($close_element) echo "</$close_element>";
   }
 
   if($resource->has("geo:lat") && $resource->has("geo:long"))

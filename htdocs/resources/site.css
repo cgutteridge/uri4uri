@@ -92,8 +92,11 @@ h1 a {
 	color: #666;
 }
 p {
-	margin-bottom: 0.5em;
 	line-height: 1.3em;
+}
+p, li, td.object {
+	display: block;
+	margin-bottom: 0.5em;
 }
 h3 {
 	margin-top: 2em;
@@ -124,6 +127,9 @@ div.content2 {
 }
 table.relation th {
 	padding-right: 10px;
+}
+table.relation tr:not(:first-child)>th {
+	visibility: hidden;
 }
 table.relation {
 	margin-top: 1em;
@@ -232,4 +238,8 @@ sup {
 }
 .datatype {
 	font-size: 60%;
+}
+.value-list {
+	display: inline-block;
+	vertical-align: top;
 }
