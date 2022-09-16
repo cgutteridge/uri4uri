@@ -87,7 +87,7 @@ $(document).ready( function() {
 <p>The URIs on this site are in the format:</p>
 <p class='code'>http://purl.org/uri4uri/&lt;type&gt;/&lt;identifier&gt;</p>
 <p>...where &lt;type&gt; is one of uri, scheme, domain, mime, suffix.</p>
-<p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF+XML or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, nt, html. These have URLs in the following formats:</p>
+<p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF/XML, JSON-LD or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, jsonld, nt, html. These have URLs in the following formats:</p>
 <p class='code'>http://purl.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</p>
 <p>Examples:</p>
 <p><a style='font-family:monospace' href='/uri/http://xkcd.com/123/'>http://purl.org/uri4uri/uri/http://xkcd.com/123/</a> - URI for  "http://xkcd.com/123/"<br />
