@@ -330,7 +330,7 @@ function graphVocab($id)
   return $graph;
 }
 
-function linkOldConcept(&$graph, $term, $type)
+function linkOldConcept($graph, $term, $type)
 {
   static $linkmap = array(
     "c"=>"owl:equivalentClass",  
@@ -345,7 +345,7 @@ function linkOldConcept(&$graph, $term, $type)
   }
 }
 
-function addVocabTrips(&$graph)
+function addVocabTrips($graph)
 {
   global $filepath;
   $lines = file("$filepath/ns.tsv");
@@ -412,7 +412,7 @@ function graphScheme($scheme)
   return $graph;
 }
 
-function addBoilerplateTrips(&$graph, $uri, $title)
+function addBoilerplateTrips($graph, $uri, $title)
 {
   global $PREFIX;
   global $PREFIX_OLD;
@@ -430,7 +430,7 @@ function addBoilerplateTrips(&$graph, $uri, $title)
 }
 
 
-function addURITrips(&$graph, $uri)
+function addURITrips($graph, $uri)
 {
   $uriuri = "uri:".urlencode_minimal($uri);
   $b = parse_url_fixed($uri);
@@ -459,7 +459,7 @@ function addURITrips(&$graph, $uri)
   
 }
 
-function addHTTPSchemeTrips(&$graph, $uri)
+function addHTTPSchemeTrips($graph, $uri)
 {
   $uriuri = "uri:".urlencode_minimal($uri);
   $b = parse_url_fixed($uri);
@@ -543,7 +543,7 @@ function addHTTPSchemeTrips(&$graph, $uri)
 
 
 
-function addDomainTrips(&$graph, $domain, $do_whois)
+function addDomainTrips($graph, $domain, $do_whois)
 {  
   $actual_domain = $domain;
   $nowww_actual_domain = $domain;
@@ -663,7 +663,7 @@ function addDomainTrips(&$graph, $domain, $do_whois)
   }
 }
 
-function addSuffixTrips(&$graph, $suffix)
+function addSuffixTrips($graph, $suffix)
 {
   global $PREFIX;
   $graph->addCompressedTriple("suffix:$suffix", "rdf:type", "uriv:Suffix");
@@ -716,7 +716,7 @@ EOF;
   $graph->load($url);
 }
 
-function addMimeTrips(&$graph, $mime, $rec=true)
+function addMimeTrips($graph, $mime, $rec=true)
 {
   global $PREFIX;
   $graph->addCompressedTriple("mime:$mime", "rdf:type", "uriv:Mimetype");
@@ -780,7 +780,7 @@ EOF;
 }
 
 
-function addSchemeTrips(&$graph, $scheme)
+function addSchemeTrips($graph, $scheme)
 {
   global $filepath;
   $schemes = json_decode(file_get_contents("$filepath/schemes.json"), true);
@@ -812,7 +812,7 @@ function addSchemeTrips(&$graph, $scheme)
   }
 }
 
-function addExtraVocabTrips(&$graph)
+function addExtraVocabTrips($graph)
 {
   global $filepath;
   $lines = file("$filepath/nsextras.tsv");
