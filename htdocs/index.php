@@ -458,51 +458,42 @@ function addURITrips($graph, $uri)
     $graph->addCompressedTriple($uriuri, "uriv:fragmentOf", "uri:".urlencode_minimal($uri_part));
   }
 
-  $graph->addCompressedTriple($uri, "uriv:identifiedBy", $uriuri);
   $graph->addCompressedTriple($uriuri, "rdf:type", "uriv:URI");
   $graph->addCompressedTriple($uriuri, "skos:notation", $uri, "xsd:anyURI");
 
   if(@$b["scheme"])
   {
+    $graph->addCompressedTriple($uri, "uriv:identifiedBy", $uriuri);
     $graph->addCompressedTriple($uriuri, "uriv:scheme", "scheme:".$b["scheme"]);
     addSchemeTrips($graph, $b["scheme"]);
-    if($b["scheme"] == "http" || $b["scheme"] == "https" || $b["scheme"] == "ftp")
+    if($b["scheme"] == "http" || $b["scheme"] == "https")
     {
-      addHTTPSchemeTrips($graph, $uri);
+      if(!empty($b["host"]))
+      {
+        $homepage = $b["scheme"]."://".$b["host"];
+        if(@$b["port"])
+        {
+          $homepage.= ":".$b["port"];
+        }
+        $homepage.="/";
+  
+        $graph->addCompressedTriple("domain:".$b["host"], "foaf:homepage", $homepage);
+        $graph->addCompressedTriple($homepage, "rdf:type", "foaf:Document");
+      }
     }
   } # end scheme
   
-}
-
-function addHTTPSchemeTrips($graph, $uri)
-{
-  $uriuri = "uri:".urlencode_minimal($uri);
-  $b = parse_url_fixed($uri);
-
-  if(@$b["host"])
+  if(!empty($b["host"]))
   {
     $graph->addCompressedTriple($uriuri, "uriv:host", "domain:".$b["host"]);
     addDomainTrips($graph, $b["host"], false);
-    if(@$b["scheme"] == "http" || @$b["scheme"] == "https")
-    {
-      $homepage = $b["scheme"]."://".$b["host"];
-      if(@$b["port"])
-      {
-        $homepage.= ":".$b["port"];
-      }
-      $homepage.="/";
-
-      $graph->addCompressedTriple("domain:".$b["host"], "foaf:homepage", $homepage);
-      $graph->addCompressedTriple($homepage, "rdf:type", "foaf:Document");
-    }
   }
-
-
+  
   if(@$b["port"])
   {
     $graph->addCompressedTriple($uriuri, "uriv:port", $b["port"], "xsd:positiveInteger");
   }
-  else
+  else if(!empty($b["host"]))
   {
     $graph->addCompressedTriple($uriuri, "uriv:port", "uriv:noPortSpecified");
   }
@@ -553,10 +544,7 @@ function addHTTPSchemeTrips($graph, $uri)
       }
     }
   }
-}  
-    
-
-
+}
 
 function addDomainTrips($graph, $domain, $do_whois)
 {  
