@@ -429,6 +429,21 @@ function addBoilerplateTrips($graph, $uri, $title)
   
 }
 
+function addWikidataResult($graph, $sparql)
+{
+  $lines = explode("\n", $sparql);
+  foreach($lines as &$line)
+  {
+    $line = trim($line);
+  }
+  foreach($graph->ns as $prefix => $ns)
+  {
+    array_unshift($lines, "PREFIX $prefix: <$ns>");
+  }
+  $sparql = implode("\n", $lines);
+  $url = 'https://query.wikidata.org/sparql?query='.rawurlencode($sparql);
+  $graph->load($url);
+}
 
 function addURITrips($graph, $uri)
 {
@@ -674,7 +689,6 @@ function addSuffixTrips($graph, $suffix)
   $suffix_upper = strtoupper($suffix);
 
   $query = <<<EOF
-PREFIX uriv: <$PREFIX/vocab#>
 CONSTRUCT {
   <$PREFIX/suffix/$suffix> uriv:usedForFormat ?format .
   ?format a uriv:Format .
@@ -712,8 +726,7 @@ CONSTRUCT {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
 EOF;
-  $url = 'https://query.wikidata.org/sparql?query='.rawurlencode($query);
-  $graph->load($url);
+  addWikidataResult($graph, $query);
 }
 
 function addMimeTrips($graph, $mime, $rec=true)
@@ -724,7 +737,6 @@ function addMimeTrips($graph, $mime, $rec=true)
   $graph->addCompressedTriple("mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype");
   
   $query = <<<EOF
-PREFIX uriv: <$PREFIX/vocab#>
 CONSTRUCT {
   <$PREFIX/mime/$mime> uriv:usedForFormat ?format .
   ?format a uriv:Format .
@@ -764,8 +776,7 @@ CONSTRUCT {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
 EOF;
-  $url = 'https://query.wikidata.org/sparql?query='.rawurlencode($query);
-  $graph->load($url);
+  addWikidataResult($graph, $query);
   
   @list(, $suffix_type) = explode("+", $mime, 2);
   if(!empty($suffix_type))
