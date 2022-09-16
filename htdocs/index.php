@@ -196,6 +196,7 @@ if($format == "html")
 	$content.= "<a href='$BASE/$type.jsonld/$id_href'>JSON-LD</a>";
 	$content.= "</p>";
 
+	$visited = array();
 	if($type == "vocab")
 	{
 		$title = "uri4uri Vocabulary";
@@ -223,7 +224,7 @@ if($format == "html")
 			$html = array();
 			foreach($l[$s[2]] as $resource) 
 			{ 
-				$html[$resource->toString()]= "<a name='".substr($resource->toString(),$prefix_length)."'></a>".renderResource($graph, $resource); 
+				$html[$resource->toString()]= "<a name='".substr($resource->toString(),$prefix_length)."'></a>".renderResource($graph, $resource, $visited); 
 			}
 			ksort($html);
 			$content.= "<a name='".$s[2]."' /><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
@@ -242,7 +243,7 @@ if($format == "html")
 		{
 			$thingy_type =" <span class='classType'>[".$resource->all("rdf:type")->label()->join(", ")."]</span>";
 		}
-		$content.= renderResource($graph, $resource);
+		$content.= renderResource($graph, $resource, $visited, $document_url);
 		#$content .= "<div style='font-size:80%'>".$graph->dump()."</div>";
 	}
 	require_once("ui/template.php");
@@ -866,12 +867,12 @@ function prettyResourceLink($resource, $attributes = "")
 	return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($label)."</a>";
 }
 
-function renderResource($graph, $resource)
+function renderResource($graph, $resource, &$visited_nodes, $parent = null, $followed_relations = array())
 {
 	global $PREFIX;
 	$type = $resource->nodeType();
 	$r = "";
-
+	$visited_nodes[$resource->toString()] = $resource;
 	$r.="<div class='class'>";
 	if($resource->hasLabel())
 	{
@@ -884,7 +885,6 @@ function renderResource($graph, $resource)
 	}
 	$r.="<div class='class2'>";
 	$r.="<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></div>";
-	$short = $long = "";
 	foreach($resource->relations() as $rel)
 	{
 		if($rel == "http://www.w3.org/2000/01/rdf-schema#label") { continue; }
@@ -892,17 +892,6 @@ function renderResource($graph, $resource)
 		if($rel == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") { continue; }
 		if($rel == "http://www.w3.org/2004/02/skos/core#exactMatch") { continue; }
 		if($rel == "http://purl.org/dc/terms/replaces") { continue; }
-		$follow_inverse = false;
-		if($rel == "http://dbpedia.org/property/cctld") { $follow_inverse = true; }
-		if($rel == "$PREFIX/vocab#subDom") { $follow_inverse = true; }
-		if($rel == "$PREFIX/vocab#usedForSuffix") { $follow_inverse = true; }
-		#if($rel == "$PREFIX/vocab#fragmentOf") { $follow_inverse = true; }
-		if($rel == "$PREFIX/vocab#identifiedBy") { $follow_inverse = true; }
-#$r .= "<div>($rel) ".$rel->nodeType()."</div>";
-#$r.="<p>$rel :: $follow_inverse</p>";
-		if(!$follow_inverse && $rel->nodeType() == "#inverseRelation") { continue; }
-		if($follow_inverse && $rel->nodeType() != "#inverseRelation") { continue; }
-		#if($rel->label() == "has type") { continue; } # hacky!
 
 		$label = $rel->label();
 		if(preg_match('/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $rel, $b))
@@ -911,39 +900,44 @@ function renderResource($graph, $resource)
 		}
 		$pred = prettyResourceLink($rel, " class='predicate'");
 		if($rel->nodeType() == "#inverseRelation") { $pred = "is \"$pred\" of"; }
+		
+		$rel_key = $rel->nodeType().$rel->toString();
+		$rel_followed = isset($followed_relations[$rel_key]);
 
 		foreach($resource->all($rel) as $r2)
 		{
+			if($r2->toString() === $parent) continue;
 			$type = $r2->nodeType();
 			if($rel == "$PREFIX/vocab#whoIsRecord") 
 			{
-				$short.= "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
+				$r.= "<div class='relation'>$pred: \"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"</div>";
 				continue;
 			}
 			if($type == "#literal")
 			{
-				$short.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\"</div>";
+				$r.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\"</div>";
 				continue;
 			}
 			if(substr($type, 0, 4) == "http")
 			{
 				$rt = $graph->resource($type);
-				$short.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span></div>";
+				$r.= "<div class='relation'>$pred: \"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span></div>";
 				continue;
 			}
-			if($r2 instanceof Graphite_Resource && $r2->isType("foaf:Document"))
+			if($rel_followed || isset($visited_nodes[$r2->toString()]) || ($r2 instanceof Graphite_Resource && $r2->isType("foaf:Document")))
 			{
-				$short.= "<div class='relation'>$pred: ".prettyResourceLink($r2)."</div>";
+				$r.= "<div class='relation'>$pred: ".prettyResourceLink($r2)."</div>";
 				continue;
 			}
-			$long.= "<table class='relation'><tr>";
-			$long.= "<th>$pred:</th>";
-			$long.= "<td class='object'>".renderResource($graph, $r2)."</td>";
-			$long.= "</tr></table>";	
+			$r.= "<table class='relation'><tr>";
+			$r.= "<th>$pred:</th>";
+			$followed_inner = $followed_relations;
+			$followed_inner[$rel_key] = $rel;
+			$r.= "<td class='object'>".renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner)."</td>";
+			$r.= "</tr></table>";	
 		}
 
 	}
-	$r .= $short.$long;
 	#$r .= "<div style='font-size:80%'>".$resource->dump()."</div>";
 
 	if($resource->has("geo:lat") && $resource->has("geo:long"))
