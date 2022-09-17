@@ -812,7 +812,7 @@ function get_mime_types()
 
 function get_tlds()
 {
-  static $cache_file = __DIR__.'/data/zones.json';
+  static $cache_file = __DIR__.'/data/tld.json';
   
   $data = get_updated_json_file($cache_file, $renew);
   if($renew)
