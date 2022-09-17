@@ -96,6 +96,55 @@ function parse_url_fixed($uri)
   return $result;
 }
 
+$construct_page_for = function($entity, $target = null)
+{
+  $page = $entity.'_page';
+  $db = $entity.'_db';
+  if(empty($target)) $target = $entity;
+  return <<<EOF
+  $target foaf:page $page .
+  $target owl:sameAs $db .
+  $page a foaf:Document .
+EOF;
+};
+
+$match_page_for = function($entity, $ids = true)
+{
+  $page = $entity.'_page';
+  $page_id = $entity.'_page_id';
+  $prop = $entity.'_prop';
+  $prop_res = $entity.'_prop_res';
+  $formatter = $entity.'_formatter';
+  $db = $entity.'_db';
+  $ids_query = '';
+  if($ids)
+  {
+    $ids_query = <<<EOF
+
+    UNION {
+      $entity $prop $page_id .
+      $prop_res wikibase:directClaim $prop .
+      $prop_res wikibase:propertyType wikibase:ExternalId .
+      $prop_res wdt:P1896 [] .
+      $prop_res wdt:P1630 $formatter .
+      BIND(URI(REPLACE(STR($page_id), "^(.*)$", STR($formatter))) AS $page)
+    }
+EOF;
+  }
+  return <<<EOF
+  OPTIONAL {
+    { $entity wdt:P973 $page . }
+    UNION { $entity wdt:P856 $page . }
+    UNION { $entity wdt:P1343/wdt:P953 $page . }
+    UNION {
+      $page schema:about $entity .
+      $page schema:isPartOf <https://en.wikipedia.org/>
+      BIND(URI(REPLACE(STR($page), "^https?://en.wikipedia.org/wiki/", "http://dbpedia.org/resource/")) AS $db)
+    }$ids_query
+  }
+EOF;
+};
+
 if(preg_match("/^\/?/", $path) && @$_GET["uri"])
 {
   $uri4uri = "$BASE/uri/".urlencode_minimal($_GET["uri"]);
@@ -635,10 +684,14 @@ function flush_output()
   flush();
 }
 
+function get_stream_context()
+{
+  return stream_context_create(array('http' => array('user_agent' => 'uri4uri PHP/'.PHP_VERSION, 'header' => 'Connection: close\r\n')));
+}
+
 function update_iana_records($file, $assignments, $id_element, $combine_id)
 {
-  $info = stream_context_create(array('http' => array('user_agent' => 'uri4uri PHP/'.PHP_VERSION, 'header' => 'Connection: close\r\n')));
-  libxml_set_streams_context($info);
+  libxml_set_streams_context(get_stream_context());
   $xml = new DOMDocument;
   $xml->preserveWhiteSpace = false;
   if($xml->load("https://www.iana.org/assignments/$assignments/$assignments.xml") === false)
@@ -757,129 +810,156 @@ function get_mime_types()
   return $data;
 }
 
-function addDomainTrips($graph, $domain, $do_whois)
-{  
-  $actual_domain = $domain;
-  $nowww_actual_domain = $domain;
-  if(substr(strtolower($nowww_actual_domain), 0, 4) == "www."){ $nowww_actual_domain = substr($actual_domain, 4);}
-
-  require_once("../lib/whois.php");
-  $whoisservers = whoisservers();
-  global $filepath;
-
-  global $schemes;
-  if(!isset($schemes))
+function get_tlds()
+{
+  static $cache_file = __DIR__.'/data/zones.json';
+  
+  $data = get_updated_json_file($cache_file, $renew);
+  if($renew)
   {
-    $schemes = json_decode(file_get_contents("$filepath/schemes.json"), true);
+    ob_start();
+    register_shutdown_function(function($cache_file)
+    {
+      flush_output();
+      libxml_set_streams_context(get_stream_context());
+      $html = new DOMDocument;
+      if(@$html->loadHTMLFile('https://www.iana.org/domains/root/db.html') === false)
+      {
+        return;
+      }
+      $xpath = new DOMXPath($html);
+      
+      $domains = array();
+      foreach($xpath->query('//table[@id="tld-table"]/tbody/tr') as $domain_item)
+      {
+        $cells = iterator_to_array($xpath->query('td', $domain_item));
+        if(count($cells) === 3)
+        {
+          foreach($xpath->query('.//a', $cells[0]) as $link)
+          {
+            $domain_data = array();
+            $name = trim($link->textContent);
+            $domain_data['name'] = $name;
+            $id = ltrim($name, ".");
+            $domain_data['id'] = $id;
+            $domain_data['url'] = $link->getAttribute('href');
+            $domain_data['type'] = trim($cells[1]->textContent);
+            $domain_data['sponsor'] = trim($cells[2]->textContent);
+            $domains[$id] = $domain_data;
+            break;
+          }
+        }
+      }
+      ksort($domains);
+      
+      if(file_exists($cache_file))
+      {
+        file_put_contents($cache_file, json_encode($domains, JSON_UNESCAPED_SLASHES));
+      }
+    }, $cache_file);
   }
   
-  global $tlds;
-  if(!isset($tlds))
-  {
-    $tlds = json_decode(file_get_contents("$filepath/tld.json"), true);
-  }
-  global $zones;
-  if(!isset($zones))
-  {
-    $zones = json_decode(file_get_contents("$filepath/zones.json"), true);
-  }
+  return $data;
+}
 
-  $graph->addCompressedTriple("domain:".$domain, "rdf:type", "uriv:Domain");
-#  if(ValidateDomain($domain))   
-#  {
-#    $graph->addCompressedTriple("domain:".$domain, "rdf:type", "uriv:Domain-Valid");
-#  }  
-#  else
-#  {
-#    $graph->addCompressedTriple("domain:".$domain, "rdf:type", "uriv:Domain-Invalid");
-#  }
-  $graph->addCompressedTriple("domain:".$domain, "rdfs:label", $domain, "literal");
-  $graph->addCompressedTriple("domain:".$domain, "skos:notation", $domain, "uriv:DomainDatatype");
+function addDomainTrips($graph, $domain, $do_whois)
+{
+  global $PREFIX, $match_page_for, $construct_page_for;
+  require_once("../lib/whois.php");
+  $whoisservers = whoisservers();
+  
+  $zones = get_tlds();
+
+  $graph->addCompressedTriple("domain:$domain", "rdf:type", "uriv:Domain");
+  $graph->addCompressedTriple("domain:$domain", "rdfs:label", $domain, "literal");
+  $graph->addCompressedTriple("domain:$domain", "skos:notation", $domain, "uriv:DomainDatatype");
 
   # Super Domains
-  while(preg_match("/\./", $domain))
+  while(strpos($domain, ".") !== false)
   {
     $old_domain = $domain;
-    $domain = preg_replace("/^[^\.]*\./", "", $domain);
+    list($domain_name, $domain) = explode(".", $domain, 2);
       
-    $graph->addCompressedTriple("domain:".$domain, "uriv:subDom", "domain:".$old_domain);
-    $graph->addCompressedTriple("domain:".$domain, "rdf:type", "uriv:Domain");
-#    if(ValidateDomain($domain))   
-#    {
-#      $graph->addCompressedTriple("domain:".$domain, "rdf:type", "uriv:Domain-Valid");
-#    }  
-#    else
-#    {
-#      $graph->addCompressedTriple("domain:".$domain, "rdf:type", "uriv:Domain-Invalid");
-#    }
-    $graph->addCompressedTriple("domain:".$domain, "rdfs:label", $domain, "literal");
-    $graph->addCompressedTriple("domain:".$domain, "skos:notation", $domain, "uriv:DomainDatatype");
+    $graph->addCompressedTriple("domain:$domain", 'uriv:subDom', "domain:$old_domain");
+    $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:Domain');
+    $graph->addCompressedTriple("domain:$domain", 'rdfs:label', $domain, 'literal');
+    $graph->addCompressedTriple("domain:$domain", 'skos:notation', $domain, 'uriv:DomainDatatype');
 
-    if($do_whois && isset($whoisservers["$domain"]))
+    if($do_whois && isset($whoisservers[$domain]))
     {
-      $graph->addCompressedTriple("domain:".$domain, "uriv:hasWhoIsServer", "domain:".$whoisservers["$domain"]);
+      $graph->addCompressedTriple("domain:$domain", "uriv:hasWhoIsServer", "domain:".$whoisservers["$domain"]);
       $graph->addCompressedTriple("domain:".$whoisservers["$domain"], "rdf:type", "uriv:WhoisServer");
       
-      $lookup = LookupDomain($nowww_actual_domain,$whoisservers[$domain]);
+      $nowww_domain = $domain;
+      if(substr($domain, 0, 4) === "www.")
+      {
+        $nowww_domain = substr($domain, 4);
+      }
+      
+      $lookup = LookupDomain($nowww_domain, $whoisservers[$domain]);
       if(@$lookup)
       {
-        $graph->addCompressedTriple("domain:$nowww_actual_domain", "uriv:whoIsRecord", $lookup, "xsd:string");
+        $graph->addCompressedTriple("domain:$nowww_domain", "uriv:whoIsRecord", $lookup, "xsd:string");
       }
     }
   }
 
   # TLD Shenanigans...
 
-  $graph->addCompressedTriple("domain:".$domain, "rdf:type", "uriv:TopLevelDomain");
-  if(isset($tlds[".$domain"]))
-  {
-    $tld = $tlds[".$domain"] ;
-    foreach($tld as $place)
-    {
-      $graph->addCompressedTriple($place["uri"], "http://dbpedia.org/property/cctld", "domain:$domain");
-      $graph->addCompressedTriple($place["uri"], "rdfs:label", $place["name"], "xsd:string");
-      $graph->addCompressedTriple($place["uri"], "rdf:type", "http://dbpedia.org/ontology/Country");
-      $graph->addCompressedTriple($place["uri"], "foaf:page", db2wiki($place["uri"]));
-      $graph->addCompressedTriple(db2wiki($place["uri"]), "rdf:type", "foaf:Document");
-      if(isset($place["tld_uri"]))
-      {
-        $graph->addCompressedTriple("domain:".$domain, "owl:sameAs", $place["tld_uri"]);
-        $graph->addCompressedTriple("domain:".$domain, "foaf:page", db2wiki($place["tld_uri"]));
-        $graph->addCompressedTriple(db2wiki($place["tld_uri"]), "rdf:type", "foaf:Document");
-      }
-      if(isset($place["point"]))
-      {
-        list($lat, $long) = preg_split("/\s+/", trim($place["point"]));
-        $lat = sprintf("%0.5f",$lat);
-        $long = sprintf("%0.5f",$long);
-        $graph->addCompressedTriple($place["uri"], "geo:lat", $lat, "xsd:float");
-        $graph->addCompressedTriple($place["uri"], "geo:long", $long, "xsd:float");
-      }
+  $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:TopLevelDomain');
+  
+  $query = <<<EOF
+CONSTRUCT {
+  <$PREFIX/domain/$domain> owl:sameAs ?domain .
+  {$construct_page_for('?domain', "<$PREFIX/domain/$domain>")}
+  ?domain rdfs:label ?domainLabel .
+  ?country <http://dbpedia.org/property/cctld> <$PREFIX/domain/$domain> .
+  ?country rdfs:label ?countryLabel .
+  ?country a <http://dbpedia.org/ontology/Country> .
+  {$construct_page_for('?country')}
+  ?country geo:lat ?lat .
+  ?country geo:long ?long .
+} WHERE {
+  ?domain wdt:P5914 "$domain" .
+  {$match_page_for('?domain')}
+  OPTIONAL {
+    ?domain wdt:P17 ?country .
+    {$match_page_for('?country', false)}
+    OPTIONAL {
+      ?country p:P625 ?coords .
+      ?coords psv:P625 ?coord_node .
+      ?coord_node wikibase:geoLatitude ?lat .  
+      ?coord_node wikibase:geoLongitude ?long .
     }
   }
-  if(isset($zones["$domain"]))
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+}
+EOF;
+  addWikidataResult($graph, $query);
+  
+  if(isset($zones[$domain]))
   {
-    $zone = $zones["$domain"] ;
-    $graph->addCompressedTriple("domain:$domain", "uriv:delegationRecordPage", "http://www.iana.org".$zone["url"]);
-    $graph->addCompressedTriple("domain:$domain", "foaf:page", "http://www.iana.org".$zone["url"]);
-    $graph->addCompressedTriple("http://www.iana.org".$zone["url"], "rdf:type", "foaf:Document");
-    $typemap = array(
+    $zone = $zones[$domain] ;
+    $graph->addCompressedTriple("domain:$domain", 'uriv:delegationRecordPage', "http://www.iana.org$zone[url]");
+    $graph->addCompressedTriple("domain:$domain", 'foaf:page', "http://www.iana.org$zone[url]");
+    $graph->addCompressedTriple("http://www.iana.org$zone[url]", 'rdf:type', 'foaf:Document');
+    static $typemap = array(
 "country-code"=>"TopLevelDomain-CountryCode",
 "generic"=>"TopLevelDomain-Generic",
 "generic-restricted"=>"TopLevelDomain-GenericRestricted",
 "infrastructure"=>"TopLevelDomain-Infrastructure",
 "sponsored"=>"TopLevelDomain-Sponsored",
 "test"=>"TopLevelDomain-Test");
-    $graph->addCompressedTriple("domain:$domain", "rdf:type", "uriv:".$typemap[$zone["type"]]);
-    $graph->addCompressedTriple("domain:$domain", "uriv:sponsor", "domain:$domain#sponsor");
-    $graph->addCompressedTriple("domain:$domain#sponsor", "rdf:type", "foaf:Organization");
-    $graph->addCompressedTriple("domain:$domain#sponsor", "rdfs:label", $zone["sponsor"], "xsd:string");
+    $graph->addCompressedTriple("domain:$domain", 'rdf:type', "uriv:".$typemap[$zone['type']]);
+    $graph->addCompressedTriple("domain:$domain", 'uriv:sponsor', "domain:$domain#sponsor");
+    $graph->addCompressedTriple("domain:$domain#sponsor", 'rdf:type', 'foaf:Organization');
+    $graph->addCompressedTriple("domain:$domain#sponsor", 'rdfs:label', $zone["sponsor"], 'xsd:string');
   }
 }
 
 function addSuffixTrips($graph, $suffix)
 {
-  global $PREFIX;
+  global $PREFIX, $match_page_for, $construct_page_for;
   $graph->addCompressedTriple("suffix:$suffix", "rdf:type", "uriv:Suffix");
   $graph->addCompressedTriple("suffix:$suffix", "rdfs:label", ".".$suffix, "xsd:string");
   $graph->addCompressedTriple("suffix:$suffix", "skos:notation", $suffix, "uriv:SuffixDatatype");
@@ -896,9 +976,7 @@ CONSTRUCT {
   ?format rdfs:label ?formatLabel .
   ?format skos:altLabel ?formatAltLabel .
   ?format dct:description ?formatDescription .
-  ?format foaf:page ?page .
-  ?format owl:sameAs ?db_res .
-  ?page a foaf:Document .
+  {$construct_page_for('?format')}
   ?mime uriv:usedForSuffix <$suffix_uri> .
   ?mime uriv:usedForFormat ?format .
   ?mime a uriv:Mimetype .
@@ -906,24 +984,7 @@ CONSTRUCT {
   ?mime skos:notation ?mime_notation .
 } WHERE {
   { ?format wdt:P1195 "$suffix_lower" . } UNION { ?format wdt:P1195 "$suffix_upper" . }
-  OPTIONAL {
-    { ?format wdt:P973 ?page . }
-    UNION { ?format wdt:P856 ?page . }
-    UNION { ?format wdt:P1343/wdt:P953 ?page . }
-    UNION {
-      ?page schema:about ?format .
-      ?page schema:isPartOf <https://en.wikipedia.org/> .
-      BIND(URI(REPLACE(STR(?page), "^https?://en.wikipedia.org/wiki/", "http://dbpedia.org/resource/")) AS ?db_res)
-    }
-    UNION {
-      ?format ?prop ?page_id .
-      ?prop_res wikibase:directClaim ?prop .
-      ?prop_res wikibase:propertyType wikibase:ExternalId .
-      ?prop_res wdt:P1896 ?source_website .
-      ?prop_res wdt:P1630 ?formatter .
-      BIND(URI(REPLACE(STR(?page_id), "^(.*)$", STR(?formatter))) AS ?page)
-    }
-  }
+  {$match_page_for('?format')}
   OPTIONAL {
     ?format wdt:P1163 ?mime_str .
     FILTER (isLiteral(?mime_str) && STR(?mime_str) != "application/octet-stream")
@@ -998,7 +1059,7 @@ function addIanaRecord($graph, $subject, $info)
 
 function addMimeTrips($graph, $mime, $rec=true)
 {
-  global $PREFIX;
+  global $PREFIX, $match_page_for, $construct_page_for;
   $mime_types = get_mime_types();
   $graph->addCompressedTriple("mime:$mime", "rdf:type", "uriv:Mimetype");
   $graph->addCompressedTriple("mime:$mime", "rdfs:label", $mime, "literal");
@@ -1013,9 +1074,7 @@ CONSTRUCT {
   ?format rdfs:label ?formatLabel .
   ?format skos:altLabel ?formatAltLabel .
   ?format dct:description ?formatDescription .
-  ?format foaf:page ?page .
-  ?format owl:sameAs ?db_res .
-  ?page a foaf:Document .
+  {$construct_page_for('?format')}
   <$PREFIX/mime/$mime> uriv:usedForSuffix ?suffix .
   ?suffix uriv:usedForFormat ?format .
   ?suffix a uriv:Suffix .
@@ -1023,24 +1082,7 @@ CONSTRUCT {
   ?suffix skos:notation ?suffix_notation .
 } WHERE {
   ?format wdt:P1163 "$mime" .
-  OPTIONAL {
-    { ?format wdt:P973 ?page . }
-    UNION { ?format wdt:P856 ?page . }
-    UNION { ?format wdt:P1343/wdt:P953 ?page . }
-    UNION {
-      ?page schema:about ?format .
-      ?page schema:isPartOf <https://en.wikipedia.org/>
-      BIND(URI(REPLACE(STR(?page), "^https?://en.wikipedia.org/wiki/", "http://dbpedia.org/resource/")) AS ?db_res)
-    }
-    UNION {
-      ?format ?prop ?page_id .
-      ?prop_res wikibase:directClaim ?prop .
-      ?prop_res wikibase:propertyType wikibase:ExternalId .
-      ?prop_res wdt:P1896 ?source_website .
-      ?prop_res wdt:P1630 ?formatter .
-      BIND(URI(REPLACE(STR(?page_id), "^(.*)$", STR(?formatter))) AS ?page)
-    }
-  }
+  {$match_page_for('?format')}
   OPTIONAL {
     ?format wdt:P1195 ?suffix_strcs .
     FILTER isLiteral(?suffix_strcs)
