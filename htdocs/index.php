@@ -457,7 +457,7 @@ function addBoilerplateTrips($graph, $uri, $title)
   
 }
 
-function addWikidataResult($graph, $sparql)
+function processSparqlQuery($graph, $sparql)
 {
   $lines = explode("\n", $sparql);
   foreach($lines as &$line)
@@ -468,8 +468,20 @@ function addWikidataResult($graph, $sparql)
   {
     array_unshift($lines, "PREFIX $prefix: <$ns>");
   }
-  $sparql = implode("\n", $lines);
+  return implode("\n", $lines);
+}
+
+function addWikidataResult($graph, $sparql)
+{
+  $sparql = processSparqlQuery($graph, $sparql);
   $url = 'https://query.wikidata.org/sparql?query='.rawurlencode($sparql);
+  $graph->load($url);
+}
+
+function addDBPediaResult($graph, $sparql)
+{
+  $sparql = processSparqlQuery($graph, $sparql);
+  $url = 'https://dbpedia.org/sparql/?query='.rawurlencode($sparql);
   $graph->load($url);
 }
 
@@ -708,17 +720,20 @@ function addSuffixTrips($graph, $suffix)
 
   $suffix_lower = strtolower($suffix);
   $suffix_upper = strtoupper($suffix);
+  
+  $suffix_uri = "$PREFIX/suffix/$suffix";
 
   $query = <<<EOF
 CONSTRUCT {
-  <$PREFIX/suffix/$suffix> uriv:usedForFormat ?format .
+  <$suffix_uri> uriv:usedForFormat ?format .
   ?format a uriv:Format .
   ?format rdfs:label ?formatLabel .
   ?format skos:altLabel ?formatAltLabel .
   ?format dct:description ?formatDescription .
   ?format foaf:page ?page .
+  ?format owl:sameAs ?db_res .
   ?page a foaf:Document .
-  ?mime uriv:usedForSuffix <$PREFIX/suffix/$suffix> .
+  ?mime uriv:usedForSuffix <$suffix_uri> .
   ?mime uriv:usedForFormat ?format .
   ?mime a uriv:Mimetype .
   ?mime rdfs:label ?mime_str .
@@ -731,7 +746,8 @@ CONSTRUCT {
     UNION { ?format wdt:P1343/wdt:P953 ?page . }
     UNION {
       ?page schema:about ?format .
-      ?page schema:isPartOf <https://en.wikipedia.org/>
+      ?page schema:isPartOf <https://en.wikipedia.org/> .
+      BIND(URI(REPLACE(STR(?page), "^https?://en.wikipedia.org/wiki/", "http://dbpedia.org/resource/")) AS ?db_res)
     }
     UNION {
       ?format ?prop ?page_id .
@@ -752,6 +768,20 @@ CONSTRUCT {
 }
 EOF;
   addWikidataResult($graph, $query);
+  
+  /*$suffix_res = $graph->resource($suffix_uri);
+  foreach($suffix_res->all('uriv:usedForFormat') as $format)
+  {
+    $query = <<<EOF
+CONSTRUCT {
+  <$format> owl:sameAs ?format .
+} WHERE {
+  <$format> (owl:sameAs|^owl:sameAs)+ ?format .
+  FILTER REGEX(STR(?format), "^http://dbpedia.org/")
+}
+EOF;
+    addDBPediaResult($graph, $query);
+  }*/
 }
 
 function addMimeTrips($graph, $mime, $rec=true)
@@ -769,6 +799,7 @@ CONSTRUCT {
   ?format skos:altLabel ?formatAltLabel .
   ?format dct:description ?formatDescription .
   ?format foaf:page ?page .
+  ?format owl:sameAs ?db_res .
   ?page a foaf:Document .
   <$PREFIX/mime/$mime> uriv:usedForSuffix ?suffix .
   ?suffix uriv:usedForFormat ?format .
@@ -784,6 +815,7 @@ CONSTRUCT {
     UNION {
       ?page schema:about ?format .
       ?page schema:isPartOf <https://en.wikipedia.org/>
+      BIND(URI(REPLACE(STR(?page), "^https?://en.wikipedia.org/wiki/", "http://dbpedia.org/resource/")) AS ?db_res)
     }
     UNION {
       ?format ?prop ?page_id .
