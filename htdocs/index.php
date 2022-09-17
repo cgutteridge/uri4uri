@@ -631,6 +631,91 @@ function flush_output()
   flush();
 }
 
+function update_iana_records($file, $assignments, $id_element, $combine_id)
+{
+  $info = stream_context_create(array('http' => array('user_agent' => 'uri4uri PHP/'.PHP_VERSION, 'header' => 'Connection: close\r\n')));
+  libxml_set_streams_context($info);
+  $xml = new DOMDocument;
+  $xml->preserveWhiteSpace = false;
+  if($xml->load("https://www.iana.org/assignments/$assignments/$assignments.xml") === false)
+  {
+    return;
+  }
+  $xpath = new DOMXPath($xml);
+  $xpath->registerNamespace('reg', 'http://www.iana.org/assignments');
+  
+  $records = array();
+  foreach($xpath->query('//reg:record') as $record)
+  {
+    foreach($xpath->query("reg:$id_element/text()", $record) as $id_item)
+    {
+      $id = trim($id_item->wholeText);
+      $record_data['id'] = $id;
+      if($combine_id)
+      {
+        foreach($xpath->query("ancestor::reg:registry[. != /reg:registry]/@id", $record) as $registry_id)
+        {
+          $registry = $registry_id->nodeValue;
+          $id = "$registry/$id";
+        }
+      }
+      foreach($xpath->query('reg:status/text()', $record) as $status_item)
+      {
+        $record_data['type'] = strtolower(trim($status_item->wholeText));
+        break;
+      }
+      foreach($xpath->query('reg:description/text()', $record) as $desc_item)
+      {
+        $record_data['name'] = trim($desc_item->wholeText);
+        break;
+      }
+      $refs = array();
+      foreach($xpath->query('reg:xref', $record) as $xref)
+      {
+        $type = $xpath->query('@type', $xref)->item(0)->nodeValue;
+        $data = $xpath->query('@data', $xref)->item(0)->nodeValue;
+        if($type === 'rfc')
+        {
+          $refs["http://www.rfc-editor.org/rfc/$data.txt"] = strtoupper($data);
+        }else if($type === 'person')
+        {
+          foreach($xpath->query("//reg:person[@id = '$data']") as $person)
+          {
+            $name = null;
+            foreach($xpath->query('reg:name/text()') as $name_item)
+            {
+              $name = $name_item->wholeText;
+              break;
+            }
+            $uri = str_replace('&', '@', trim($xpath->query('reg:uri/text()', $person)->item(0)->wholeText));
+            $refs[$uri] = $name;
+            break;
+          }
+        }else if($type === 'uri')
+        {
+          $refs[$data] = null;
+        }
+      }
+      $record_data['refs'] = $refs;
+      foreach($xpath->query('reg:file[@type="template"]/text()', $record) as $template)
+      {
+        $template = trim($template->wholeText);
+        $record_data['template'] = "http://www.iana.org/assignments/$assignments/$template";
+        break;
+      }
+      $records[strtolower($id)] = $record_data;
+      break;
+    }
+  }
+  
+  ksort($records);
+  
+  if(file_exists($file))
+  {
+    file_put_contents($file, json_encode($records, JSON_UNESCAPED_SLASHES));
+  }
+}
+
 function get_schemes()
 {
   static $cache_file = __DIR__.'/data/schemes.json';
@@ -642,62 +727,25 @@ function get_schemes()
     register_shutdown_function(function($cache_file)
     {
       flush_output();
-      
-      $info = stream_context_create(array('http' => array('user_agent' => 'uri4uri PHP/'.PHP_VERSION, 'header' => 'Connection: close\r\n')));
-      libxml_set_streams_context($info);
-      $xml = new DOMDocument;
-      $xml->preserveWhiteSpace = false;
-      if($xml->load('https://www.iana.org/assignments/uri-schemes/uri-schemes.xml') === false)
-      {
-        return;
-      }
-      $xpath = new DOMXPath($xml);
-      $xpath->registerNamespace('reg', 'http://www.iana.org/assignments');
-      
-      $schemes = array();
-      
-      foreach($xpath->query('//reg:record') as $record)
-      {
-        $scheme = array();
-        $id = trim($xpath->query('reg:value/text()', $record)->item(0)->wholeText);
-        $scheme['id'] = $id;
-        $scheme['type'] = strtolower(trim($xpath->query('reg:status/text()', $record)->item(0)->wholeText));
-        $scheme['name'] = trim($xpath->query('reg:description/text()', $record)->item(0)->wholeText);
-        $refs = array();
-        foreach($xpath->query('reg:xref', $record) as $xref)
-        {
-          $type = $xpath->query('@type', $xref)->item(0)->nodeValue;
-          $data = $xpath->query('@data', $xref)->item(0)->nodeValue;
-          if($type === 'rfc')
-          {
-            $refs["http://www.rfc-editor.org/rfc/$data.txt"] = strtoupper($data);
-          }else if($type === 'person')
-          {
-            foreach($xpath->query("//reg:person[@id = '$data']") as $person)
-            {
-              $name = trim($xpath->query('reg:name/text()', $person)->item(0)->wholeText);
-              $uri = str_replace('&', '@', trim($xpath->query('reg:uri/text()', $person)->item(0)->wholeText));
-              $refs[$uri] = $name;
-              break;
-            }
-          }
-        }
-        $scheme['refs'] = $refs;
-        foreach($xpath->query('reg:file[@type="template"]/text()', $record) as $template)
-        {
-          $template = trim($template->wholeText);
-          $scheme['template'] = "http://www.iana.org/assignments/uri-schemes/$template";
-          break;
-        }
-        $schemes[$id] = $scheme;
-      }
-      
-      ksort($schemes);
-      
-      if(file_exists($cache_file))
-      {
-        file_put_contents($cache_file, json_encode($schemes, JSON_UNESCAPED_SLASHES));
-      }
+      update_iana_records($cache_file, 'uri-schemes', 'value', false);
+    }, $cache_file);
+  }
+  
+  return $data;
+}
+
+function get_mime_types()
+{
+  static $cache_file = __DIR__.'/data/mime.json';
+  
+  $data = get_updated_json_file($cache_file, $renew);
+  if($renew)
+  {
+    ob_start();
+    register_shutdown_function(function($cache_file)
+    {
+      flush_output();
+      update_iana_records($cache_file, 'media-types', 'name', true);
     }, $cache_file);
   }
   
@@ -897,12 +945,61 @@ EOF;
   }*/
 }
 
+function addIanaRecord($graph, $subject, $info)
+{
+  if(empty($info))
+  {
+    $graph->addCompressedTriple($subject, 'vs:term_status', "unstable", 'literal');
+    return;
+  }
+  
+  static $tmap = array(
+    "permanent" => "stable",
+    "provisional" => "testing",
+    "historical" => "archaic"
+  );
+  
+  if(isset($info['name']))
+  {
+    $graph->addCompressedTriple($subject, 'rdfs:label', $info['name'], 'literal');
+  }
+  if(isset($info['type']))
+  {
+    $graph->addCompressedTriple($subject, 'vs:term_status', $tmap[$info['type']], 'literal');
+  }else{
+    $graph->addCompressedTriple($subject, 'vs:term_status', "stable", 'literal');
+  }
+  if(isset($info['template']))
+  {
+    $graph->addCompressedTriple($subject, 'rdfs:seeAlso', $info['template']);
+    $graph->addCompressedTriple($info['template'], 'rdf:type', 'foaf:Document');
+  }
+  foreach($info['refs'] as $url => $label)
+  {
+    $graph->addCompressedTriple($subject, 'uriv:IANARef', $url);
+    if(str_starts_with($url, 'http://www.rfc-editor.org/rfc/'))
+    {
+      $graph->addCompressedTriple($subject, 'foaf:page', $url);
+      $graph->addCompressedTriple($url, 'rdf:type', 'foaf:Document');
+    }else{
+      $graph->addCompressedTriple($url, 'rdf:type', 'foaf:Agent');
+    }
+    if(!empty($label))
+    {
+      $graph->addCompressedTriple($url, 'rdfs:label', $label, 'literal');
+    }
+  }
+}
+
 function addMimeTrips($graph, $mime, $rec=true)
 {
   global $PREFIX;
+  $mime_types = get_mime_types();
   $graph->addCompressedTriple("mime:$mime", "rdf:type", "uriv:Mimetype");
   $graph->addCompressedTriple("mime:$mime", "rdfs:label", $mime, "literal");
   $graph->addCompressedTriple("mime:$mime", "skos:notation", $mime, "uriv:MimetypeDatatype");
+  
+  addIanaRecord($graph, "mime:$mime", @$mime_types[$mime]);
   
   $query = <<<EOF
 CONSTRUCT {
@@ -970,38 +1067,7 @@ function addSchemeTrips($graph, $scheme)
   $graph->addCompressedTriple("scheme:$scheme", "rdf:type", "uriv:URIScheme");
   $graph->addCompressedTriple("scheme:$scheme", "skos:notation", $scheme, "uriv:URISchemeDatatype");
 
-  if(!isset($schemes[$scheme]))
-  {
-    $graph->addCompressedTriple("scheme:$scheme", "vs:term_status", "unstable", "literal");
-    return;
-  }
-  $s = $schemes[$scheme];
-
-  $graph->addCompressedTriple("scheme:$scheme", "rdfs:label", $s["name"], "literal");
-  $tmap = array(
-    "permanent" => "stable",
-    "provisional" => "testing",
-    "historical" => "archaic"
-  );
-  $graph->addCompressedTriple("scheme:$scheme", "vs:term_status", $tmap[$s["type"]], "literal");
-  if(isset($s['template']))
-  {
-    $graph->addCompressedTriple("scheme:$scheme", "rdfs:seeAlso", $s['template']);
-    $graph->addCompressedTriple($s['template'], "rdf:type", "foaf:Document");
-  }
-  foreach($s['refs'] as $url => $label)
-  {
-    $graph->addCompressedTriple("scheme:$scheme", "uriv:IANARef", $url);
-    if(str_starts_with($url, 'http://www.rfc-editor.org/rfc/'))
-    {
-      $graph->addCompressedTriple("scheme:$scheme", "foaf:page", $url);
-      $graph->addCompressedTriple($url, "rdf:type", "foaf:Document");
-      $graph->addCompressedTriple($url, "rdfs:label", $label, "literal");
-    }else{
-      $graph->addCompressedTriple($url, "rdf:type", "foaf:Agent");
-      $graph->addCompressedTriple($url, "rdfs:label", $label, "literal");
-    }
-  }
+  addIanaRecord($graph, "scheme:$scheme", @$schemes[$scheme]);
 }
 
 function addExtraVocabTrips($graph)
