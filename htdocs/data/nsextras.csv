@@ -22,6 +22,8 @@ xsd:string,d,String
 xsd:anyURI,d,URI
 foaf:Document,c,Document
 foaf:Organization,c,Organization
+foaf:Agent,c,Agent
+foaf:Person,c,Person
 skos:Concept,c,Concept
 http://dbpedia.org/ontology/Country,c,Country
 rdfs:Class,c,Class

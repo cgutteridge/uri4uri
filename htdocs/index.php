@@ -15,6 +15,14 @@ $ARCHIVE_BASE = "//web.archive.org/web/20220000000000/";
 $show_title = true;
 #error_log("Req: ".$_SERVER["REQUEST_URI"]);
 
+if(!function_exists('str_starts_with'))
+{
+  function str_starts_with($haystack, $needle)
+  {
+    return (string)$needle !== '' && strncmp($haystack, $needle, strlen($needle)) === 0;
+  }
+}
+
 $path = substr($_SERVER["REQUEST_URI"], 0);
 
 if($path == "")
@@ -591,6 +599,111 @@ function addURITrips($graph, $uri)
   }
 }
 
+function get_updated_json_file($file, &$renew)
+{
+  if(file_exists($file))
+  {
+    if(time() - filemtime($file) >= (48 * 60 + rand(-120, 120)) * 60)
+    {
+      touch($file);
+      $renew = true;
+    }else{
+      $renew = false;
+    }
+    $data = json_decode(file_get_contents($file), true);
+    if($data === null)
+    {
+      $renew = true;
+    }else{
+      return $data;
+    }
+  }
+  return array();
+}
+
+function flush_output()
+{
+  header('Content-Encoding: none');
+  header('Content-Length: '.ob_get_length());
+  header('Connection: close');
+  ob_end_flush();
+  ob_flush();
+  flush();
+}
+
+function get_schemes()
+{
+  static $cache_file = __DIR__.'/data/schemes.json';
+  
+  $data = get_updated_json_file($cache_file, $renew);
+  if($renew)
+  {
+    ob_start();
+    register_shutdown_function(function($cache_file)
+    {
+      flush_output();
+      
+      $info = stream_context_create(array('http' => array('user_agent' => 'uri4uri PHP/'.PHP_VERSION, 'header' => 'Connection: close\r\n')));
+      libxml_set_streams_context($info);
+      $xml = new DOMDocument;
+      $xml->preserveWhiteSpace = false;
+      if($xml->load('https://www.iana.org/assignments/uri-schemes/uri-schemes.xml') === false)
+      {
+        return;
+      }
+      $xpath = new DOMXPath($xml);
+      $xpath->registerNamespace('reg', 'http://www.iana.org/assignments');
+      
+      $schemes = array();
+      
+      foreach($xpath->query('//reg:record') as $record)
+      {
+        $scheme = array();
+        $id = trim($xpath->query('reg:value/text()', $record)->item(0)->wholeText);
+        $scheme['id'] = $id;
+        $scheme['type'] = strtolower(trim($xpath->query('reg:status/text()', $record)->item(0)->wholeText));
+        $scheme['name'] = trim($xpath->query('reg:description/text()', $record)->item(0)->wholeText);
+        $refs = array();
+        foreach($xpath->query('reg:xref', $record) as $xref)
+        {
+          $type = $xpath->query('@type', $xref)->item(0)->nodeValue;
+          $data = $xpath->query('@data', $xref)->item(0)->nodeValue;
+          if($type === 'rfc')
+          {
+            $refs["http://www.rfc-editor.org/rfc/$data.txt"] = strtoupper($data);
+          }else if($type === 'person')
+          {
+            foreach($xpath->query("//reg:person[@id = '$data']") as $person)
+            {
+              $name = trim($xpath->query('reg:name/text()', $person)->item(0)->wholeText);
+              $uri = str_replace('&', '@', trim($xpath->query('reg:uri/text()', $person)->item(0)->wholeText));
+              $refs[$uri] = $name;
+              break;
+            }
+          }
+        }
+        $scheme['refs'] = $refs;
+        foreach($xpath->query('reg:file[@type="template"]/text()', $record) as $template)
+        {
+          $template = trim($template->wholeText);
+          $scheme['template'] = "http://www.iana.org/assignments/uri-schemes/$template";
+          break;
+        }
+        $schemes[$id] = $scheme;
+      }
+      
+      ksort($schemes);
+      
+      if(file_exists($cache_file))
+      {
+        file_put_contents($cache_file, json_encode($schemes, JSON_UNESCAPED_SLASHES));
+      }
+    }, $cache_file);
+  }
+  
+  return $data;
+}
+
 function addDomainTrips($graph, $domain, $do_whois)
 {  
   $actual_domain = $domain;
@@ -851,36 +964,43 @@ EOF;
   }
 }
 
-
 function addSchemeTrips($graph, $scheme)
 {
-  global $filepath;
-  $schemes = json_decode(file_get_contents("$filepath/schemes.json"), true);
-  $graph->addCompressedTriple("scheme:".$scheme, "rdf:type", "uriv:URIScheme");
-  $graph->addCompressedTriple("scheme:".$scheme, "skos:notation", $scheme, "uriv:URISchemeDatatype");
+  $schemes = get_schemes();
+  $graph->addCompressedTriple("scheme:$scheme", "rdf:type", "uriv:URIScheme");
+  $graph->addCompressedTriple("scheme:$scheme", "skos:notation", $scheme, "uriv:URISchemeDatatype");
 
-  $s = @$schemes[$scheme];
-  if(!isset($s)) { return; }
-
-  $graph->addCompressedTriple("scheme:".$scheme, "rdfs:label", $s["name"], "literal");
-  $tmap = array(
-    "permenent"=>"stable",
-    "provisional"=>"testing",
-    "historical"=>"archaic"
-  );
-  $graph->addCompressedTriple("scheme:".$scheme, "vs:term_status", $tmap[$s["type"]], "literal");
-  if(@$s["url"])
+  if(!isset($schemes[$scheme]))
   {
-    $graph->addCompressedTriple("scheme:".$scheme, "foaf:page", $s["url"]);
-    $graph->addCompressedTriple("scheme:".$scheme, "uriv:IANAPage", $s["url"]);
-    $graph->addCompressedTriple($s["url"], "rdf:type", "foaf:Document");
+    $graph->addCompressedTriple("scheme:$scheme", "vs:term_status", "unstable", "literal");
+    return;
   }
-  foreach($s["refs"] as $url=>$label)
+  $s = $schemes[$scheme];
+
+  $graph->addCompressedTriple("scheme:$scheme", "rdfs:label", $s["name"], "literal");
+  $tmap = array(
+    "permanent" => "stable",
+    "provisional" => "testing",
+    "historical" => "archaic"
+  );
+  $graph->addCompressedTriple("scheme:$scheme", "vs:term_status", $tmap[$s["type"]], "literal");
+  if(isset($s['template']))
   {
-    $graph->addCompressedTriple("scheme:".$scheme, "foaf:page", $url);
-    $graph->addCompressedTriple("scheme:".$scheme, "uriv:IANARef", $url);
-    $graph->addCompressedTriple($url, "rdf:type", "foaf:Document");
-    $graph->addCompressedTriple($url, "rdfs:label", $label, "literal");
+    $graph->addCompressedTriple("scheme:$scheme", "rdfs:seeAlso", $s['template']);
+    $graph->addCompressedTriple($s['template'], "rdf:type", "foaf:Document");
+  }
+  foreach($s['refs'] as $url => $label)
+  {
+    $graph->addCompressedTriple("scheme:$scheme", "uriv:IANARef", $url);
+    if(str_starts_with($url, 'http://www.rfc-editor.org/rfc/'))
+    {
+      $graph->addCompressedTriple("scheme:$scheme", "foaf:page", $url);
+      $graph->addCompressedTriple($url, "rdf:type", "foaf:Document");
+      $graph->addCompressedTriple($url, "rdfs:label", $label, "literal");
+    }else{
+      $graph->addCompressedTriple($url, "rdf:type", "foaf:Agent");
+      $graph->addCompressedTriple($url, "rdfs:label", $label, "literal");
+    }
   }
 }
 
