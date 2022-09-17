@@ -654,6 +654,7 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
     foreach($xpath->query("reg:$id_element/text()", $record) as $id_item)
     {
       $id = trim($id_item->wholeText);
+      $record_data = array();
       $record_data['id'] = $id;
       if($combine_id)
       {
@@ -701,9 +702,9 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
         }
       }
       $record_data['refs'] = $refs;
-      foreach($xpath->query('reg:file[@type="template"]/text()', $record) as $template)
+      foreach($xpath->query('reg:file[@type="template"]/text()', $record) as $template_item)
       {
-        $template = trim($template->wholeText);
+        $template = trim($template_item->wholeText);
         $record_data['template'] = "http://www.iana.org/assignments/$assignments/$template";
         break;
       }
