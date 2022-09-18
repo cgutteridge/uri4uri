@@ -1248,38 +1248,6 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     if($close_element) echo "</$close_element>";
   }
 
-  if($resource->has('geo:lat') && $resource->has('geo:long'))
-  {
-    global $mapid;
-    if(!@$mapid)
-    {
-      $mapid = 0;
-      echo '<script src="http://openlayers.org/api/OpenLayers.js"></script>';
-    }
-    $mapid++;
-
-    echo '<div style="border:solid 1px #ccc;width:100%; height:200px; margin-top:1em !important" id="map'.$mapid.'"></div>
-<script>
-$(document).ready(function() {
-  var map = new OpenLayers.Map("map'.$mapid.'");
-  var wms = new OpenLayers.Layer.OSM();
-  map.addLayer(wms);
-  var lonLat = new OpenLayers.LonLat('.$resource->getString('geo:long').','.$resource->getString('geo:lat').')
-     .transform(
-      new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-      map.getProjectionObject() // to Spherical Mercator Projection
-    );
-  var zoom = 3;
-  var markers = new OpenLayers.Layer.Markers("Markers");
-  map.addLayer(markers);
-  markers.addMarker(new OpenLayers.Marker(lonLat));
-  map.setCenter(lonLat, zoom); 
-});
-</script>
-';
-
-  }
-
   echo "</div>";
   echo "</div>";
 }
