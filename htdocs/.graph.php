@@ -287,14 +287,14 @@ function addURITrips($graph, $uri)
   if(isset($b['path']))
   {
     $graph->addCompressedTriple($uriuri, 'uriv:path', $b['path'], 'xsd:string');
-    if(preg_match("/\.([^#\.\/]+)($|#)/", $b['path'], $bits))
+    if(preg_match("/\.([^\.\/]+)$/", $b['path'], $bits))
     {
       $graph->addCompressedTriple($uriuri, 'uriv:suffix', "suffix:$bits[1]");
       addSuffixTrips($graph, $bits[1]);
     }
-    if(preg_match("/\/([^#\/]+)($|#)/", $b['path'], $bits ))
+    if(preg_match("/\/([^\/]+)$/", $b['path'], $bits))
     {
-      $graph->addCompressedTriple($uriuri, 'uriv:filename', $bits['1'], 'xsd:string');
+      $graph->addCompressedTriple($uriuri, 'uriv:filename', $bits[1], 'xsd:string');
     }
   }
 
@@ -305,16 +305,16 @@ function addURITrips($graph, $uri)
     $graph->addCompressedTriple("$uriuri#query", 'rdf:type', 'uriv:Query');
     $graph->addCompressedTriple("$uriuri#query", 'rdf:type', 'rdf:Seq');
     $i = 0;
-    foreach(preg_split("/&/", $b['query']) as $kv)
+    foreach(explode('&', $b['query']) as $kv)
     {
       ++$i;
       $graph->addCompressedTriple("$uriuri#query", "rdf:_$i", "$uriuri#query-$i");
       $graph->addCompressedTriple("$uriuri#query-$i", 'rdf:type', 'uriv:QueryKVP');
-      if(preg_match('/=/', $kv))
+      if(strpos($kv, '=') !== false)
       {
-        list($key, $value) = preg_split('/=/', $kv, 2);
-        $graph->addCompressedTriple("$uriuri#query-$i", 'uriv:key', $key, 'xsd:string');
-        $graph->addCompressedTriple("$uriuri#query-$i", 'uriv:value', $value, 'xsd:string');
+        list($key, $value) = explode('=', $kv, 2);
+        $graph->addCompressedTriple("$uriuri#query-$i", 'uriv:key', $key, 'literal');
+        $graph->addCompressedTriple("$uriuri#query-$i", 'uriv:value', $value, 'literal');
       }
     }
   }
