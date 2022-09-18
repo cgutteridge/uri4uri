@@ -14,9 +14,6 @@ $PREFIX = 'http://purl.org/uri4uri';
 $PREFIX_OLD = 'http://uri4uri.net';
 $ARCHIVE_BASE = '//web.archive.org/web/20220000000000/';
 
-$show_title = true;
-#error_log("Req: ".$_SERVER['REQUEST_URI']);
-
 $path = substr($_SERVER['REQUEST_URI'], 0);
 
 if($path == '')
@@ -33,25 +30,29 @@ if($path == "/robots.txt")
   exit;
 }
 
-if(preg_match("/^\/?/", $path) && @$_GET['uri'])
+if(str_starts_with($path, '/?') && isset($_GET['uri']))
 {
   $uri4uri = "$BASE/uri/".urlencode_minimal($_GET['uri']);
   header("Location: $uri4uri");
   exit;
 }
+
+$page_title = "";
+$page_show_title = true;
+$page_url = null;
+$page_content = "";
+
 if($path == "/aprilfools")
 {
-  $title = 'uri4uri';
-  $show_title = false;
-  $content = file_get_contents("ui/aprilfools.html");
+  $page_show_title = false;
+  $page_content = file_get_contents("ui/aprilfools.html");
   require_once("ui/template.php");
   exit;
 }
 if($path == "/")
 {
-  $title = 'uri4uri';
-  $show_title = false;
-  $content = file_get_contents("ui/homepage.html");
+  $page_show_title = false;
+  $page_content = file_get_contents("ui/homepage.html");
   require_once("ui/template.php");
   exit;
 }
@@ -160,7 +161,7 @@ if($format == 'html')
   http_response_code(200);
   $document_url = $PREFIX.$_SERVER['REQUEST_URI'];
   $doc = $graph->resource($document_url);
-  $title = $doc->label();
+  $page_title = $doc->label();
   if($doc->has('foaf:primaryTopic'))
   {
     $uri = $doc->getString('foaf:primaryTopic');
@@ -226,13 +227,14 @@ if($format == 'html')
     $resource = $graph->resource($uri);
     if($resource->has('rdf:type'))
     {
-      $thingy_type =" <span class='classType'>[".$resource->all('rdf:type')->label()->join(", ")."]</span>";
+      $page_thingy_type =" <span class='classType'>[".$resource->all('rdf:type')->label()->join(", ")."]</span>";
     }
     renderResource($graph, $resource, $visited, $document_url);
   }
-  $content = ob_get_contents();
+  $page_url = $uri;
+  $page_content = ob_get_contents();
   ob_end_clean();
-  $head_content = "  <script type='application/ld+json'>".$graph->serialize('JSONLD')."</script>";
+  $page_head_content = "  <script type='application/ld+json'>".$graph->serialize('JSONLD')."</script>";
   require_once("ui/template.php");
 }
 elseif($format == 'rdf')
