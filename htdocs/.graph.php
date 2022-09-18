@@ -9,21 +9,19 @@ function initGraph()
   global $PREFIX_OLD;
 
   $graph = new Graphite();
-  $graph->ns('uri',"$PREFIX/uri/");
-  $graph->ns('uriv',"$PREFIX/vocab#");
-  $graph->ns('scheme',"$PREFIX/scheme/");
-  $graph->ns('domain',"$PREFIX/domain/");
-  $graph->ns('suffix',"$PREFIX/suffix/");
-  $graph->ns('mime',"$PREFIX/mime/");
-  $graph->ns('olduri',"$PREFIX_OLD/uri/");
-  $graph->ns('olduriv',"$PREFIX_OLD/vocab#");
-  $graph->ns('oldscheme',"$PREFIX_OLD/scheme/");
-  $graph->ns('olddomain',"$PREFIX_OLD/domain/");
-  $graph->ns('oldsuffix',"$PREFIX_OLD/suffix/");
-  $graph->ns('oldmime',"$PREFIX_OLD/mime/");
-  $graph->ns('occult', "http://data.totl.net/occult/");
-  $graph->ns('xtypes', "http://prefix.cc/xtypes/");
-  $graph->ns('vs',"http://www.w3.org/2003/06/sw-vocab-status/ns#");
+  $graph->ns('uriv', "$PREFIX/vocab#");
+  $graph->ns('uri', "$PREFIX/uri/");
+  $graph->ns('scheme', "$PREFIX/scheme/");
+  $graph->ns('domain', "$PREFIX/domain/");
+  $graph->ns('suffix', "$PREFIX/suffix/");
+  $graph->ns('mime', "$PREFIX/mime/");
+  $graph->ns('olduri', "$PREFIX_OLD/uri/");
+  $graph->ns('olduriv', "$PREFIX_OLD/vocab#");
+  $graph->ns('oldscheme', "$PREFIX_OLD/scheme/");
+  $graph->ns('olddomain', "$PREFIX_OLD/domain/");
+  $graph->ns('oldsuffix', "$PREFIX_OLD/suffix/");
+  $graph->ns('oldmime', "$PREFIX_OLD/mime/");
+  $graph->ns('vs', "http://www.w3.org/2003/06/sw-vocab-status/ns#");
   
   return $graph;
 }
