@@ -171,6 +171,10 @@ if(!preg_match("/^\/(vocab|uri|scheme|suffix|domain|mime)(\.(rdf|debug|ttl|html|
 @list(, $type, , $format, , $id) = $b;
 
 $decoded_id = rawurldecode($id);
+if($type === 'domain')
+{
+  $decoded_id = idn_to_utf8($decoded_id, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+}
 if($type !== 'uri')
 {
   $decoded_id = strtolower($decoded_id);
@@ -868,23 +872,25 @@ function addDomainTrips($graph, $domain)
   global $PREFIX, $match_page_for, $construct_page_for;
   
   $zones = get_tlds();
+  
+  $domain_idn = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
 
   $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:Domain');
   $graph->addCompressedTriple("domain:$domain", 'rdfs:label', $domain, 'literal');
   $graph->addCompressedTriple("domain:$domain", 'skos:notation', $domain, 'uriv:DomainDatatype');
-  $graph->addCompressedTriple("domain:$domain", 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain");
+  if($domain_idn !== $domain)
+  {
+    $graph->addCompressedTriple("domain:$domain", 'skos:notation', $domain_idn, 'uriv:DomainDatatype');
+  }
+  $graph->addCompressedTriple("domain:$domain", 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain_idn");
 
   # Super Domains
-  while(strpos($domain, ".") !== false)
+  if(strpos($domain, ".") !== false)
   {
     $old_domain = $domain;
     list($domain_name, $domain) = explode(".", $domain, 2);
-      
     $graph->addCompressedTriple("domain:$domain", 'uriv:subDom', "domain:$old_domain");
-    $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:Domain');
-    $graph->addCompressedTriple("domain:$domain", 'rdfs:label', $domain, 'literal');
-    $graph->addCompressedTriple("domain:$domain", 'skos:notation', $domain, 'uriv:DomainDatatype');
-    $graph->addCompressedTriple("domain:$domain", 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain");
+    return addDomainTrips($graph, $domain);
   }
 
   # TLD Shenanigans...
@@ -903,7 +909,7 @@ CONSTRUCT {
   ?country geo:lat ?lat .
   ?country geo:long ?long .
 } WHERE {
-  ?domain wdt:P5914 "$domain" .
+  ?domain wdt:P5914 "$domain_idn" .
   {$match_page_for('?domain')}
   OPTIONAL {
     ?domain wdt:P17 ?country .
@@ -920,9 +926,9 @@ CONSTRUCT {
 EOF;
   addWikidataResult($graph, $query);
   
-  if(isset($zones[$domain]))
+  if(isset($zones[$domain_idn]))
   {
-    $zone = $zones[$domain] ;
+    $zone = $zones[$domain_idn] ;
     $graph->addCompressedTriple("domain:$domain", 'uriv:delegationRecordPage', "http://www.iana.org$zone[url]");
     $graph->addCompressedTriple("domain:$domain", 'foaf:page', "http://www.iana.org$zone[url]");
     $graph->addCompressedTriple("http://www.iana.org$zone[url]", 'rdf:type', 'foaf:Document');
