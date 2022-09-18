@@ -92,6 +92,19 @@ function parse_url_fixed($uri)
   return $result;
 }
 
+$construct_label_for = function($entity, $target = null)
+{
+  $label = $entity.'Label';
+  $alt_label = $entity.'AltLabel';
+  $description = $entity.'Description';
+  if(empty($target)) $target = $entity;
+  return <<<EOF
+  $target rdfs:label $label .
+  $target skos:altLabel $alt_label .
+  $target dct:description $description .
+EOF;
+};
+
 $construct_page_for = function($entity, $target = null)
 {
   $page = $entity.'_page';
@@ -873,7 +886,7 @@ function get_tlds()
 
 function addDomainTrips($graph, $domain)
 {
-  global $PREFIX, $match_page_for, $construct_page_for;
+  global $PREFIX, $match_page_for, $construct_page_for, $construct_label_for;
   
   $zones = get_tlds();
   
@@ -901,14 +914,15 @@ function addDomainTrips($graph, $domain)
 
   $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:TopLevelDomain');
   
+  $domain_node = "<$PREFIX/domain/$domain>";
   $query = <<<EOF
 CONSTRUCT {
-  <$PREFIX/domain/$domain> owl:sameAs ?domain .
-  {$construct_page_for('?domain', "<$PREFIX/domain/$domain>")}
-  ?domain rdfs:label ?domainLabel .
+  $domain_node owl:sameAs ?domain .
+  {$construct_page_for('?domain', $domain_node)}
+  {$construct_label_for('?domain')}
   ?country <http://dbpedia.org/property/cctld> <$PREFIX/domain/$domain> .
-  ?country rdfs:label ?countryLabel .
   ?country a <http://dbpedia.org/ontology/Country> .
+  {$construct_label_for('?country')}
   {$construct_page_for('?country')}
   ?country geo:lat ?lat .
   ?country geo:long ?long .
@@ -952,7 +966,7 @@ EOF;
 
 function addSuffixTrips($graph, $suffix)
 {
-  global $PREFIX, $match_page_for, $construct_page_for;
+  global $PREFIX, $match_page_for, $construct_page_for, $construct_label_for;
   $graph->addCompressedTriple("suffix:$suffix", 'rdf:type', 'uriv:Suffix');
   $graph->addCompressedTriple("suffix:$suffix", 'rdfs:label', ".".$suffix, 'xsd:string');
   $graph->addCompressedTriple("suffix:$suffix", 'skos:notation', $suffix, 'uriv:SuffixDatatype');
@@ -960,17 +974,14 @@ function addSuffixTrips($graph, $suffix)
   $suffix_lower = strtolower($suffix);
   $suffix_upper = strtoupper($suffix);
   
-  $suffix_uri = "$PREFIX/suffix/$suffix";
-
+  $suffix_node = "<$PREFIX/suffix/$suffix>";
   $query = <<<EOF
 CONSTRUCT {
-  <$suffix_uri> uriv:usedForFormat ?format .
+  $suffix_node uriv:usedForFormat ?format .
   ?format a uriv:Format .
-  ?format rdfs:label ?formatLabel .
-  ?format skos:altLabel ?formatAltLabel .
-  ?format dct:description ?formatDescription .
+  {$construct_label_for('?format')}
   {$construct_page_for('?format')}
-  ?mime uriv:usedForSuffix <$suffix_uri> .
+  ?mime uriv:usedForSuffix $suffix_node .
   ?mime uriv:usedForFormat ?format .
   ?mime a uriv:Mimetype .
   ?mime rdfs:label ?mime_str .
@@ -1052,7 +1063,7 @@ function addIanaRecord($graph, $subject, $info)
 
 function addMimeTrips($graph, $mime, $rec=true)
 {
-  global $PREFIX, $match_page_for, $construct_page_for;
+  global $PREFIX, $match_page_for, $construct_page_for, $construct_label_for;
   $mime_types = get_mime_types();
   $graph->addCompressedTriple("mime:$mime", 'rdf:type', 'uriv:Mimetype');
   $graph->addCompressedTriple("mime:$mime", 'rdfs:label', $mime, 'literal');
@@ -1060,15 +1071,14 @@ function addMimeTrips($graph, $mime, $rec=true)
   
   addIanaRecord($graph, "mime:$mime", @$mime_types[$mime]);
   
+  $mime_node = "<$PREFIX/mime/$mime>";
   $query = <<<EOF
 CONSTRUCT {
-  <$PREFIX/mime/$mime> uriv:usedForFormat ?format .
+  $mime_node uriv:usedForFormat ?format .
   ?format a uriv:Format .
-  ?format rdfs:label ?formatLabel .
-  ?format skos:altLabel ?formatAltLabel .
-  ?format dct:description ?formatDescription .
+  {$construct_label_for('?format')}
   {$construct_page_for('?format')}
-  <$PREFIX/mime/$mime> uriv:usedForSuffix ?suffix .
+  $mime_node uriv:usedForSuffix ?suffix .
   ?suffix uriv:usedForFormat ?format .
   ?suffix a uriv:Suffix .
   ?suffix rdfs:label ?suffix_label .
@@ -1107,11 +1117,39 @@ EOF;
 
 function addSchemeTrips($graph, $scheme)
 {
+  global $PREFIX, $match_page_for, $construct_page_for, $construct_label_for;
   $schemes = get_schemes();
   $graph->addCompressedTriple("scheme:$scheme", 'rdf:type', 'uriv:URIScheme');
   $graph->addCompressedTriple("scheme:$scheme", 'skos:notation', $scheme, 'uriv:URISchemeDatatype');
 
   addIanaRecord($graph, "scheme:$scheme", @$schemes[$scheme]);
+  
+  $scheme_node = "<$PREFIX/scheme/$scheme>";
+  $query = <<<EOF
+CONSTRUCT {
+  {$construct_label_for('?scheme', $scheme_node)}
+  $scheme_node owl:sameAs ?scheme .
+  {$construct_page_for('?scheme', $scheme_node)}
+  ?technology uriv:usesScheme $scheme_node .
+  {$construct_label_for('?technology')}
+  {$construct_page_for('?technology')}
+} WHERE {
+  OPTIONAL {
+    ?scheme wdt:P4742 "$scheme" .
+    ?scheme wdt:P31 wd:Q37071 .
+    {$match_page_for('?scheme')}
+  }
+  OPTIONAL {
+    ?technology wdt:P4742 "$scheme" .
+    FILTER NOT EXISTS {
+      ?technology wdt:P31 wd:Q37071 .
+    }
+    {$match_page_for('?technology')}
+  }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+}
+EOF;
+  addWikidataResult($graph, $query);
 }
 
 function addExtraVocabTrips($graph)

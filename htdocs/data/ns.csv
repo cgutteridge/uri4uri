@@ -52,6 +52,7 @@ subject,p,old,subject,subject identified by
 trueAt,p,old,trueAt,statement true at
 usedForFormat,p,old,used for format
 usedForSuffix,p,old,used for suffix
+usesScheme,p,new,uses URI scheme
 user,p,old,user
 value,p,old,value
 whoIsRecord,p,old,whois record
