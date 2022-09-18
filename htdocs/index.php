@@ -310,14 +310,18 @@ if($format == 'html')
     $prefix_length = strlen("$PREFIX/vocab#");
     foreach($sections as $s)
     {
-      $html = array();
+      $resources = array();
       foreach($l[$s[2]] as $resource) 
       { 
-        $html[$resource->toString()]= "<a name='".substr($resource->toString(),$prefix_length)."'></a>".renderResource($graph, $resource, $visited); 
+        $resources[$resource->toString()] = $resource; 
       }
-      ksort($html);
-      echo "<a name='".$s[2]."' /><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
-      echo join("", $html);  
+      ksort($resources);
+      echo "<a name='".$s[2]."'><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
+      foreach($resources as $resource) 
+      { 
+        echo "<a name='".substr($resource->toString(),$prefix_length)."'></a>";
+        renderResource($graph, $resource, $visited); 
+      }
       echo "</div></div>";
     }
 
