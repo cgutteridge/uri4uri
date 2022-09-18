@@ -4,6 +4,7 @@ Domain,c,old,Internet Domain
 DomainDatatype,d,old,Internet Domain Identifier
 Domain-Invalid,c,old,Invalid Internet Domain
 Domain-Valid,c,old,Valid Internet Domain
+Domain-Special,c,new,Special-Use Domain
 filename,p,old,filename
 Format,c,old,File Format
 fragmentOf,p,old,fragment of

@@ -313,7 +313,8 @@ function addDomainTrips($graph, $domain)
 {
   global $PREFIX, $SPARQL;
   
-  $zones = get_tlds();
+  $tlds = get_tlds();
+  $special_domains = get_special_domains();
   
   $domain_idn = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
 
@@ -325,6 +326,13 @@ function addDomainTrips($graph, $domain)
     $graph->addCompressedTriple("domain:$domain", 'skos:notation', $domain_idn, 'uriv:DomainDatatype');
   }
   $graph->addCompressedTriple("domain:$domain", 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain_idn");
+  
+  $special_type = null;
+  if(isset($special_domains["$domain_idn."]))
+  {
+    addIanaRecord($graph, "domain:$domain", $special_domains["$domain_idn."]);
+    $special_type = 'uriv:Domain-Special';
+  }
 
   # Super Domains
   if(strpos($domain, ".") !== false)
@@ -332,7 +340,17 @@ function addDomainTrips($graph, $domain)
     $old_domain = $domain;
     list($domain_name, $domain) = explode(".", $domain, 2);
     $graph->addCompressedTriple("domain:$domain", 'uriv:subDom', "domain:$old_domain");
-    return addDomainTrips($graph, $domain);
+    $inner_special_type = addDomainTrips($graph, $domain);
+    $special_type = $special_type ?? $inner_special_type;
+    if(!empty($special_type))
+    {
+      $graph->addCompressedTriple("domain:$old_domain", 'rdf:type', $special_type);
+    }
+    return $special_type;
+  }
+  if(!empty($special_type))
+  {
+    $graph->addCompressedTriple("domain:$domain", 'rdf:type', $special_type);
   }
 
   # TLD Shenanigans...
@@ -369,12 +387,12 @@ CONSTRUCT {
 EOF;
   addWikidataResult($graph, $query);
   
-  if(isset($zones[$domain_idn]))
+  if(isset($tlds[$domain_idn]))
   {
-    $zone = $zones[$domain_idn] ;
-    $graph->addCompressedTriple("domain:$domain", 'uriv:delegationRecordPage', "http://www.iana.org$zone[url]");
-    $graph->addCompressedTriple("domain:$domain", 'foaf:page', "http://www.iana.org$zone[url]");
-    $graph->addCompressedTriple("http://www.iana.org$zone[url]", 'rdf:type', 'foaf:Document');
+    $tld = $tlds[$domain_idn];
+    $graph->addCompressedTriple("domain:$domain", 'uriv:delegationRecordPage', "http://www.iana.org$tld[url]");
+    $graph->addCompressedTriple("domain:$domain", 'foaf:page', "http://www.iana.org$tld[url]");
+    $graph->addCompressedTriple("http://www.iana.org$tld[url]", 'rdf:type', 'foaf:Document');
     static $typemap = array(
 "country-code"=>"TopLevelDomain-CountryCode",
 "generic"=>"TopLevelDomain-Generic",
@@ -382,11 +400,12 @@ EOF;
 "infrastructure"=>"TopLevelDomain-Infrastructure",
 "sponsored"=>"TopLevelDomain-Sponsored",
 "test"=>"TopLevelDomain-Test");
-    $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:'.$typemap[$zone['type']]);
+    $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:'.$typemap[$tld['type']]);
     $graph->addCompressedTriple("domain:$domain", 'uriv:sponsor', "domain:$domain#sponsor");
     $graph->addCompressedTriple("domain:$domain#sponsor", 'rdf:type', 'foaf:Organization');
-    $graph->addCompressedTriple("domain:$domain#sponsor", 'rdfs:label', $zone['sponsor'], 'xsd:string');
+    $graph->addCompressedTriple("domain:$domain#sponsor", 'rdfs:label', $tld['sponsor'], 'xsd:string');
   }
+  return $special_type;
 }
 
 function addSuffixTrips($graph, $suffix)

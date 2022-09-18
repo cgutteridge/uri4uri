@@ -186,6 +186,24 @@ function get_mime_types()
   return $data;
 }
 
+function get_special_domains()
+{
+  static $cache_file = __DIR__.'/data/specialdn.json';
+  
+  $data = get_updated_json_file($cache_file, $renew);
+  if($renew)
+  {
+    ob_start();
+    register_shutdown_function(function($cache_file)
+    {
+      flush_output();
+      update_iana_records($cache_file, 'special-use-domain-names', 'name', false);
+    }, $cache_file);
+  }
+  
+  return $data;
+}
+
 function get_tlds()
 {
   static $cache_file = __DIR__.'/data/tld.json';
