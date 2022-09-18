@@ -15,6 +15,7 @@ function initGraph()
   $graph->ns('domain', "$PREFIX/domain/");
   $graph->ns('suffix', "$PREFIX/suffix/");
   $graph->ns('mime', "$PREFIX/mime/");
+  $graph->ns('urnns', "$PREFIX/urn/");
   $graph->ns('olduri', "$PREFIX_OLD/uri/");
   $graph->ns('olduriv', "$PREFIX_OLD/vocab#");
   $graph->ns('oldscheme', "$PREFIX_OLD/scheme/");
@@ -177,6 +178,15 @@ function graphMime($mime)
   return $graph;
 }
 
+function graphURNNamespace($ns)
+{
+  $graph = initGraph();
+  $uri = $graph->expandURI("urnns:$ns");
+  addBoilerplateTrips($graph, "urnns:$ns", $uri, false);
+  addURNNamespaceTrips($graph, $ns);
+  return $graph;
+}
+
 function graphScheme($scheme)
 {
   $graph = initGraph();
@@ -186,7 +196,7 @@ function graphScheme($scheme)
   return $graph;
 }
 
-function addBoilerplateTrips($graph, $uri, $title)
+function addBoilerplateTrips($graph, $uri, $title, $link_old = true)
 {
   global $PREFIX;
   global $PREFIX_OLD;
@@ -195,12 +205,7 @@ function addBoilerplateTrips($graph, $uri, $title)
   $graph->addCompressedTriple($document_url, 'dcterms:title', $title, 'literal');
   $graph->addCompressedTriple($document_url, 'foaf:primaryTopic', $uri);
   
-  linkOldConcept($graph, $uri, '');
-  
-# wikipedia data etc. not cc0
-#"  $graph->addCompressedTriple('', 'dcterms:license', "http://creativecommons.org/publicdomain/zero/1.0/");
-#  $graph->addCompressedTriple("http://creativecommons.org/publicdomain/zero/1.0/", 'rdfs:label', "CC0: Public Domain Dedication", 'literal');
-  
+  if($link_old) linkOldConcept($graph, $uri, '');
 }
 
 function addURITrips($graph, $uri)
@@ -603,6 +608,39 @@ CONSTRUCT {
     }
     {$SPARQL->match_page('?technology')}
   }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+}
+EOF;
+  addWikidataResult($graph, $query);
+}
+
+function addURNNamespaceTrips($graph, $ns)
+{
+  global $PREFIX, $SPARQL;
+  $namespaces = get_urn_namespaces();
+  $graph->addCompressedTriple("urnns:$ns", 'rdf:type', 'uriv:URNNamespace');
+  if(str_starts_with($ns, 'x-'))
+  {
+    $graph->addCompressedTriple("urnns:$ns", 'rdf:type', 'uriv:URNNamespace-Experimental');
+  }else if(str_starts_with($ns, 'urn-'))
+  {
+    $graph->addCompressedTriple("urnns:$ns", 'rdf:type', 'uriv:URNNamespace-Informal');
+  }else{
+    $graph->addCompressedTriple("urnns:$ns", 'rdf:type', 'uriv:URNNamespace-Formal');
+  }
+  $graph->addCompressedTriple("urnns:$ns", 'skos:notation', $ns, 'uriv:URNNamespaceDatatype');
+
+  addIanaRecord($graph, "urnns:$ns", @$namespaces[$ns]);
+  
+  $ns_node = "<$PREFIX/urn/$ns>";
+  $query = <<<EOF
+CONSTRUCT {
+  ?technology uriv:usesNamespace $ns_node .
+  {$SPARQL->construct_label('?technology')}
+  {$SPARQL->construct_page('?technology')}
+} WHERE {
+  ?technology wdt:P7470 "urn:$ns:\$1" .
+  {$SPARQL->match_page('?technology')}
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
 EOF;

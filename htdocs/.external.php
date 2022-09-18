@@ -137,6 +137,14 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
         $record_data['template'] = "http://www.iana.org/assignments/$assignments/$template";
         break;
       }
+      if(!isset($record_data['template']))
+      {
+        foreach($xpath->query('reg:template/reg:xref[@type="uri"]/@data', $record) as $template_item)
+        {
+          $record_data['template'] = $template_item->nodeValue;
+          break;
+        }
+      }
       $records[strtolower($id)] = $record_data;
       break;
     }
@@ -198,6 +206,24 @@ function get_special_domains()
     {
       flush_output();
       update_iana_records($cache_file, 'special-use-domain-names', 'name', false);
+    }, $cache_file);
+  }
+  
+  return $data;
+}
+
+function get_urn_namespaces()
+{
+  static $cache_file = __DIR__.'/data/urnns.json';
+  
+  $data = get_updated_json_file($cache_file, $renew);
+  if($renew)
+  {
+    ob_start();
+    register_shutdown_function(function($cache_file)
+    {
+      flush_output();
+      update_iana_records($cache_file, 'urn-namespaces', 'name', false);
     }, $cache_file);
   }
   
