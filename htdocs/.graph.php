@@ -252,6 +252,7 @@ function addURITrips($graph, $uri)
     {
       list($urnns) = explode(':', $b['path'], 2);
       $urnns = strtolower($urnns);
+      $graph->addCompressedTriple($uriuri, 'rdf:type', 'uriv:URN');
       $graph->addCompressedTriple($uriuri, 'uriv:urnNamespace', "urnns:$urnns");
       addURNNamespaceTrips($graph, $urnns);
     }
