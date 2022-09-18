@@ -35,10 +35,6 @@ if($path == "/robots.txt")
 {
   header("Content-type: text/plain");
   echo "User-agent: *\n";
-  # prevent robots triggering a who-is
-  echo "Disallow: /domain\n";
-  echo "\n";
-  echo "User-agent: ia_archiver\n";
   echo "Allow: /\n"; 
   exit;
 }
@@ -479,7 +475,7 @@ function graphDomain($domain)
   $graph = initGraph();
   $uri = $graph->expandURI("domain:$domain");
   addBoilerplateTrips($graph, "domain:$domain", $uri);
-  addDomainTrips($graph, $domain, true);
+  addDomainTrips($graph, $domain);
   return $graph;
 }
 
@@ -592,7 +588,7 @@ function addURITrips($graph, $uri)
   if(!empty($b["host"]))
   {
     $graph->addCompressedTriple($uriuri, "uriv:host", "domain:".$b["host"]);
-    addDomainTrips($graph, $b["host"], false);
+    addDomainTrips($graph, $b["host"]);
   }
   
   if(@$b["port"])
@@ -862,17 +858,16 @@ function get_tlds()
   return $data;
 }
 
-function addDomainTrips($graph, $domain, $do_whois)
+function addDomainTrips($graph, $domain)
 {
   global $PREFIX, $match_page_for, $construct_page_for;
-  require_once("../lib/whois.php");
-  $whoisservers = whoisservers();
   
   $zones = get_tlds();
 
-  $graph->addCompressedTriple("domain:$domain", "rdf:type", "uriv:Domain");
-  $graph->addCompressedTriple("domain:$domain", "rdfs:label", $domain, "literal");
-  $graph->addCompressedTriple("domain:$domain", "skos:notation", $domain, "uriv:DomainDatatype");
+  $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:Domain');
+  $graph->addCompressedTriple("domain:$domain", 'rdfs:label', $domain, 'literal');
+  $graph->addCompressedTriple("domain:$domain", 'skos:notation', $domain, 'uriv:DomainDatatype');
+  $graph->addCompressedTriple("domain:$domain", 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain");
 
   # Super Domains
   while(strpos($domain, ".") !== false)
@@ -884,24 +879,7 @@ function addDomainTrips($graph, $domain, $do_whois)
     $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:Domain');
     $graph->addCompressedTriple("domain:$domain", 'rdfs:label', $domain, 'literal');
     $graph->addCompressedTriple("domain:$domain", 'skos:notation', $domain, 'uriv:DomainDatatype');
-
-    if($do_whois && isset($whoisservers[$domain]))
-    {
-      $graph->addCompressedTriple("domain:$domain", "uriv:hasWhoIsServer", "domain:".$whoisservers["$domain"]);
-      $graph->addCompressedTriple("domain:".$whoisservers["$domain"], "rdf:type", "uriv:WhoisServer");
-      
-      $nowww_domain = $domain;
-      if(substr($domain, 0, 4) === "www.")
-      {
-        $nowww_domain = substr($domain, 4);
-      }
-      
-      $lookup = LookupDomain($nowww_domain, $whoisservers[$domain]);
-      if(@$lookup)
-      {
-        $graph->addCompressedTriple("domain:$nowww_domain", "uriv:whoIsRecord", $lookup, "xsd:string");
-      }
-    }
+    $graph->addCompressedTriple("domain:$domain", 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain");
   }
 
   # TLD Shenanigans...
@@ -1224,10 +1202,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     {
       $r2 = $res_map[$key];
       $type = $r2->nodeType();
-      if($rel == "$PREFIX/vocab#whoIsRecord") 
-      {
-        $value = "\"<span class='pre literal'>".htmlspecialchars($r2)."</span>\"";
-      }else if($type == "#literal")
+      if($type == "#literal")
       {
         $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\"";
       }else if(substr($type, 0, 4) == "http")
