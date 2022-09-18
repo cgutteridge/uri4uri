@@ -248,8 +248,14 @@ function addURITrips($graph, $uri)
         $graph->addCompressedTriple("domain:$b[host]", 'foaf:homepage', $homepage);
         $graph->addCompressedTriple($homepage, 'rdf:type', 'foaf:Document');
       }
+    }else if($b['scheme'] == 'urn' && isset($b['path']))
+    {
+      list($urnns) = explode(':', $b['path'], 2);
+      $urnns = strtolower($urnns);
+      $graph->addCompressedTriple($uriuri, 'uriv:urnNamespace', "urnns:$urnns");
+      addURNNamespaceTrips($graph, $urnns);
     }
-  } # end scheme
+  }
   
   if(!empty($b['host']))
   {
@@ -257,7 +263,7 @@ function addURITrips($graph, $uri)
     addDomainTrips($graph, $b['host']);
   }
   
-  if(@$b['port'])
+  if(isset($b['port']))
   {
     $graph->addCompressedTriple($uriuri, 'uriv:port', $b['port'], 'xsd:positiveInteger');
   }
@@ -266,10 +272,10 @@ function addURITrips($graph, $uri)
     $graph->addCompressedTriple($uriuri, 'uriv:port', 'uriv:noPortSpecified');
   }
   
-  if(@$b['user'])
+  if(isset($b['user']))
   {
     $graph->addCompressedTriple($uriuri, 'uriv:user', $b['user'], 'literal');
-    if(@$b['pass'])
+    if(isset($b['pass']))
     {
       $graph->addCompressedTriple($uriuri, 'uriv:pass', $b['pass'], 'literal');
     }
@@ -278,10 +284,10 @@ function addURITrips($graph, $uri)
     $graph->addCompressedTriple("$uriuri#account-".$b['user'], 'rdfs:label', $b['user'], 'xsd:string');
   }
 
-  if(@$b['path'])
+  if(isset($b['path']))
   {
     $graph->addCompressedTriple($uriuri, 'uriv:path', $b['path'], 'xsd:string');
-    if(preg_match("/\.([^#\.\/]+)($|#)/", $b['path'], $bits ))
+    if(preg_match("/\.([^#\.\/]+)($|#)/", $b['path'], $bits))
     {
       $graph->addCompressedTriple($uriuri, 'uriv:suffix', "suffix:$bits[1]");
       addSuffixTrips($graph, $bits[1]);
