@@ -3,9 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once("../lib/arc2/ARC2.php");
-require_once("../lib/Graphite/Graphite.php");
-
 require_once(".helpers.php");
 require_once(".external.php");
 require_once(".graph.php");
@@ -35,68 +32,6 @@ if($path == "/robots.txt")
   echo "Allow: /\n"; 
   exit;
 }
-
-$construct_label_for = function($entity, $target = null)
-{
-  $label = $entity.'Label';
-  $alt_label = $entity.'AltLabel';
-  $description = $entity.'Description';
-  if(empty($target)) $target = $entity;
-  return <<<EOF
-  $target rdfs:label $label .
-  $target skos:altLabel $alt_label .
-  $target dct:description $description .
-EOF;
-};
-
-$construct_page_for = function($entity, $target = null)
-{
-  $page = $entity.'_page';
-  $db = $entity.'_db';
-  if(empty($target)) $target = $entity;
-  return <<<EOF
-  $target foaf:page $page .
-  $target owl:sameAs $db .
-  $page a foaf:Document .
-EOF;
-};
-
-$match_page_for = function($entity, $ids = true)
-{
-  $page = $entity.'_page';
-  $page_id = $entity.'_page_id';
-  $prop = $entity.'_prop';
-  $prop_res = $entity.'_prop_res';
-  $formatter = $entity.'_formatter';
-  $db = $entity.'_db';
-  $ids_query = '';
-  if($ids)
-  {
-    $ids_query = <<<EOF
-
-    UNION {
-      $entity $prop $page_id .
-      $prop_res wikibase:directClaim $prop .
-      $prop_res wikibase:propertyType wikibase:ExternalId .
-      $prop_res wdt:P1896 [] .
-      $prop_res wdt:P1630 $formatter .
-      BIND(URI(REPLACE(STR($page_id), "^(.*)$", STR($formatter))) AS $page)
-    }
-EOF;
-  }
-  return <<<EOF
-  OPTIONAL {
-    { $entity wdt:P973 $page . }
-    UNION { $entity wdt:P856 $page . }
-    UNION { $entity wdt:P1343/wdt:P953 $page . }
-    UNION {
-      $page schema:about $entity .
-      $page schema:isPartOf <https://en.wikipedia.org/>
-      BIND(URI(REPLACE(STR($page), "^https?://en.wikipedia.org/wiki/", "http://dbpedia.org/resource/")) AS $db)
-    }$ids_query
-  }
-EOF;
-};
 
 if(preg_match("/^\/?/", $path) && @$_GET['uri'])
 {
