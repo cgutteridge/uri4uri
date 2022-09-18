@@ -571,20 +571,20 @@ function addURITrips($graph, $uri)
   if(@$b['scheme'])
   {
     $graph->addCompressedTriple($uri, 'uriv:identifiedBy', $uriuri);
-    $graph->addCompressedTriple($uriuri, 'uriv:scheme', 'scheme:'.$b['scheme']);
+    $graph->addCompressedTriple($uriuri, 'uriv:scheme', "scheme:$b[scheme]");
     addSchemeTrips($graph, $b['scheme']);
     if($b['scheme'] == 'http' || $b['scheme'] == 'https')
     {
       if(!empty($b['host']))
       {
-        $homepage = $b['scheme'].'://'.$b['host'];
+        $homepage = "$b[scheme]://$b[host]";
         if(@$b['port'])
         {
-          $homepage.= ':'.$b['port'];
+          $homepage.= ":$b[port]";
         }
         $homepage.='/';
   
-        $graph->addCompressedTriple('domain:'.$b['host'], 'foaf:homepage', $homepage);
+        $graph->addCompressedTriple("domain:$b[host]", 'foaf:homepage', $homepage);
         $graph->addCompressedTriple($homepage, 'rdf:type', 'foaf:Document');
       }
     }
@@ -592,7 +592,7 @@ function addURITrips($graph, $uri)
   
   if(!empty($b['host']))
   {
-    $graph->addCompressedTriple($uriuri, 'uriv:host', 'domain:'.$b['host']);
+    $graph->addCompressedTriple($uriuri, 'uriv:host', "domain:$b[host]");
     addDomainTrips($graph, $b['host']);
   }
   
@@ -622,7 +622,7 @@ function addURITrips($graph, $uri)
     $graph->addCompressedTriple($uriuri, 'uriv:path', $b['path'], 'xsd:string');
     if(preg_match("/\.([^#\.\/]+)($|#)/", $b['path'], $bits ))
     {
-      $graph->addCompressedTriple($uriuri, 'uriv:suffix', 'suffix:'.$bits['1']);
+      $graph->addCompressedTriple($uriuri, 'uriv:suffix', "suffix:$bits[1]");
       addSuffixTrips($graph, $bits[1]);
     }
     if(preg_match("/\/([^#\/]+)($|#)/", $b['path'], $bits ))
