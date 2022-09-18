@@ -47,7 +47,26 @@ function get_updated_json_file($file, &$renew)
       return $data;
     }
   }
-  return array();
+  return new class implements ArrayAccess
+  {
+    public function offsetGet($offset)
+    {
+      return 'UNLOADED';
+    }
+
+    public function offsetExists($offset)
+    {
+      return false;
+    }
+    
+    public function offsetSet($offset, $value)
+    {
+    }
+
+    public function offsetUnset($offset)
+    {
+    }
+  };
 }
 
 function flush_output()

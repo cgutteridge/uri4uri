@@ -277,7 +277,9 @@ exit;
 function serve404()
 {
   http_response_code(404);
-  $title = "404 Not Found";
-  $content = "<p>See, it's things like this that are what Ted Nelson was trying to warn you about.</p>";
+  $page_title = "404 Not Found";
+  $page_show_title = true;
+  $page_url = null;
+  $page_content = "<p>See, it's things like this that are what Ted Nelson was trying to warn you about.</p>";
   require_once("ui/template.php");
 }

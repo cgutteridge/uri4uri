@@ -29,7 +29,7 @@ function initGraph()
 
 $SPARQL = new class
 {
-  public function construct_label($entity, $target = null)
+  public function CONSTRUCT_LABEL($entity, $target = null)
   {
     $label = $entity.'Label';
     $alt_label = $entity.'AltLabel';
@@ -42,7 +42,7 @@ $SPARQL = new class
 EOF;
   }
   
-  public function construct_page($entity, $target = null)
+  public function CONSTRUCT_PAGE($entity, $target = null)
   {
     $page = $entity.'_page';
     $db = $entity.'_db';
@@ -54,7 +54,7 @@ EOF;
 EOF;
   }
   
-  public function match_page($entity, $ids = true)
+  public function MATCH_PAGE($entity, $ids = true)
   {
     $page = $entity.'_page';
     $page_id = $entity.'_page_id';
@@ -316,10 +316,7 @@ function addURITrips($graph, $uri)
 
 function addDomainTrips($graph, $domain)
 {
-  global $PREFIX, $SPARQL;
-  
-  $tlds = get_tlds();
-  $special_domains = get_special_domains();
+  global $SPARQL;
   
   $domain_idn = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
 
@@ -332,6 +329,7 @@ function addDomainTrips($graph, $domain)
   }
   $graph->addCompressedTriple("domain:$domain", 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain_idn");
   
+  $special_domains = get_special_domains();
   $special_type = null;
   if(isset($special_domains["$domain_idn."]))
   {
@@ -362,24 +360,24 @@ function addDomainTrips($graph, $domain)
 
   $graph->addCompressedTriple("domain:$domain", 'rdf:type', 'uriv:TopLevelDomain');
   
-  $domain_node = "<$PREFIX/domain/$domain>";
+  $domain_node = "<{$graph->expandURI("domain:$domain")}>";
   $query = <<<EOF
 CONSTRUCT {
   $domain_node owl:sameAs ?domain .
-  {$SPARQL->construct_page('?domain', $domain_node)}
-  {$SPARQL->construct_label('?domain')}
-  ?country <http://dbpedia.org/property/cctld> <$PREFIX/domain/$domain> .
+  {$SPARQL->CONSTRUCT_PAGE('?domain', $domain_node)}
+  {$SPARQL->CONSTRUCT_LABEL('?domain')}
+  ?country <http://dbpedia.org/property/cctld> $domain_node .
   ?country a <http://dbpedia.org/ontology/Country> .
-  {$SPARQL->construct_label('?country')}
-  {$SPARQL->construct_page('?country')}
+  {$SPARQL->CONSTRUCT_LABEL('?country')}
+  {$SPARQL->CONSTRUCT_PAGE('?country')}
   ?country geo:lat ?lat .
   ?country geo:long ?long .
 } WHERE {
   ?domain wdt:P5914 "$domain_idn" .
-  {$SPARQL->match_page('?domain')}
+  {$SPARQL->MATCH_PAGE('?domain')}
   OPTIONAL {
     ?domain wdt:P17 ?country .
-    {$SPARQL->match_page('?country', false)}
+    {$SPARQL->MATCH_PAGE('?country', false)}
     OPTIONAL {
       ?country p:P625 ?coords .
       ?coords psv:P625 ?coord_node .
@@ -392,6 +390,7 @@ CONSTRUCT {
 EOF;
   addWikidataResult($graph, $query);
   
+  $tlds = get_tlds();
   if(isset($tlds[$domain_idn]))
   {
     $tld = $tlds[$domain_idn];
@@ -415,7 +414,7 @@ EOF;
 
 function addSuffixTrips($graph, $suffix)
 {
-  global $PREFIX, $SPARQL;
+  global $SPARQL;
   $graph->addCompressedTriple("suffix:$suffix", 'rdf:type', 'uriv:Suffix');
   $graph->addCompressedTriple("suffix:$suffix", 'rdfs:label', ".".$suffix, 'xsd:string');
   $graph->addCompressedTriple("suffix:$suffix", 'skos:notation', $suffix, 'uriv:SuffixDatatype');
@@ -423,13 +422,13 @@ function addSuffixTrips($graph, $suffix)
   $suffix_lower = strtolower($suffix);
   $suffix_upper = strtoupper($suffix);
   
-  $suffix_node = "<$PREFIX/suffix/$suffix>";
+  $suffix_node = "<{$graph->expandURI("suffix:$suffix")}>";
   $query = <<<EOF
 CONSTRUCT {
   $suffix_node uriv:usedForFormat ?format .
   ?format a uriv:Format .
-  {$SPARQL->construct_label('?format')}
-  {$SPARQL->construct_page('?format')}
+  {$SPARQL->CONSTRUCT_LABEL('?format')}
+  {$SPARQL->CONSTRUCT_PAGE('?format')}
   ?mime uriv:usedForSuffix $suffix_node .
   ?mime uriv:usedForFormat ?format .
   ?mime a uriv:Mimetype .
@@ -437,12 +436,12 @@ CONSTRUCT {
   ?mime skos:notation ?mime_notation .
 } WHERE {
   { ?format wdt:P1195 "$suffix_lower" . } UNION { ?format wdt:P1195 "$suffix_upper" . }
-  {$SPARQL->match_page('?format')}
+  {$SPARQL->MATCH_PAGE('?format')}
   OPTIONAL {
     ?format wdt:P1163 ?mime_str .
     FILTER (isLiteral(?mime_str) && STR(?mime_str) != "application/octet-stream")
     BIND(STRDT(?mime_str, uriv:MimetypeDatatype) AS ?mime_notation)
-    BIND(URI(CONCAT("$PREFIX/mime/", ?mime_str)) AS ?mime)
+    BIND(URI(CONCAT("{$graph->expandURI("mime:")}", ?mime_str)) AS ?mime)
   }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
@@ -466,6 +465,10 @@ EOF;
 
 function addIanaRecord($graph, $subject, $info)
 {
+  if(!is_array($info))
+  {
+    return;
+  }
   if(empty($info))
   {
     $graph->addCompressedTriple($subject, 'vs:term_status', "unstable", 'literal');
@@ -512,49 +515,54 @@ function addIanaRecord($graph, $subject, $info)
 
 function addMimeTrips($graph, $mime, $rec=true)
 {
-  global $PREFIX, $SPARQL;
-  $mime_types = get_mime_types();
+  global $SPARQL;
   $graph->addCompressedTriple("mime:$mime", 'rdf:type', 'uriv:Mimetype');
   $graph->addCompressedTriple("mime:$mime", 'rdfs:label', $mime, 'literal');
   $graph->addCompressedTriple("mime:$mime", 'skos:notation', $mime, 'uriv:MimetypeDatatype');
   
+  $mime_types = get_mime_types();
   addIanaRecord($graph, "mime:$mime", @$mime_types[$mime]);
   
   $filter_query = '';
   if($mime === 'text/plain' || $mime === 'application/octet-stream')
   {
     $filter_query = <<<EOF
-
-    ?format p:P1163/prov:wasDerivedFrom ?format_mime_source .
+    ?format p:P1163 ?mime_prop .
+    ?mime_prop ps:P1163 "$mime" .
+    ?mime_prop prov:wasDerivedFrom ?mime_source .
     FILTER NOT EXISTS {
       ?format wdt:P1163 ?other_mime .
       FILTER(STR(?other_mime) != "$mime")
     }
 EOF;
+  }else{
+    $filter_query = <<<EOF
+    ?format wdt:P1163 "$mime" .
+EOF;
   }
   
-  $mime_node = "<$PREFIX/mime/$mime>";
+  $mime_node = "<{$graph->expandURI("mime:$mime")}>";
   $query = <<<EOF
 CONSTRUCT {
   $mime_node uriv:usedForFormat ?format .
   ?format a uriv:Format .
-  {$SPARQL->construct_label('?format')}
-  {$SPARQL->construct_page('?format')}
+  {$SPARQL->CONSTRUCT_LABEL('?format')}
+  {$SPARQL->CONSTRUCT_PAGE('?format')}
   $mime_node uriv:usedForSuffix ?suffix .
   ?suffix uriv:usedForFormat ?format .
   ?suffix a uriv:Suffix .
   ?suffix rdfs:label ?suffix_label .
   ?suffix skos:notation ?suffix_notation .
 } WHERE {
-  ?format wdt:P1163 "$mime" .$filter_query
-  {$SPARQL->match_page('?format')}
+  $filter_query
+  {$SPARQL->MATCH_PAGE('?format')}
   OPTIONAL {
     ?format wdt:P1195 ?suffix_strcs .
     FILTER isLiteral(?suffix_strcs)
     BIND(LCASE(STR(?suffix_strcs)) AS ?suffix_str)
     BIND(CONCAT(".", ?suffix_str) AS ?suffix_label)
     BIND(STRDT(?suffix_str, uriv:SuffixDatatype) AS ?suffix_notation)
-    BIND(URI(CONCAT("$PREFIX/suffix/", ?suffix_str)) AS ?suffix)
+    BIND(URI(CONCAT("{$graph->expandURI("suffix:")}", ?suffix_str)) AS ?suffix)
   }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
@@ -579,34 +587,34 @@ EOF;
 
 function addSchemeTrips($graph, $scheme)
 {
-  global $PREFIX, $SPARQL;
-  $schemes = get_schemes();
+  global $SPARQL;
   $graph->addCompressedTriple("scheme:$scheme", 'rdf:type', 'uriv:URIScheme');
   $graph->addCompressedTriple("scheme:$scheme", 'skos:notation', $scheme, 'uriv:URISchemeDatatype');
 
+  $schemes = get_schemes();
   addIanaRecord($graph, "scheme:$scheme", @$schemes[$scheme]);
   
-  $scheme_node = "<$PREFIX/scheme/$scheme>";
+  $scheme_node = "<{$graph->expandURI("scheme:$scheme")}>";
   $query = <<<EOF
 CONSTRUCT {
-  {$SPARQL->construct_label('?scheme', $scheme_node)}
+  {$SPARQL->CONSTRUCT_LABEL('?scheme', $scheme_node)}
   $scheme_node owl:sameAs ?scheme .
-  {$SPARQL->construct_page('?scheme', $scheme_node)}
+  {$SPARQL->CONSTRUCT_PAGE('?scheme', $scheme_node)}
   ?technology uriv:usesScheme $scheme_node .
-  {$SPARQL->construct_label('?technology')}
-  {$SPARQL->construct_page('?technology')}
+  {$SPARQL->CONSTRUCT_LABEL('?technology')}
+  {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {
   OPTIONAL {
     ?scheme wdt:P4742 "$scheme" .
     ?scheme wdt:P31 wd:Q37071 .
-    {$SPARQL->match_page('?scheme')}
+    {$SPARQL->MATCH_PAGE('?scheme')}
   }
   OPTIONAL {
     ?technology wdt:P4742 "$scheme" .
     FILTER NOT EXISTS {
       ?technology wdt:P31 wd:Q37071 .
     }
-    {$SPARQL->match_page('?technology')}
+    {$SPARQL->MATCH_PAGE('?technology')}
   }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
@@ -616,8 +624,7 @@ EOF;
 
 function addURNNamespaceTrips($graph, $ns)
 {
-  global $PREFIX, $SPARQL;
-  $namespaces = get_urn_namespaces();
+  global $SPARQL;
   $graph->addCompressedTriple("urnns:$ns", 'rdf:type', 'uriv:URNNamespace');
   if(str_starts_with($ns, 'x-'))
   {
@@ -630,17 +637,18 @@ function addURNNamespaceTrips($graph, $ns)
   }
   $graph->addCompressedTriple("urnns:$ns", 'skos:notation', $ns, 'uriv:URNNamespaceDatatype');
 
+  $namespaces = get_urn_namespaces();
   addIanaRecord($graph, "urnns:$ns", @$namespaces[$ns]);
   
-  $ns_node = "<$PREFIX/urn/$ns>";
+  $ns_node = "<{$graph->expandURI("urnns:$ns")}>";
   $query = <<<EOF
 CONSTRUCT {
   ?technology uriv:usesNamespace $ns_node .
-  {$SPARQL->construct_label('?technology')}
-  {$SPARQL->construct_page('?technology')}
+  {$SPARQL->CONSTRUCT_LABEL('?technology')}
+  {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {
   ?technology wdt:P7470 "urn:$ns:\$1" .
-  {$SPARQL->match_page('?technology')}
+  {$SPARQL->MATCH_PAGE('?technology')}
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }
 EOF;
