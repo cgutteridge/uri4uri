@@ -496,6 +496,19 @@ function addMimeTrips($graph, $mime, $rec=true)
   
   addIanaRecord($graph, "mime:$mime", @$mime_types[$mime]);
   
+  $filter_query = '';
+  if($mime === 'text/plain' || $mime === 'application/octet-stream')
+  {
+    $filter_query = <<<EOF
+
+    ?format p:P1163/prov:wasDerivedFrom ?format_mime_source .
+    FILTER NOT EXISTS {
+      ?format wdt:P1163 ?other_mime .
+      FILTER(STR(?other_mime) != "$mime")
+    }
+EOF;
+  }
+  
   $mime_node = "<$PREFIX/mime/$mime>";
   $query = <<<EOF
 CONSTRUCT {
@@ -509,7 +522,7 @@ CONSTRUCT {
   ?suffix rdfs:label ?suffix_label .
   ?suffix skos:notation ?suffix_notation .
 } WHERE {
-  ?format wdt:P1163 "$mime" .
+  ?format wdt:P1163 "$mime" .$filter_query
   {$SPARQL->match_page('?format')}
   OPTIONAL {
     ?format wdt:P1195 ?suffix_strcs .
