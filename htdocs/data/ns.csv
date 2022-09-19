@@ -31,6 +31,7 @@ queryString,p,old,query string
 QueryValue,c,old,URI Query Value
 scheme,p,old,URI scheme
 urnNamespace,p,new,URN namespace
+wellknownSuffix,p,new,well-known URI suffix
 sponsor,p,old,sponsor
 subDom,p,old,subdomain
 Suffix,c,old,Filename Suffix
@@ -47,12 +48,15 @@ URI,c,old,URI
 URIDatatype,d,old,URI Identifier
 URIScheme,c,old,URI Scheme
 URISchemeDatatype,d,old,URI Scheme Identifier
+URI-WellKnown,c,new,Well-Known URI
 URN,c,new,URN
 URNNamespace,c,new,URN Namespace
 URNNamespace-Formal,c,new,Formal URN Namespace
 URNNamespace-Informal,c,new,Informal URN Namespace
 URNNamespace-Experimental,c,new,Experimental URN Namespace
 URNNamespaceDatatype,d,new,URN Namespace Identifier
+WellKnownURISuffix,c,new,Well-Known URI Suffix
+WellKnownURISuffixDatatype,d,new,Well-Known URI Suffix Identifier
 Statement,c,old,Statement (reified)
 object,p,old,object,object identified by
 predicate,p,old,predicate,predicate identified by

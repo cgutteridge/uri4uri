@@ -123,7 +123,7 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
         break;
       }
       $refs = array();
-      foreach($xpath->query('reg:xref', $record) as $xref)
+      foreach($xpath->query('.//reg:xref[not(parent::reg:template)]', $record) as $xref)
       {
         $type = $xpath->query('@type', $xref)->item(0)->nodeValue;
         $data = $xpath->query('@data', $xref)->item(0)->nodeValue;
@@ -243,6 +243,24 @@ function get_urn_namespaces()
     {
       flush_output();
       update_iana_records($cache_file, 'urn-namespaces', 'name', false);
+    }, $cache_file);
+  }
+  
+  return $data;
+}
+
+function get_wellknown_uris()
+{
+  static $cache_file = __DIR__.'/data/wellknown.json';
+  
+  $data = get_updated_json_file($cache_file, $renew);
+  if($renew)
+  {
+    ob_start();
+    register_shutdown_function(function($cache_file)
+    {
+      flush_output();
+      update_iana_records($cache_file, 'well-known-uris', 'value', false);
     }, $cache_file);
   }
   

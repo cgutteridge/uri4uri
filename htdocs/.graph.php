@@ -16,6 +16,7 @@ function initGraph()
   $graph->ns('suffix', "$PREFIX/suffix/");
   $graph->ns('mime', "$PREFIX/mime/");
   $graph->ns('urnns', "$PREFIX/urn/");
+  $graph->ns('wellknown', "$PREFIX/well-known/");
   $graph->ns('olduri', "$PREFIX_OLD/uri/");
   $graph->ns('olduriv', "$PREFIX_OLD/vocab#");
   $graph->ns('oldscheme', "$PREFIX_OLD/scheme/");
@@ -187,6 +188,15 @@ function graphURNNamespace($ns)
   return $graph;
 }
 
+function graphWellknown($suffix)
+{
+  $graph = initGraph();
+  $uri = $graph->expandURI("wellknown:$suffix");
+  addBoilerplateTrips($graph, "wellknown:$suffix", $uri, false);
+  addWellknownTrips($graph, $suffix);
+  return $graph;
+}
+
 function graphScheme($scheme)
 {
   $graph = initGraph();
@@ -247,6 +257,15 @@ function addURITrips($graph, $uri)
   
         $graph->addCompressedTriple("domain:$b[host]", 'foaf:homepage', $homepage);
         $graph->addCompressedTriple($homepage, 'rdf:type', 'foaf:Document');
+      }
+      if(!empty($b['path']))
+      {
+        if(preg_match('/\/\.well-known\/([^\/]+)/', $b['path'], $bits))
+        {
+          $graph->addCompressedTriple($uriuri, 'rdf:type', 'uriv:URI-WellKnown');
+          $graph->addCompressedTriple($uriuri, 'uriv:wellknownSuffix', "wellknown:$bits[1]");
+          addWellknownTrips($graph, $bits[1]);
+        }
       }
     }else if($b['scheme'] == 'urn' && isset($b['path']))
     {
@@ -660,6 +679,16 @@ CONSTRUCT {
 }
 EOF;
   addWikidataResult($graph, $query);
+}
+
+function addWellknownTrips($graph, $suffix)
+{
+  global $SPARQL;
+  $graph->addCompressedTriple("wellknown:$suffix", 'rdf:type', 'uriv:WellKnownURISuffix');
+  $graph->addCompressedTriple("wellknown:$suffix", 'skos:notation', $suffix, 'uriv:WellKnownURISuffixDatatype');
+
+  $wellknown = get_wellknown_uris();
+  addIanaRecord($graph, "wellknown:$suffix", @$wellknown[$suffix]);
 }
 
 function addExtraVocabTrips($graph)
