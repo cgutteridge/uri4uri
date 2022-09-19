@@ -491,13 +491,13 @@ EOF;
 
 function addIanaRecord($graph, $subject, $info)
 {
-  if(!is_array($info))
-  {
-    return;
-  }
   if(empty($info))
   {
     $graph->addCompressedTriple($subject, 'vs:term_status', "unstable", 'literal');
+    return;
+  }
+  if(!is_array($info))
+  {
     return;
   }
   
