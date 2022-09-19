@@ -198,7 +198,7 @@ if($format == 'html')
       $l[$s[2]] = $graph->allOfType($s[1]);
       $skips []= "<a href='#".$s[2]."'>".$s[0]."</a>";
     }
-    addExtraVocabTrips($graph);
+    addExtraVocabTriples($graph);
     echo "<p><strong style='font-weight:bold'>Jump to:</strong> ".join(" &bull; ", $skips)."</p>";
     echo "<style type='text/css'>.class .class { margin: 4em 0;} .class .class .class { margin: 1em 0; }</style>";
     echo "<div class='class'><div class='class2'>";
@@ -224,8 +224,8 @@ if($format == 'html')
   }
   else
   { 
-    addVocabTrips($graph);
-    addExtraVocabTrips($graph);
+    addVocabTriples($graph);
+    addExtraVocabTriples($graph);
     $resource = $graph->resource($uri);
     if($resource->has('rdf:type'))
     {
