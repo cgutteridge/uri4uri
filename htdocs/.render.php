@@ -1,20 +1,25 @@
 <?php
 
-function substituteLink($uri)
+function substituteLink($href)
 {
   global $BASE;
   global $PREFIX;
   global $PREFIX_OLD;
   global $ARCHIVE_BASE;
-  if(substr($uri, 0, strlen($PREFIX)) === $PREFIX)
+  global $page_url;
+  if(str_starts_with($href, $page_url))
   {
-    return $BASE.substr($uri, strlen($PREFIX));
+    return substr($href, strlen($page_url));
   }
-  if(substr($uri, 0, strlen($PREFIX_OLD)) === $PREFIX_OLD)
+  if(str_starts_with($href, $PREFIX))
   {
-    return $ARCHIVE_BASE.$uri;
+    return $BASE.substr($href, strlen($PREFIX));
   }
-  return $uri;
+  if(str_starts_with($href, $PREFIX_OLD))
+  {
+    return $ARCHIVE_BASE.$href;
+  }
+  return $href;
 }
 
 function resourceLink($resource, $attributes = '')
@@ -96,35 +101,51 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     natsort($res_keys);
 
     $close_element = null;
-    foreach($res_keys as $key)
+    foreach($res_keys as $res_key)
     {
-      $r2 = $res_map[$key];
+      $r2 = $res_map[$res_key];
       $type = $r2->nodeType();
       if($type == '#literal')
       {
         $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\"";
-      }else if(substr($type, 0, 4) == 'http')
+      }else if(!str_starts_with($type, '#'))
       {
         $rt = $graph->resource($type);
         $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span>";
-      }else if($rel_followed || isset($visited_nodes[$r2->toString()]) || @$atomic_properties[$rel_key] || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))
-      {
-        $value = prettyResourceLink($r2);
       }else{
-        if($close_element !== 'table')
+        global $page_url;
+        if(str_starts_with($res_key, "$page_url#") && !isset($visited_nodes[$res_key]))
         {
-          if($close_element) echo "</$close_element>";
-          echo "<table class='relation'>";
-          $close_element = 'table';
+          $res_id = substr($res_key, strlen($page_url) + 1);
         }
-        echo "<tr>";
-        echo "<th>$pred:</th>";
-        $followed_inner = $followed_relations;
-        $followed_inner[$rel->toString()] = $rel;
-        echo "<td class='object'>";
-        renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner);
-        echo "</td></tr>";
-        continue;
+        if($rel_followed || isset($visited_nodes[$res_key]) || @$atomic_properties[$rel_key] || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))
+        {
+          $value = prettyResourceLink($r2);
+          if(isset($res_id))
+          {
+            $value = "<a name='$res_id'>$value</a>";
+          }
+        }else{
+          if($close_element !== 'table')
+          {
+            if($close_element) echo "</$close_element>";
+            echo "<table class='relation'>";
+            $close_element = 'table';
+          }
+          echo "<tr>";
+          echo "<th>$pred:</th>";
+          $followed_inner = $followed_relations;
+          $followed_inner[$rel->toString()] = $rel;
+          if(isset($res_id))
+          {
+            echo "<td class='object' id='$res_id'>";
+          }else{
+            echo "<td class='object'>";
+          }
+          renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner);
+          echo "</td></tr>";
+          continue;
+        }
       }
       if($close_element !== 'ul></div')
       {

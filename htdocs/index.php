@@ -168,7 +168,7 @@ if($format == 'html')
   $page_title = $doc->label();
   if($doc->has('foaf:primaryTopic'))
   {
-    $uri = $doc->getString('foaf:primaryTopic');
+    $page_url = $doc->getString('foaf:primaryTopic');
   }
   ob_start();
   echo "<p><span style='font-weight:bold'>Download data:</span> ";
@@ -225,17 +225,16 @@ if($format == 'html')
     echo "</div></div>";
   }
   else
-  { 
+  {
     addVocabTriples($graph);
     addExtraVocabTriples($graph);
-    $resource = $graph->resource($uri);
+    $resource = $graph->resource($page_url);
     if($resource->has('rdf:type'))
     {
       $page_thingy_type =" <span class='classType'>[".$resource->all('rdf:type')->label()->join(", ")."]</span>";
     }
     renderResource($graph, $resource, $visited, $document_url);
   }
-  $page_url = $uri;
   $page_content = ob_get_contents();
   ob_end_clean();
   $page_head_content = "  <script type='application/ld+json'>".$graph->serialize('JSONLD')."</script>";
