@@ -57,6 +57,9 @@ URNNamespace-Experimental,c,new,Experimental URN Namespace
 URNNamespaceDatatype,d,new,URN Namespace Identifier
 WellKnownURISuffix,c,new,Well-Known URI Suffix
 WellKnownURISuffixDatatype,d,new,Well-Known URI Suffix Identifier
+PortNumber,c,new,Port Number
+Protocol,c,new,Protocol
+protocol,p,new,protocol
 Statement,c,old,Statement (reified)
 object,p,old,object,object identified by
 predicate,p,old,predicate,predicate identified by
@@ -66,6 +69,7 @@ usedForFormat,p,old,used for format
 usedForSuffix,p,old,used for suffix
 usesScheme,p,new,uses URI scheme
 usesNamespace,p,new,uses URN namespace
+usesPort,p,new,uses port
 user,p,old,user
 value,p,old,value
 whoIsRecord,p,old,whois record

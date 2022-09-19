@@ -17,6 +17,8 @@ function initGraph()
   $graph->ns('mime', "$PREFIX/mime/");
   $graph->ns('urnns', "$PREFIX/urn/");
   $graph->ns('wellknown', "$PREFIX/well-known/");
+  $graph->ns('port', "$PREFIX/port/");
+  $graph->ns('protocol', "$PREFIX/protocol/");
   $graph->ns('olduri', "$PREFIX_OLD/uri/");
   $graph->ns('olduriv', "$PREFIX_OLD/vocab#");
   $graph->ns('oldscheme', "$PREFIX_OLD/scheme/");
@@ -37,7 +39,7 @@ $SPARQL = new class
     $description = $entity.'Description';
     if(empty($target)) $target = $entity;
     return <<<EOF
-  $target rdfs:label $label .
+$target rdfs:label $label .
   $target skos:altLabel $alt_label .
   $target dct:description $description .
 EOF;
@@ -49,7 +51,7 @@ EOF;
     $db = $entity.'_db';
     if(empty($target)) $target = $entity;
     return <<<EOF
-  $target foaf:page $page .
+$target foaf:page $page .
   $target owl:sameAs $db .
   $page a foaf:Document .
 EOF;
@@ -79,7 +81,7 @@ EOF;
 EOF;
     }
     return <<<EOF
-  OPTIONAL {
+OPTIONAL {
     { $entity wdt:P973 $page . }
     UNION { $entity wdt:P856 $page . }
     UNION { $entity wdt:P1343/wdt:P953 $page . }
@@ -201,6 +203,22 @@ function graphWellknown($id)
   return $graph;
 }
 
+function graphPort($id)
+{
+  $graph = initGraph();
+  $subject = addPortTriples($graph, $id, true);
+  addBoilerplateTriples($graph, $subject, $id, false);
+  return $graph;
+}
+
+function graphProtocol($id)
+{
+  $graph = initGraph();
+  $subject = addProtocolTriples($graph, $id, true);
+  addBoilerplateTriples($graph, $subject, $id, false);
+  return $graph;
+}
+
 function addBoilerplateTriples($graph, $uri, $title, $link_old = true)
 {
   global $PREFIX;
@@ -277,7 +295,7 @@ function addURITriples($graph, $uri, $queries = false)
   
   if(isset($b['port']))
   {
-    $graph->addCompressedTriple($subject, 'uriv:port', $b['port'], 'xsd:positiveInteger');
+    $graph->addCompressedTriple($subject, 'uriv:port', addPortTriples($graph, ($b['port'])));
   }
   else if(!empty($b['host']))
   {
@@ -492,9 +510,9 @@ function addIanaRecord($graph, $subject, $info)
     'obsoleted' => 'archaic'
   );
   
-  if(isset($info['name']))
+  if(isset($info['description']))
   {
-    $graph->addCompressedTriple($subject, 'rdfs:label', $info['name'], 'literal');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $info['description'], 'literal');
   }
   if(isset($info['type']))
   {
@@ -699,6 +717,106 @@ function addWellknownTriples($graph, $suffix, $queries = false)
 
   $wellknown = get_wellknown_uris();
   addIanaRecord($graph, $subject, @$wellknown[$suffix]);
+  
+  return $subject;
+}
+
+function addPortTriples($graph, $port, $queries = false)
+{
+  global $SPARQL;
+  
+  $subject = 'port:'.urlencode_minimal($port);
+  
+  $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:PortNumber');
+  $graph->addCompressedTriple($subject, 'skos:notation', $port, 'xsd:unsignedShort');
+  
+  $ports = get_ports();
+  $info = @$ports[$port];
+  if(empty($info))
+  {
+    addIanaRecord($graph, $subject, null);
+  }else while(is_array($info) && !empty($info))
+  {
+    if(!empty($info['protocol']))
+    {
+      $protocol = strtolower($info['protocol']);
+      $specific = "$subject#$protocol";
+      $graph->addCompressedTriple($subject, 'skos:narrower', $specific);
+      $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:PortNumber');
+      $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
+      addIanaRecord($graph, $specific, $info['description'] !== "Unassigned" ? $info : null);
+      $graph->addCompressedTriple($specific, 'uriv:protocol', addProtocolTriples($graph, $protocol));
+    }
+    $info = @$info['additional'];
+  }
+  
+  if(!$queries) return $subject;
+  
+  $subject_node = "<{$graph->expandURI($subject)}>";
+  
+  $protocol_values = array();
+  foreach(get_protocols() as $protocol)
+  {
+    $name = strtolower($protocol['id']);
+    $protocol_values[] = "\"$name\"";
+  }
+  $protocol_values = implode(' ', $protocol_values);
+  
+  $query = <<<EOF
+CONSTRUCT {
+  ?technology uriv:usesPort ?subject .
+  ?subject a uriv:PortNumber .
+  ?subject skos:notation "$port"^^xsd:unsignedShort .
+  $subject_node skos:narrower ?subject .
+  {$SPARQL->CONSTRUCT_LABEL('?technology')}
+  {$SPARQL->CONSTRUCT_PAGE('?technology')}
+} WHERE {
+  ?technology p:P1641 ?port_prop .
+  ?port_prop ps:P1641 "$port"^^xsd:decimal .
+  ?port_prop pq:P642 ?protocol .
+  VALUES ?protocol_lower { $protocol_values }
+  BIND(UCASE(?protocol_lower) AS ?protocol_upper)
+  { ?protocol ?protocol_label_prop ?protocol_lower . } UNION { ?protocol ?protocol_label_prop ?protocol_upper . }
+  BIND(URI(CONCAT("{$graph->expandURI($subject)}#", ?protocol_lower)) AS ?subject)
+  {$SPARQL->MATCH_PAGE('?technology')}
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+}
+EOF;
+  addWikidataResult($graph, $query);
+  
+  return $subject;
+}
+
+function addProtocolTriples($graph, $protocol, $queries = false)
+{
+  global $SPARQL;
+  
+  $subject = 'protocol:'.urlencode_minimal($protocol);
+  
+  $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Protocol');
+
+  $protocols = get_protocols();
+  addIanaRecord($graph, $subject, @$protocols[$protocol]);
+  
+  if(!$queries) return $subject;
+  
+  $protocol_upper = strtoupper($protocol);
+  
+  $subject_node = "<{$graph->expandURI($subject)}>";
+  
+  $query = <<<EOF
+CONSTRUCT {
+  $subject_node owl:sameAs ?protocol .
+  {$SPARQL->CONSTRUCT_LABEL('?protocol', $subject_node)}
+  {$SPARQL->CONSTRUCT_PAGE('?protocol', $subject_node)}
+} WHERE {
+  ?port_prop pq:P642 ?protocol .
+  { ?protocol ?protocol_label_prop "$protocol" . } UNION { ?protocol ?protocol_label_prop "$protocol_upper" . }
+  {$SPARQL->MATCH_PAGE('?protocol')}
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+}
+EOF;
+  addWikidataResult($graph, $query);
   
   return $subject;
 }

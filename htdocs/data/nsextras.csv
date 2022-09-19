@@ -14,10 +14,13 @@ dcterms:description,p,description
 dcterms:replaces,p,replaces
 skos:exactMatch,p,exactly matches
 skos:broader,p,broader concept
+skos:narrower,p,narrower concept
 skos:altLabel,p,alternative label
 rdfs:seeAlso,p,see also
 xsd:float,d,Floating-point number
+xsd:double,d,Double-precision floating-point number
 xsd:positiveInteger,d,Postitive Integer
+xsd:unsignedShort,d,Unsigned 16-bit Integer
 xsd:string,d,String
 xsd:anyURI,d,URI
 foaf:Document,c,Document

@@ -54,13 +54,21 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
   }
   echo "<div class='class2'>";
   echo "<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></div>";
+  
+  static $hidden_properties = array(
+    'http://www.w3.org/2000/01/rdf-schema#label' => true,
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy' => true,
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' => true,
+    'http://www.w3.org/2004/02/skos/core#exactMatch' => true,
+    'http://purl.org/dc/terms/replaces' => true,
+    'http://purl.org/uri4uri/vocab#IANARef #inverseRelation' => true
+  );
+  
+  static $atomic_properties = array();
+  
   foreach($resource->relations() as $rel)
   {
-    if($rel == "http://www.w3.org/2000/01/rdf-schema#label") { continue; }
-    if($rel == "http://www.w3.org/2000/01/rdf-schema#isDefinedBy") { continue; }
-    if($rel == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") { continue; }
-    if($rel == "http://www.w3.org/2004/02/skos/core#exactMatch") { continue; }
-    if($rel == "http://purl.org/dc/terms/replaces") { continue; }
+    if(@$hidden_properties[$rel->toString()]) continue;
 
     $label = $rel->label();
     if(preg_match('/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $rel, $b))
@@ -68,10 +76,13 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
       $label = "#".$b[1];
     }
     $pred = prettyResourceLink($rel, " class='predicate'");
-    if($rel->nodeType() == "#inverseRelation") { $pred = "is \"$pred\" of"; }
+    if($rel->nodeType() == '#inverseRelation') { $pred = "is \"$pred\" of"; }
     
-    $rel_key = $rel->nodeType().$rel->toString();
-    $rel_followed = isset($followed_relations[$rel_key]);
+    $rel_key = $rel->toString().' '.$rel->nodeType();
+    
+    if(@$hidden_properties[$rel_key]) continue;
+    
+    $rel_followed = isset($followed_relations[$rel->toString()]) || isset($followed_relations[$rel_key]);
     
     $res_keys = array();
     $res_map = array();
@@ -89,14 +100,14 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     {
       $r2 = $res_map[$key];
       $type = $r2->nodeType();
-      if($type == "#literal")
+      if($type == '#literal')
       {
         $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\"";
       }else if(substr($type, 0, 4) == 'http')
       {
         $rt = $graph->resource($type);
         $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span>";
-      }else if($rel_followed || isset($visited_nodes[$r2->toString()]) || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))
+      }else if($rel_followed || isset($visited_nodes[$r2->toString()]) || @$atomic_properties[$rel_key] || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))
       {
         $value = prettyResourceLink($r2);
       }else{
@@ -109,7 +120,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
         echo "<tr>";
         echo "<th>$pred:</th>";
         $followed_inner = $followed_relations;
-        $followed_inner[$rel_key] = $rel;
+        $followed_inner[$rel->toString()] = $rel;
         echo "<td class='object'>";
         renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner);
         echo "</td></tr>";

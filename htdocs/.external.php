@@ -96,6 +96,16 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
   $xpath = new DOMXPath($xml);
   $xpath->registerNamespace('reg', 'http://www.iana.org/assignments');
   
+  $people = array();
+  foreach($xpath->query('//reg:person') as $person)
+  {
+    foreach($xpath->query('@id', $person) as $id_item)
+    {
+      $people[$id_item->nodeValue] = $person;
+      break;
+    }
+  }
+  
   $records = array();
   foreach($xpath->query('//reg:record') as $record)
   {
@@ -112,41 +122,63 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
           $id = "$registry/$id";
         }
       }
-      foreach($xpath->query('reg:status/text()', $record) as $status_item)
+      foreach($xpath->query('reg:status/text()', $record) as $item)
       {
-        $record_data['type'] = strtolower(trim($status_item->wholeText));
+        $record_data['type'] = strtolower(trim($item->wholeText));
         break;
       }
-      foreach($xpath->query('reg:description/text()', $record) as $desc_item)
+      foreach($xpath->query('reg:name/text()', $record) as $item)
       {
-        $record_data['name'] = trim($desc_item->wholeText);
+        $record_data['name'] = trim($item->wholeText);
+        break;
+      }
+      foreach($xpath->query('reg:description/text()', $record) as $item)
+      {
+        $record_data['description'] = trim($item->wholeText);
+        break;
+      }
+      foreach($xpath->query('reg:protocol/text()', $record) as $item)
+      {
+        $record_data['protocol'] = trim($item->wholeText);
         break;
       }
       $refs = array();
       foreach($xpath->query('.//reg:xref[not(parent::reg:template)]', $record) as $xref)
       {
-        $type = $xpath->query('@type', $xref)->item(0)->nodeValue;
-        $data = $xpath->query('@data', $xref)->item(0)->nodeValue;
-        if($type === 'rfc')
+        foreach($xpath->query('@type', $xref) as $type_item)
         {
-          $refs["http://www.rfc-editor.org/rfc/$data.txt"] = strtoupper($data);
-        }else if($type === 'person')
-        {
-          foreach($xpath->query("//reg:person[@id = '$data']") as $person)
+          foreach($xpath->query('@data', $xref) as $data_item)
           {
-            $name = null;
-            foreach($xpath->query('reg:name/text()') as $name_item)
+            $type = $type_item->nodeValue;
+            $data = $data_item->nodeValue;
+            if($type === 'rfc')
             {
-              $name = $name_item->wholeText;
-              break;
+              $refs["http://www.rfc-editor.org/rfc/$data.txt"] = strtoupper($data);
+            }else if($type === 'person')
+            {
+              if(isset($people[$data]))
+              {
+                $person = $people[$data];
+                $name = null;
+                foreach($xpath->query('reg:name/text()') as $name_item)
+                {
+                  $name = $name_item->wholeText;
+                  break;
+                }
+                foreach($xpath->query('reg:uri/text()', $person) as $uri_item)
+                {
+                  $uri = str_replace('&', '@', trim($uri_item->wholeText));
+                  $refs[$uri] = $name;
+                  break;
+                }
+              }
+            }else if($type === 'uri')
+            {
+              $refs[$data] = null;
             }
-            $uri = str_replace('&', '@', trim($xpath->query('reg:uri/text()', $person)->item(0)->wholeText));
-            $refs[$uri] = $name;
             break;
           }
-        }else if($type === 'uri')
-        {
-          $refs[$data] = null;
+          break;
         }
       }
       $record_data['refs'] = $refs;
@@ -164,7 +196,9 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
           break;
         }
       }
-      $records[strtolower($id)] = $record_data;
+      $id = strtolower($id);
+      $record_data['additional'] = @$records[$id];
+      $records[$id] = $record_data;
       break;
     }
   }
@@ -267,6 +301,42 @@ function get_wellknown_uris()
   return $data;
 }
 
+function get_ports()
+{
+  static $cache_file = __DIR__.'/data/ports.json';
+  
+  $data = get_updated_json_file($cache_file, $renew);
+  if($renew)
+  {
+    ob_start();
+    register_shutdown_function(function($cache_file)
+    {
+      flush_output();
+      update_iana_records($cache_file, 'service-names-port-numbers', 'number', false);
+    }, $cache_file);
+  }
+  
+  return $data;
+}
+
+function get_protocols()
+{
+  static $cache_file = __DIR__.'/data/protocols.json';
+  
+  $data = get_updated_json_file($cache_file, $renew);
+  if($renew)
+  {
+    ob_start();
+    register_shutdown_function(function($cache_file)
+    {
+      flush_output();
+      update_iana_records($cache_file, 'protocol-numbers', 'name', false);
+    }, $cache_file);
+  }
+  
+  return $data;
+}
+
 function get_tlds()
 {
   static $cache_file = __DIR__.'/data/tld.json';
@@ -296,7 +366,7 @@ function get_tlds()
           {
             $domain_data = array();
             $name = trim($link->textContent);
-            $domain_data['name'] = $name;
+            $domain_data['description'] = $name;
             $id = ltrim($name, ".");
             $domain_data['id'] = $id;
             $domain_data['url'] = $link->getAttribute('href');
