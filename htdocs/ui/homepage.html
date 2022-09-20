@@ -1,5 +1,5 @@
 
-<p style='margin: 2em 0em 2em 0em'>This site was created for fun on April 1st 2013 by <a href='http://users.ecs.soton.ac.uk/people/cjg'>Christopher Gutteridge</a> (University of Southampton) with a <a href='/aprilfools'>very over-the-top set of claims</a>. Since July 2022, it is maintained by <a href="https://is4.site/">IS4</a>.</p>
+<p style='margin: 2em 0em 2em 0em'>This site was created for fun on April 1st 2013 by <a href='http://users.ecs.soton.ac.uk/people/cjg'>Christopher Gutteridge</a> (University of Southampton) with a <a href='/aprilfools'>very over-the-top set of claims</a>. Since July 2022, it is developed by <a href="https://is4.site/">IS4</a>.</p>
 
 <div class='class'>
 <div class='class'>
@@ -121,7 +121,7 @@
 </div>
 
 <h3>How does it work?</h3>
-<p>The URI resolver just parses the URI to get the parts, then uses lookup tables and external queries to retrieve information about MIME types, top level domains and so forth. This data is taken from IANA and Wikidata and is periodically updated.</p>
+<p>The URI resolver just parses the URI to get the parts, then uses registries and external queries to retrieve information about MIME types, top level domains and so forth. This data is taken from IANA and Wikidata and is periodically updated.</p>
 
 <p>It accepts any possible URI, including 
 <a href="/uri/http%3A%2F%2Ftotl.net%2F">web addresses</a>, 
@@ -149,7 +149,7 @@
 </p>
 
 <h3>How big is it?</h3>
-<p>The results are generated on the fly, so this question is invalid. The answer is either zero or virtually infinite, depending on your point of view.</p>
+<p>Virtually infinite, and still growing! Since it generates most results on the fly however, the size can be pretty efficiently compressed to almost 0. The remainder are the registries from IANA, which are cached and take about 2.5 MiB of space in total.</p>
 
 <h3>What is included</h3>
 <p>URIs, Internet Domains, Mime Types, File Suffixes, URI Schemes, URN Namespaces, Well-Known URIs, Ports, Protocols.</p>
@@ -158,7 +158,7 @@
 <p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://purl.org/uri4uri/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
 <h3>What parts of a URI are supported?</h3>
 <p>The majority of the effort has gone into calculating the components of 
-<a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2#fragment'>http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2#fragment</a>, however other URI schemes are supported, e.g.
+<a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http://foo:bar@bbc.co.uk:80/index.html%3Fa=1&amp;b=2%23fragment'>http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2#fragment</a>, however other URI schemes are supported, e.g.
 <a href='/uri/tel:+2035989395'>tel:</a> or 
 <a href='/uri/secondlife://Ancient Ireland/167/153'>secondlife:</a>.</p>
 
