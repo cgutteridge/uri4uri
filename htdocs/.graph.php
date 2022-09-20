@@ -810,7 +810,12 @@ CONSTRUCT {
   {$SPARQL->CONSTRUCT_LABEL('?protocol', $subject_node)}
   {$SPARQL->CONSTRUCT_PAGE('?protocol', $subject_node)}
 } WHERE {
-  ?port_prop pq:P642 ?protocol .
+  {
+    ?protocol wdt:P31/(wdt:P279)* wd:Q15836568 .
+  } UNION {
+    ?port_prop ps:P1641 ?port .
+    ?port_prop pq:P642 ?protocol .
+  }
   { ?protocol ?protocol_label_prop "$protocol" . } UNION { ?protocol ?protocol_label_prop "$protocol_upper" . }
   {$SPARQL->MATCH_PAGE('?protocol')}
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
