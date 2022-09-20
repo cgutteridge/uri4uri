@@ -126,14 +126,19 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
             $value = "<a name='$res_id'>$value</a>";
           }
         }else{
+          $opening = false;
           if($close_element !== 'table')
           {
             if($close_element) echo "</$close_element>";
             echo "<table class='relation'>";
             $close_element = 'table';
+            $opening = true;
           }
           echo "<tr>";
-          echo "<th>$pred:</th>";
+          if($opening)
+          {
+            echo "<th rowspan='0'>$pred:</th>";
+          }
           $followed_inner = $followed_relations;
           $followed_inner[$rel->toString()] = $rel;
           if(isset($res_id))
