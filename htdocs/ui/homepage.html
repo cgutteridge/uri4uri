@@ -1,80 +1,127 @@
 
 <p style='margin: 2em 0em 2em 0em'>This site was created for fun on April 1st 2013 by <a href='http://users.ecs.soton.ac.uk/people/cjg'>Christopher Gutteridge</a> (University of Southampton) with a <a href='/aprilfools'>very over-the-top set of claims</a>. Since July 2022, it is maintained by <a href="https://is4.site/">IS4</a>.</p>
-<div style='text-align:center;'>
 
 <div class='class'>
 <div class='class'>
-<div class='classLabel'>Generate a URI for a URI</div>
+<div class='classLabel'>Generate&hellip;</div>
+<div class='class2'>
+<table style='text-align:center;width:100%'>
+<tr>
+<td colspan="2">
+<div class='class'>
+<div class='classLabel'>URI</div>
 <div class='class2'>
 <form>
-<input autocomplete="off" style='padding:4px;width:80%;border-radius:5px' name='uri' id='uri' value='' /> 
+<input autocomplete="off" spellcheck="false" type="url" placeholder="https://domain/path?query#fragment" style='padding:4px;width:80%;border-radius:5px' name='uri' id='uri'>
+<button type="submit">Generate!</button>
 </form>
-<div id='resultBlock' style='margin-top: 1em'>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div class='class'>
+<div class='classLabel'>Domain</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="www.iana.org" style='padding:4px;width:80%;border-radius:5px' name='domain' id='domain'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+<td>
+<div class='class'>
+<div class='classLabel'>URI Scheme</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="ftp" style='padding:4px;width:80%;border-radius:5px' name='scheme' id='scheme'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div class='class'>
+<div class='classLabel'>MIME</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="application/xml" style='padding:4px;width:80%;border-radius:5px' name='mime' id='mime'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+<td>
+<div class='class'>
+<div class='classLabel'>Suffix</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="exe" style='padding:4px;width:80%;border-radius:5px' name='suffix' id='suffix'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div class='class'>
+<div class='classLabel'>Port</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="25565" type="number" min="0" max="65535" style='padding:4px;width:80%;border-radius:5px' name='port' id='port'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+<td>
+<div class='class'>
+<div class='classLabel'>Protocol</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="dccp" style='padding:4px;width:80%;border-radius:5px' name='protocol' id='protocol'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div class='class'>
+<div class='classLabel'>URN Namespace</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="oid" style='padding:4px;width:80%;border-radius:5px' name='urn' id='urn'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+<td>
+<div class='class'>
+<div class='classLabel'>Well-Known URI</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="tor-relay" style='padding:4px;width:80%;border-radius:5px' name='well-known' id='well-known'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
-</div>
-</div>
-
-<script>
-$(document).ready( function() {
-	var default_text = "Enter any URI or URL";
-	var uri = $('#uri');
-	v = uri.val();
-	if( v == default_text )
-	{
-		uri.css( "color", "#999" );
-	}
-	uri.focus( function() {
-		uri.css( "color", "#000" );
-		v = uri.val();
-		if( v == default_text )
-		{
-			uri.val( "" );
-		}
-	} );
- 	function blur() {
-		v = uri.val();
-		if( v == "" )
-		{
-			uri.val( default_text );
-			uri.css( "color", "#999" );
-		}
-		if( v == default_text )
-		{
-			uri.css( "color", "#999" );
-		}
-	}
-	function keyup() {
-		v = uri.val();
-		if( v == default_text || v == "" )
-		{
-			$('#resultBlock').hide();
-			return;
-		}
-	
-		parts = v.split( ":" );
-		if( parts.length == 1 )
-		{
-			$('#resultBlock').html("URIs must contain at least one colon.");
-			$('#resultBlock').show();
-			return;
-		}
-		v = v.replace(/[^!$&-;=@A-Z_a-z~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+/ug, encodeURIComponent)
-			.replace(/[&<>']/g, m => '&#' + match.charCodeAt(0) + ';');
-		$('#resultBlock').html("The URI for this URI is: <div style='margin-top:0.5em'><a href='/uri/"+v+"'>http://purl.org/uri4uri/uri/"+v+"</a></div>" );
-		$('#resultBlock').show();
-	}
-	uri.blur( blur );
-	uri.keyup( keyup );
-	keyup();
-	blur();
-} );
-</script>
-
 
 <h3>How does it work?</h3>
-<p>It just parses the URI part (using the PHP parse_url command) to get the parts, then uses some lookup tables for information about mime types, top level domains and so forth. This data was taken from IANA and dbpedia.</p>
+<p>The URI resolver just parses the URI to get the parts, then uses lookup tables and external queries to retrieve information about MIME types, top level domains and so forth. This data is taken from IANA and Wikidata and is periodically updated.</p>
 
 <p>It accepts any possible URI, including 
 <a href="/uri/http%3A%2F%2Ftotl.net%2F">web addresses</a>, 
@@ -86,7 +133,7 @@ $(document).ready( function() {
 
 <p>The URIs on this site are in the format:</p>
 <p class='code'>http://purl.org/uri4uri/&lt;type&gt;/&lt;identifier&gt;</p>
-<p>...where &lt;type&gt; is one of uri, scheme, domain, mime, suffix.</p>
+<p>...where <code>&lt;type&gt;</code> is one of <code>uri</code>, <code>scheme</code>, <code>domain</code>, <code>mime</code>, <code>suffix</code>, <code>urn</code>, <code>well-known</code>, <code>port</code>, <code>protocol</code>. Percent-encoding <code>&lt;identifier&gt;</code> is necessary only for <code>?<code> and <code>#</code> and usual invalid characters.</p>
 <p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF/XML, JSON-LD or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, jsonld, nt, html. These have URLs in the following formats:</p>
 <p class='code'>http://purl.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</p>
 <p>Examples:</p>
@@ -96,7 +143,7 @@ $(document).ready( function() {
 <a style='font-family:monospace' href='/scheme/ftp'>http://purl.org/uri4uri/scheme/ftp</a> - URI for the URI scheme "ftp"<br />
 <a style='font-family:monospace' href='/mime/text/plain'>http://purl.org/uri4uri/mime/text/plain</a> - URI for the MIME Type "text/plain"<br />
 <a style='font-family:monospace' href='/urn/uuid'>http://purl.org/uri4uri/urn/uuid</a> - URI for the "urn:uuid:" Namespace<br />
-<a style='font-family:monospace' href='/well-known/genid'>http://purl.org/uri4uri/well-known/genid</a> - URI for the "/.well-known/genid" Service<br />
+<a style='font-family:monospace' href='/well-known/genid'>http://purl.org/uri4uri/well-known/void</a> - URI for the "/.well-known/void" Service<br />
 <a style='font-family:monospace' href='/port/80'>http://purl.org/uri4uri/port/80</a> - URI for the port 80<br />
 <a style='font-family:monospace' href='/protocol/tcp'>http://purl.org/uri4uri/protocol/tcp</a> - URI for the TCP protocol
 </p>
@@ -111,49 +158,12 @@ $(document).ready( function() {
 <p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://purl.org/uri4uri/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
 <h3>What parts of a URI are supported?</h3>
 <p>The majority of the effort has gone into calculating the components of 
-<a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2</a>, however other URI schemes are supported, eg.
+<a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2#fragment'>http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2#fragment</a>, however other URI schemes are supported, e.g.
 <a href='/uri/tel:+2035989395'>tel:</a> or 
 <a href='/uri/secondlife://Ancient Ireland/167/153'>secondlife:</a>.</p>
 
 <h3>Uncool URIs</h3>
 <p>Sir Professor TimBL has said to you "<a href='http://www.w3.org/Provider/Style/URI'>Cool URIs don't change</a>". This implies a sad corollary; "Uncool URIs do sometimes change". You may use the uri4uri URIs to describe your own metadata about a URI, including where, why and by whom it was assigned, and what it was the sameAs at a given moment or interval throughout its existence.</p>
-<!--
-<p>A good example of this is the <a href='http://en.wikipedia.org/wiki/Paris'>Paris</a> article on the English Wikipedia. Initially this described Paris in Texas, but in 2006 this was changed to describe Paris in France to calm some complaints from Europe. This means that the meaning of the DBPedia URI 
-<a href='http://dpbedia.org/resource/Paris'>http://dpbedia.org/resource/Paris</a>
-will have altered at that time. This can be expressed with a simple reified URI description:</p>
 
-<div class='code-block'>&lt;http://dpbedia.org/resource/Paris&gt; 
-	uriv:identifiedBy &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; .
-
-&lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; 
-	a uriv:URI .
-	uriv:assignedBy &lt;http://dbpedia.org/resource/DBpedia&gt; .
-
-_:b1
-	a uriv:Statement ;
-	uriv:subject &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; ;
-	uriv:predicate &lt;http://purl.org/uri4uri/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
-	uriv:object &lt;http://purl.org/uri4uri/uri/sws.geonames.org/7174050/&gt; ;
-	uriv:trueAt _:b3 .
-
-_:b3
-	a tl:Interval .
-	tl:end "2006-04-01T12:30:21+08:00"^^xsd:dateTime .
-
-_:b2
-	a uriv:Statement ;
-	uriv:subject &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; ;
-	uriv:predicate &lt;http://purl.org/uri4uri/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
-	uriv:object &lt;http://purl.org/uri4uri/uri/sws.geonames.org/2988507/&gt; ;
-	uriv:trueAt _:b4 .
-
-_:b4
-	a tl:Interval .
-	tl:start "2006-04-01T12:30:22+08:00"^^xsd:dateTime .</div>
-	
-<p>subject, predicate, object and Statement in the uri4uri vocabulary have the same meaning to the reified URIs as the properties rdf:subject etc. have to normal resources. The <a href='http://purl.org/NET/c4dm/timeline.owl#'>timeline</a> terms are used to decribe when the triple was true.</p>	
-
-<p>This, of course, assumes that owl:sameAs had the same definition in 2006. It is possible that an additional layer of abstraction is requred to allow a single statement to include URIs meanings from different dates. This work will depend on securing future funding.</p>
--->
 <h3>Can I see the source code?</h3>
 <p>Sure, you can find the <a href='https://github.com/IllidanS4/uri4uri'>uri4uri source on github.com</a></p>

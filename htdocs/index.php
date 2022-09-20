@@ -30,10 +30,13 @@ if($path == "/robots.txt")
   exit;
 }
 
-if(str_starts_with($path, '/?') && isset($_GET['uri']))
+if(str_starts_with($path, '/?') && count($_GET) === 1)
 {
-  $uri4uri = "$BASE/uri/".urlencode_minimal($_GET['uri']);
-  header("Location: $uri4uri");
+  foreach($_GET as $key => $value)
+  {
+    $target_uri = "$BASE/$key/".urlencode_minimal($value);
+    header("Location: $target_uri");
+  }
   exit;
 }
 
@@ -56,12 +59,12 @@ if($path == "/")
   require_once("ui/template.php");
   exit;
 }
-if(!preg_match("/^\/(vocab|uri|scheme|suffix|domain|mime|urn|well-known|port|protocol)(\.(rdf|debug|ttl|html|nt|jsonld))?(\/(.*))?$/", $path, $b))
+if(!preg_match("/^\/(vocab|uri|scheme|suffix|domain|mime|urn|well-known|port|protocol)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:\/([^\?]*))?(\?.*)?$/", $path, $b))
 {
   serve404();
   exit;
 }
-@list(, $type, , $format, , $id) = $b;
+@list(, $type, $format, $id, $query) = $b;
 
 $decoded_id = rawurldecode($id);
 if($type === 'domain')
@@ -78,10 +81,10 @@ if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id))
   if(empty($format))
   {
     http_response_code(301);
-    header("Location: $BASE/$type/$reencoded_id");
+    header("Location: $BASE/$type/$reencoded_id$query");
   }else{
     http_response_code(301);
-    header("Location: $BASE/$type.$format/$reencoded_id");
+    header("Location: $BASE/$type.$format/$reencoded_id$query");
   }
   exit;
 }
@@ -145,7 +148,7 @@ if(empty($format))
   if($wants == 'application/ld+json') $format = 'jsonld';
 
   http_response_code(303);
-  header("Location: $BASE/$type.$format/$reencoded_id");
+  header("Location: $BASE/$type.$format/$reencoded_id$query");
   exit;
 }
 if($type == 'uri') $graph = graphURI($id);
