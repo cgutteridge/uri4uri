@@ -584,7 +584,7 @@ function addMimeTriples($graph, $mime, $queries = false)
     );
     $base_mime = @$suffix_map[$suffix_type] ?? "application/$suffix_type";
     $base_subject = addMimeTriples($graph, $base_mime);
-    $graph->addCompressedTriple($subject, 'skos:broader', $base_subject);
+    $graph->addCompressedTriple($subject, 'dbp:extendedFrom', $base_subject);
   }
   
   if(!$queries) return $subject;
@@ -662,7 +662,7 @@ CONSTRUCT {
   {$SPARQL->CONSTRUCT_LABEL('?scheme', $subject_node)}
   $subject_node owl:sameAs ?scheme .
   {$SPARQL->CONSTRUCT_PAGE('?scheme', $subject_node)}
-  ?technology uriv:usesScheme $subject_node .
+  ?technology dcterms:hasPart $subject_node .
   {$SPARQL->CONSTRUCT_LABEL('?technology')}
   {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {
@@ -717,7 +717,7 @@ function addURNNamespaceTriples($graph, $ns, $queries = false)
   
   $query = <<<EOF
 CONSTRUCT {
-  ?technology uriv:usesNamespace $subject_node .
+  ?technology dcterms:hasPart $subject_node .
   {$SPARQL->CONSTRUCT_LABEL('?technology')}
   {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {
@@ -771,7 +771,7 @@ function addPortTriples($graph, $port, $queries = false)
       $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:PortNumber');
       $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
       addIanaRecord($graph, $specific, ($info['description'] !== "Unassigned" && $info['description'] !== "Reserved") ? $info : null);
-      $graph->addCompressedTriple($specific, 'uriv:protocol', addProtocolTriples($graph, $protocol));
+      $graph->addCompressedTriple(addProtocolTriples($graph, $protocol), 'dcterms:hasPart', $specific);
     }
     $info = @$info['additional'];
   }
@@ -794,7 +794,7 @@ CONSTRUCT {
   ?subject a uriv:PortNumber .
   ?subject skos:notation "$port"^^xsd:unsignedShort .
   $subject_node skos:narrower ?subject .
-  ?subject uriv:protocol ?protocol_node .
+  ?protocol_node dcterms:hasPart ?subject .
   {$SPARQL->CONSTRUCT_LABEL('?technology')}
   {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {

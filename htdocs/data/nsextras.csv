@@ -8,6 +8,7 @@ dbp:cctld,p,country code top-level domain
 dbp:ports,p,port
 dbp:mime,p,MIME type
 dbp:extension,p,suffix
+dbp:extendedFrom,p,extends
 owl:sameAs,p,is the same as
 owl:equivalentClass,p,is equivalent class to
 owl:equivalentProperty,p,is equivalent property to
@@ -17,6 +18,7 @@ geo:long,p,longitude
 dcterms:description,p,description
 dcterms:replaces,p,replaces
 dcterms:isReplacedBy,p,replaced by
+dcterms:hasPart,p,part
 skos:exactMatch,p,exactly matches
 skos:broader,p,broader concept
 skos:narrower,p,narrower concept
