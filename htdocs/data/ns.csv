@@ -17,8 +17,8 @@ identifiedBy,p,old,identified by URI
 key,p,old,key
 length,p,old,length
 md5,p,old,md5 hash
-Mimetype,c,old,Mimetype
-MimetypeDatatype,d,old,Mimetype Identifier
+Mimetype,c,old,MIME Type
+MimetypeDatatype,d,old,MIME Type Identifier
 noPortSpecified,,old,No Port Specified
 pass,p,old,password
 path,p,old,path
@@ -65,11 +65,10 @@ object,p,old,object,object identified by
 predicate,p,old,predicate,predicate identified by
 subject,p,old,subject,subject identified by
 trueAt,p,old,trueAt,statement true at
-usedForFormat,p,old,used for format
-usedForSuffix,p,old,used for suffix
+usedForFormat,p,old-deprecated,used for format
+usedForSuffix,p,old-deprecated,used for suffix
 usesScheme,p,new,uses URI scheme
 usesNamespace,p,new,uses URN namespace
-usesPort,p,new,uses port
 user,p,old,user
 value,p,old,value
 whoIsRecord,p,old,whois record

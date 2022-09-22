@@ -25,7 +25,9 @@ function initGraph()
   $graph->ns('olddomain', "$PREFIX_OLD/domain/");
   $graph->ns('oldsuffix', "$PREFIX_OLD/suffix/");
   $graph->ns('oldmime', "$PREFIX_OLD/mime/");
-  $graph->ns('vs', "http://www.w3.org/2003/06/sw-vocab-status/ns#");
+  $graph->ns('vs', 'http://www.w3.org/2003/06/sw-vocab-status/ns#');
+  $graph->ns('dbo', 'http://dbpedia.org/ontology/');
+  $graph->ns('dbp', 'http://dbpedia.org/property/');
   
   return $graph;
 }
@@ -139,7 +141,11 @@ function addVocabTriples($graph)
     $graph->addCompressedTriple($term, 'rdf:type', $tmap[$type]);
     $graph->addCompressedTriple($term, 'rdfs:isDefinedBy', 'uriv:');
     $graph->addCompressedTriple($term, 'rdfs:label', $name, 'literal');
-    if($status === 'old')
+    if($status === 'old-deprecated')
+    {
+      $graph->addCompressedTriple($term, 'owl:deprecated', 'true', 'xsd:boolean');
+    }
+    if($status === 'old' || $status === 'old-deprecated')
     {
       linkOldConcept($graph, $term, $type);
     }
@@ -419,8 +425,8 @@ CONSTRUCT {
   $subject_node owl:sameAs ?domain .
   {$SPARQL->CONSTRUCT_PAGE('?domain', $subject_node)}
   {$SPARQL->CONSTRUCT_LABEL('?domain')}
-  ?country <http://dbpedia.org/property/cctld> $subject_node .
-  ?country a <http://dbpedia.org/ontology/Country> .
+  ?country dbp:cctld $subject_node .
+  ?country a dbo:Country .
   {$SPARQL->CONSTRUCT_LABEL('?country')}
   {$SPARQL->CONSTRUCT_PAGE('?country')}
   ?country geo:lat ?lat .
@@ -465,12 +471,11 @@ function addSuffixTriples($graph, $suffix, $queries = false)
   
   $query = <<<EOF
 CONSTRUCT {
-  $subject_node uriv:usedForFormat ?format .
+  ?format dbp:extension $subject_node .
   ?format a uriv:Format .
   {$SPARQL->CONSTRUCT_LABEL('?format')}
   {$SPARQL->CONSTRUCT_PAGE('?format')}
-  ?mime uriv:usedForSuffix $subject_node .
-  ?mime uriv:usedForFormat ?format .
+  ?format dbp:mime ?mime .
   ?mime a uriv:Mimetype .
   ?mime rdfs:label ?mime_str .
   ?mime skos:notation ?mime_notation .
@@ -592,12 +597,11 @@ EOF;
   
   $query = <<<EOF
 CONSTRUCT {
-  $subject_node uriv:usedForFormat ?format .
+  ?format dbp:mime $subject_node .
   ?format a uriv:Format .
   {$SPARQL->CONSTRUCT_LABEL('?format')}
   {$SPARQL->CONSTRUCT_PAGE('?format')}
-  $subject_node uriv:usedForSuffix ?suffix .
-  ?suffix uriv:usedForFormat ?format .
+  ?format dbp:extension ?suffix .
   ?suffix a uriv:Suffix .
   ?suffix rdfs:label ?suffix_label .
   ?suffix skos:notation ?suffix_notation .
@@ -764,10 +768,11 @@ function addPortTriples($graph, $port, $queries = false)
   
   $query = <<<EOF
 CONSTRUCT {
-  ?technology uriv:usesPort ?subject .
+  ?technology dbp:ports ?subject .
   ?subject a uriv:PortNumber .
   ?subject skos:notation "$port"^^xsd:unsignedShort .
   $subject_node skos:narrower ?subject .
+  ?subject uriv:protocol ?protocol_node .
   {$SPARQL->CONSTRUCT_LABEL('?technology')}
   {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {
@@ -778,6 +783,7 @@ CONSTRUCT {
   BIND(UCASE(?protocol_lower) AS ?protocol_upper)
   { ?protocol ?protocol_label_prop ?protocol_lower . } UNION { ?protocol ?protocol_label_prop ?protocol_upper . }
   BIND(URI(CONCAT("{$graph->expandURI($subject)}#", ?protocol_lower)) AS ?subject)
+  BIND(URI(CONCAT("{$graph->expandURI('protocol:')}", ?protocol_lower)) AS ?protocol_node)
   {$SPARQL->MATCH_PAGE('?technology')}
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
 }

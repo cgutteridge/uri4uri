@@ -4,10 +4,14 @@ skos:notation,p,notation
 vs:term_status,p,term status
 foaf:page,p,page
 foaf:homepage,p,homepage
-http://dbpedia.org/property/cctld,p,country code top-level domain
+dbp:cctld,p,country code top-level domain
+dbp:ports,p,port
+dbp:mime,p,MIME type
+dbp:extension,p,suffix
 owl:sameAs,p,is the same as
 owl:equivalentClass,p,is equivalent class to
 owl:equivalentProperty,p,is equivalent property to
+owl:deprecated,p,deprecated
 geo:lat,p,latitude
 geo:long,p,longitude
 dcterms:description,p,description
@@ -22,13 +26,14 @@ xsd:double,d,Double-precision floating-point number
 xsd:positiveInteger,d,Postitive Integer
 xsd:unsignedShort,d,Unsigned 16-bit Integer
 xsd:string,d,String
+xsd:boolean,d,Boolean
 xsd:anyURI,d,URI
 foaf:Document,c,Document
 foaf:Organization,c,Organization
 foaf:Agent,c,Agent
 foaf:Person,c,Person
 skos:Concept,c,Concept
-http://dbpedia.org/ontology/Country,c,Country
+dbo:Country,c,Country
 rdfs:Class,c,Class
 rdf:Property,c,Property
 rdfs:Datatype,c,Datatype
