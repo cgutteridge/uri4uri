@@ -2,14 +2,35 @@
 
 function processSparqlQuery($graph, $sparql)
 {
+  $prefixes = array();
   $lines = explode("\n", $sparql);
-  foreach($lines as &$line)
+  foreach($lines as $index => &$line)
   {
-    $line = trim($line);
+    if(preg_match('/^\s*#/', $line))
+    {
+      $line = '';
+    }else{
+      $line = trim($line);
+    }
+    if(empty($line))
+    {
+      unset($lines[$index]);
+    }else{
+      if(preg_match_all('/(\w+):/', $line, $matches, PREG_SET_ORDER))
+      {
+        foreach($matches as $match)
+        {
+          $prefixes[$match[1]] = true;
+        }
+      }
+    }
   }
   foreach($graph->ns as $prefix => $ns)
   {
-    array_unshift($lines, "PREFIX $prefix: <$ns>");
+    if(@$prefixes[$prefix])
+    {
+      array_unshift($lines, "PREFIX $prefix: <$ns>");
+    }
   }
   return implode("\n", $lines);
 }

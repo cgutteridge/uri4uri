@@ -76,7 +76,9 @@ EOF;
       $entity $prop $page_id .
       $prop_res wikibase:directClaim $prop .
       $prop_res wikibase:propertyType wikibase:ExternalId .
+      # source website for the property
       $prop_res wdt:P1896 [] .
+      # formatter URL
       $prop_res wdt:P1630 $formatter .
       BIND(URI(REPLACE(STR($page_id), "^(.*)$", STR($formatter))) AS $page)
     }
@@ -84,8 +86,11 @@ EOF;
     }
     return <<<EOF
 OPTIONAL {
+    # described at URL
     { $entity wdt:P973 $page . }
+    # official website
     UNION { $entity wdt:P856 $page . }
+    # described by source/full work available at URL
     UNION { $entity wdt:P1343/wdt:P953 $page . }
     UNION {
       $page schema:about $entity .
@@ -436,12 +441,15 @@ CONSTRUCT {
   ?country geo:lat ?lat .
   ?country geo:long ?long .
 } WHERE {
+  # IANA Root Zone Database ID
   ?domain wdt:P5914 "$domain_idn" .
   {$SPARQL->MATCH_PAGE('?domain')}
   OPTIONAL {
+    # country
     ?domain wdt:P17 ?country .
     {$SPARQL->MATCH_PAGE('?country', false)}
     OPTIONAL {
+      # coordinate location
       ?country p:P625 ?coords .
       ?coords psv:P625 ?coord_node .
       ?coord_node wikibase:geoLatitude ?lat .  
@@ -484,9 +492,11 @@ CONSTRUCT {
   ?mime rdfs:label ?mime_str .
   ?mime skos:notation ?mime_notation .
 } WHERE {
+  # file extension
   { ?format wdt:P1195 "$suffix_lower" . } UNION { ?format wdt:P1195 "$suffix_upper" . }
   {$SPARQL->MATCH_PAGE('?format')}
   OPTIONAL {
+    # MIME type
     ?format wdt:P1163 ?mime_str .
     FILTER (isLiteral(?mime_str) && STR(?mime_str) != "application/octet-stream")
     BIND(STRDT(?mime_str, uriv:MimetypeDatatype) AS ?mime_notation)
@@ -585,6 +595,7 @@ function addMimeTriples($graph, $mime, $queries = false)
   if($mime === 'text/plain' || $mime === 'application/octet-stream')
   {
     $filter_query = <<<EOF
+    # MIME type
     ?format p:P1163 ?mime_prop .
     ?mime_prop ps:P1163 "$mime" .
     ?mime_prop prov:wasDerivedFrom ?mime_source .
@@ -595,6 +606,7 @@ function addMimeTriples($graph, $mime, $queries = false)
 EOF;
   }else{
     $filter_query = <<<EOF
+    # MIME type
     ?format wdt:P1163 "$mime" .
 EOF;
   }
@@ -613,6 +625,7 @@ CONSTRUCT {
   $filter_query
   {$SPARQL->MATCH_PAGE('?format')}
   OPTIONAL {
+    # file extension
     ?format wdt:P1195 ?suffix_strcs .
     FILTER isLiteral(?suffix_strcs)
     BIND(LCASE(STR(?suffix_strcs)) AS ?suffix_str)
@@ -654,13 +667,17 @@ CONSTRUCT {
   {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {
   OPTIONAL {
+    # Uniform Resource Identifier Scheme
     ?scheme wdt:P4742 "$scheme" .
+    # instance of Uniform Resource Identifier scheme
     ?scheme wdt:P31 wd:Q37071 .
     {$SPARQL->MATCH_PAGE('?scheme')}
   }
   OPTIONAL {
+    # Uniform Resource Identifier Scheme
     ?technology wdt:P4742 "$scheme" .
     FILTER NOT EXISTS {
+      # instance of Uniform Resource Identifier scheme
       ?technology wdt:P31 wd:Q37071 .
     }
     {$SPARQL->MATCH_PAGE('?technology')}
@@ -704,6 +721,7 @@ CONSTRUCT {
   {$SPARQL->CONSTRUCT_LABEL('?technology')}
   {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {
+  # URN formatter
   ?technology wdt:P7470 "urn:$ns:\$1" .
   {$SPARQL->MATCH_PAGE('?technology')}
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
@@ -780,8 +798,10 @@ CONSTRUCT {
   {$SPARQL->CONSTRUCT_LABEL('?technology')}
   {$SPARQL->CONSTRUCT_PAGE('?technology')}
 } WHERE {
+  # port
   ?technology p:P1641 ?port_prop .
   ?port_prop ps:P1641 "$port"^^xsd:decimal .
+  # of
   ?port_prop pq:P642 ?protocol .
   VALUES ?protocol_lower { $protocol_values }
   BIND(UCASE(?protocol_lower) AS ?protocol_upper)
@@ -821,9 +841,12 @@ CONSTRUCT {
   {$SPARQL->CONSTRUCT_PAGE('?protocol', $subject_node)}
 } WHERE {
   {
+    # instance of/subclass of computer network protocol
     ?protocol wdt:P31/(wdt:P279)* wd:Q15836568 .
   } UNION {
+    # port
     ?port_prop ps:P1641 ?port .
+    # of
     ?port_prop pq:P642 ?protocol .
   }
   { ?protocol ?protocol_label_prop "$protocol" . } UNION { ?protocol ?protocol_label_prop "$protocol_upper" . }
