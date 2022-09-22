@@ -248,6 +248,8 @@ function addBoilerplateTriples($graph, $uri, $title, $link_old = true)
 
 function addURITriples($graph, $uri, $queries = false)
 {
+  global $SPARQL;
+  
   $subject = 'uri:'.urlencode_minimal($uri);
   $b = parse_url_fixed($uri);
 
@@ -362,6 +364,25 @@ function addURITriples($graph, $uri, $queries = false)
       }
     }
   }
+  
+  if(!$queries) return $subject;
+  
+  $subject_node = "<{$graph->expandURI($subject)}>";
+  
+  $query = <<<EOF
+CONSTRUCT {
+  ?thing dcterms:hasPart $subject_node .
+  {$SPARQL->CONSTRUCT_PAGE('?thing')}
+  {$SPARQL->CONSTRUCT_LABEL('?thing')}
+} WHERE {
+  ?thing ?prop <$uri> .
+  ?prop_node wikibase:directClaim ?prop .
+  ?prop_node wikibase:propertyType wikibase:Url .
+  {$SPARQL->MATCH_PAGE('?thing')}
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+}
+EOF;
+  addWikidataResult($graph, $query);
   
   return $subject;
 }
