@@ -34,6 +34,11 @@ function initGraph()
 
 $SPARQL = new class
 {
+  public function LABELS()
+  {
+    return 'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }';
+  }
+  
   public function CONSTRUCT_LABEL($entity, $target = null)
   {
     $label = $entity.'Label';
@@ -379,7 +384,7 @@ CONSTRUCT {
   ?prop_node wikibase:directClaim ?prop .
   ?prop_node wikibase:propertyType wikibase:Url .
   {$SPARQL->MATCH_PAGE('?thing')}
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  {$SPARQL->LABELS()}
 }
 EOF;
   addWikidataResult($graph, $query);
@@ -477,7 +482,7 @@ CONSTRUCT {
       ?coord_node wikibase:geoLongitude ?long .
     }
   }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  {$SPARQL->LABELS()}
 }
 EOF;
   addWikidataResult($graph, $query);
@@ -523,7 +528,7 @@ CONSTRUCT {
     BIND(STRDT(?mime_str, uriv:MimetypeDatatype) AS ?mime_notation)
     BIND(URI(CONCAT("{$graph->expandURI("mime:")}", ?mime_str)) AS ?mime)
   }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  {$SPARQL->LABELS()}
 }
 EOF;
   addWikidataResult($graph, $query);
@@ -654,7 +659,7 @@ CONSTRUCT {
     BIND(STRDT(?suffix_str, uriv:SuffixDatatype) AS ?suffix_notation)
     BIND(URI(CONCAT("{$graph->expandURI("suffix:")}", ?suffix_str)) AS ?suffix)
   }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  {$SPARQL->LABELS()}
 }
 EOF;
   addWikidataResult($graph, $query);
@@ -703,7 +708,7 @@ CONSTRUCT {
     }
     {$SPARQL->MATCH_PAGE('?technology')}
   }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  {$SPARQL->LABELS()}
 }
 EOF;
   addWikidataResult($graph, $query);
@@ -745,7 +750,7 @@ CONSTRUCT {
   # URN formatter
   ?technology wdt:P7470 "urn:$ns:\$1" .
   {$SPARQL->MATCH_PAGE('?technology')}
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  {$SPARQL->LABELS()}
 }
 EOF;
   addWikidataResult($graph, $query);
@@ -830,7 +835,7 @@ CONSTRUCT {
   BIND(URI(CONCAT("{$graph->expandURI($subject)}#", ?protocol_lower)) AS ?subject)
   BIND(URI(CONCAT("{$graph->expandURI('protocol:')}", ?protocol_lower)) AS ?protocol_node)
   {$SPARQL->MATCH_PAGE('?technology')}
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  {$SPARQL->LABELS()}
 }
 EOF;
   addWikidataResult($graph, $query);
@@ -872,7 +877,7 @@ CONSTRUCT {
   }
   { ?protocol ?protocol_label_prop "$protocol" . } UNION { ?protocol ?protocol_label_prop "$protocol_upper" . }
   {$SPARQL->MATCH_PAGE('?protocol')}
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }
+  {$SPARQL->LABELS()}
 }
 EOF;
   addWikidataResult($graph, $query);
