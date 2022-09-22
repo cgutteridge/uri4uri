@@ -748,7 +748,7 @@ function addPortTriples($graph, $port, $queries = false)
       $graph->addCompressedTriple($subject, 'skos:narrower', $specific);
       $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:PortNumber');
       $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
-      addIanaRecord($graph, $specific, $info['description'] !== "Unassigned" ? $info : null);
+      addIanaRecord($graph, $specific, ($info['description'] !== "Unassigned" && $info['description'] !== "Reserved") ? $info : null);
       $graph->addCompressedTriple($specific, 'uriv:protocol', addProtocolTriples($graph, $protocol));
     }
     $info = @$info['additional'];
