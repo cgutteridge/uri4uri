@@ -81,7 +81,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
       $label = "#".$b[1];
     }
     $pred = prettyResourceLink($rel, " class='predicate'");
-    if($rel->nodeType() == '#inverseRelation') { $pred = "is \"$pred\" of"; }
+    if($rel->nodeType() == '#inverseRelation') { $pred = "is $pred of"; }
     
     $rel_key = $rel->toString().' '.$rel->nodeType();
     
