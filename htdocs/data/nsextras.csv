@@ -16,6 +16,7 @@ geo:lat,p,latitude
 geo:long,p,longitude
 dcterms:description,p,description
 dcterms:replaces,p,replaces
+dcterms:isReplacedBy,p,replaced by
 skos:exactMatch,p,exactly matches
 skos:broader,p,broader concept
 skos:narrower,p,narrower concept

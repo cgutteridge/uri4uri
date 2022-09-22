@@ -65,8 +65,8 @@ object,p,old,object,object identified by
 predicate,p,old,predicate,predicate identified by
 subject,p,old,subject,subject identified by
 trueAt,p,old,trueAt,statement true at
-usedForFormat,p,old-deprecated,used for format
-usedForSuffix,p,old-deprecated,used for suffix
+usedForFormat,p,old-deprecated,used for format,dbp:mime
+usedForSuffix,p,old-deprecated,used for suffix,dbp:extension
 usesScheme,p,new,uses URI scheme
 usesNamespace,p,new,uses URN namespace
 user,p,old,user

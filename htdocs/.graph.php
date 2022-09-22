@@ -136,7 +136,7 @@ function addVocabTriples($graph)
   );
   foreach($lines as $line)
   {
-    list($term, $type, $status, $name) = explode(",", rtrim($line));
+    @list($term, $type, $status, $name, $replaced) = explode(",", rtrim($line));
     $term = "uriv:$term";
     $graph->addCompressedTriple($term, 'rdf:type', $tmap[$type]);
     $graph->addCompressedTriple($term, 'rdfs:isDefinedBy', 'uriv:');
@@ -148,6 +148,10 @@ function addVocabTriples($graph)
     if($status === 'old' || $status === 'old-deprecated')
     {
       linkOldConcept($graph, $term, $type);
+    }
+    if(!empty($replaced))
+    {
+      $graph->addCompressedTriple($term, 'dct:isReplacedBy', $replaced);
     }
   }
 }
