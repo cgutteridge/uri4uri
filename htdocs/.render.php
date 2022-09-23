@@ -66,7 +66,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
   
   static $hidden_properties = array(
     'http://www.w3.org/2000/01/rdf-schema#label' => true,
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy ' => true,
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy #relation' => true,
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' => true,
     'http://www.w3.org/2004/02/skos/core#exactMatch' => true,
     'http://purl.org/dc/terms/replaces' => true,

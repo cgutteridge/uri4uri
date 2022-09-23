@@ -87,7 +87,7 @@ abstract class Triples
     $ontology = "$PREFIX/$type/";
     foreach($triples->source() as $id => $info)
     {
-      if(str_starts_with($id, '#')) continue;
+      if(str_starts_with($id, '#') || !is_array($info)) continue;
       $id = $triples->unmapId($id);
       if($id === null) continue;
       $subject = "$PREFIX/$type/".urlencode_minimal($id);
@@ -941,8 +941,11 @@ class PortTriples extends Triples
     $protocol_values = array();
     foreach(get_protocols() as $protocol)
     {
-      $name = strtolower($protocol['id']);
-      $protocol_values[] = "\"$name\"";
+      if(is_array($protocol))
+      {
+        $name = strtolower($protocol['id']);
+        $protocol_values[] = "\"$name\"";
+      }
     }
     $protocol_values = implode(' ', $protocol_values);
     
