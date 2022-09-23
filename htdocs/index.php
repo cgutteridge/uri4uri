@@ -151,18 +151,9 @@ if(empty($format))
   header("Location: $BASE/$type.$format/$reencoded_id$query");
   exit;
 }
-if($type == 'uri') $graph = graphURI($id);
-elseif($type == 'scheme') $graph = graphScheme($id);
-elseif($type == 'suffix') $graph = graphSuffix($id);
-elseif($type == 'domain') $graph = graphDomain($id);
-elseif($type == 'mime') $graph = graphMime($id);
-elseif($type == 'urn') $graph = graphURNNamespace($id);
-elseif($type == 'well-known') $graph = graphWellknown($id);
-elseif($type == 'port') $graph = graphPort($id);
-elseif($type == 'service') $graph = graphService($id);
-elseif($type == 'protocol') $graph = graphProtocol($id);
-elseif($type == 'vocab') $graph = graphVocab($id);
-else { serve404(); exit; }
+
+if($type == 'vocab') $graph = graphVocab($id);
+else $graph = graphEntity($type, $id);
 
 if($format == 'html')
 {
