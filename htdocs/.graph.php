@@ -503,7 +503,7 @@ class DomainTriples extends Triples
     $domain_idn = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
     
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Domain');
-    $graph->addCompressedTriple($subject, 'rdfs:label', $domain, 'literal');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $domain, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $domain, 'uriv:DomainDatatype');
     if($domain_idn !== $domain)
     {
@@ -664,7 +664,7 @@ class MIMETriples extends Triples
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'mime:');
     
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Mimetype');
-    $graph->addCompressedTriple($subject, 'rdfs:label', $mime, 'literal');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $mime, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $mime, 'uriv:MimetypeDatatype');
     
     $mime_types = get_mime_types();
@@ -753,6 +753,7 @@ class SchemeTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'scheme:');
     
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIScheme');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $scheme, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $scheme, 'uriv:URISchemeDatatype');
   
     $schemes = get_schemes();
@@ -820,6 +821,7 @@ class URNNamespaceTriples extends Triples
     }else{
       $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URNNamespace-Formal');
     }
+    $graph->addCompressedTriple($subject, 'rdfs:label', $ns, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $ns, 'uriv:URNNamespaceDatatype');
   
     $namespaces = get_urn_namespaces();
@@ -862,6 +864,7 @@ class WellknownTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'wellknown:');
     
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:WellKnownURISuffix');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $suffix, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $suffix, 'uriv:WellKnownURISuffixDatatype');
   
     $wellknown = get_wellknown_uris();
@@ -886,6 +889,7 @@ class PortTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'port:');
     
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Port');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $port, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $port, 'xsd:unsignedShort');
     
     $ports = get_ports();
@@ -902,7 +906,7 @@ class PortTriples extends Triples
         $graph->addCompressedTriple($subject, 'skos:narrower', $specific);
         $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:Port');
         $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
-        $graph->addCompressedTriple($specific, 'rdfs:label', $port.' ('.strtoupper($protocol).')', 'literal');
+        $graph->addCompressedTriple($specific, 'rdfs:label', $port.' ('.strtoupper($protocol).')', 'xsd:string');
         addIanaRecord($graph, $specific, $ports, ($info['description'] !== "Unassigned" && $info['description'] !== "Reserved") ? $port : null);
         $graph->addCompressedTriple(self::addForType('protocol', $graph, $protocol), 'dcterms:hasPart', $specific);
         if(!empty($info['name']))
@@ -911,6 +915,7 @@ class PortTriples extends Triples
           $service_node = 'service:'.urlencode_minimal($service);
           $graph->addCompressedTriple($service_node, 'rdfs:isDefinedBy', 'service:');
           $graph->addCompressedTriple($service_node, 'rdf:type', 'uriv:Service');
+          $graph->addCompressedTriple($service_node, 'rdfs:label', $service, 'xsd:string');
           $graph->addCompressedTriple($service_node, 'skos:notation', $service, 'uriv:ServiceDatatype');
           $graph->addCompressedTriple($service_node, 'dbp:ports', $specific);
         }
@@ -934,6 +939,7 @@ class PortTriples extends Triples
 CONSTRUCT {
   ?technology dbp:ports ?subject .
   ?subject a uriv:Port .
+  ?subject rdfs:label "$port" .
   ?subject skos:notation "$port"^^xsd:unsignedShort .
   $subject_node skos:narrower ?subject .
   ?protocol_node dcterms:hasPart ?subject .
@@ -976,6 +982,7 @@ class ServiceTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'service:');
     
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Service');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $service, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $service, 'uriv:ServiceDatatype');
     
     $services = get_services();
@@ -994,6 +1001,7 @@ class ServiceTriples extends Triples
           $port = $info['number'];
           $specific = "port:$port#$protocol";
           $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:Port');
+          $graph->addCompressedTriple($subject, 'rdfs:label', $port, 'xsd:string');
           $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
           $graph->addCompressedTriple($subject, 'dbp:ports', $specific);
         }else{
@@ -1040,6 +1048,7 @@ class ProtocolTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'protocol:');
     
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Protocol');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $protocol, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $protocol, 'uriv:ProtocolDatatype');
   
     $protocols = get_protocols();
