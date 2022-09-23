@@ -84,12 +84,17 @@ abstract class Triples
     global $PREFIX;
     $triples = self::map($type);
     $link_old = $triples->link_old;
+    $ontology = "$PREFIX/$type/";
     foreach($triples->source() as $id => $info)
     {
       if(str_starts_with($id, '#')) continue;
-      $subject = $triples->add($graph, $triples->unmapId($id), $queries);
+      $id = $triples->unmapId($id);
+      if($id === null) continue;
+      $subject = "$PREFIX/$type/".urlencode_minimal($id);
+      $graph->addCompressedTriple($subject, 'rdfs:label', $id, 'xsd:string');
+      $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', $ontology);
     }
-    return "$PREFIX/$type/";
+    return $ontology;
   }
   
   protected final function LABELS()
@@ -883,6 +888,11 @@ class PortTriples extends Triples
     return get_ports();
   }
   
+  public function unmapId($id)
+  {
+    return is_numeric($id) ? $id : null;
+  }
+  
   public function add($graph, $port, $queries = false)
   {
     $subject = 'port:'.urlencode_minimal($port);
@@ -907,7 +917,8 @@ class PortTriples extends Triples
         $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:Port');
         $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
         $graph->addCompressedTriple($specific, 'rdfs:label', $port.' ('.strtoupper($protocol).')', 'xsd:string');
-        addIanaRecord($graph, $specific, $ports, ($info['description'] !== "Unassigned" && $info['description'] !== "Reserved") ? $port : null);
+        $desc = @$info['description'];
+        addIanaRecord($graph, $specific, $ports, ($desc !== "Unassigned" && $desc !== "Reserved") ? $port : null);
         $graph->addCompressedTriple(self::addForType('protocol', $graph, $protocol), 'dcterms:hasPart', $specific);
         if(!empty($info['name']))
         {
@@ -975,6 +986,11 @@ EOF;
 class ServiceTriples extends Triples
 {
   public $link_old = false;
+  
+  public function source()
+  {
+    return get_services();
+  }
   
   public function add($graph, $service, $queries = false)
   {
