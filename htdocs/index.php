@@ -88,6 +88,12 @@ if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id))
   }
   exit;
 }
+if($type === 'vocab' && !empty($id))
+{
+  http_response_code(301);
+  header("Location: $BASE/$type$query#$id");
+  exit;
+}
 $id = $decoded_id;
 
 if(empty($format))
@@ -148,7 +154,11 @@ if(empty($format))
   if($wants == 'application/ld+json') $format = 'jsonld';
 
   http_response_code(303);
-  header("Location: $BASE/$type.$format/$reencoded_id$query");
+  if(!empty($reencoded_id))
+  {
+    $reencoded_id = "/$reencoded_id";
+  }
+  header("Location: $BASE/$type.$format$reencoded_id$query");
   exit;
 }
 
