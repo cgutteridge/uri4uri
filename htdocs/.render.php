@@ -105,6 +105,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
       $res_map[$key] = $r2;
     }
     natsort($res_keys);
+    $num_resources = count($res_keys);
 
     $close_element = null;
     foreach($res_keys as $res_key)
@@ -143,7 +144,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
           echo "<tr>";
           if($opening)
           {
-            echo "<th rowspan='0'>$pred:</th>";
+            echo "<th rowspan='$num_resources'>$pred:</th>";
           }
           $followed_inner = $followed_relations;
           $followed_inner[$rel->toString()] = $rel;
