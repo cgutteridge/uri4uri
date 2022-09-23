@@ -85,7 +85,13 @@ abstract class Triples
     $triples = self::map($type);
     $link_old = $triples->link_old;
     $ontology = "$PREFIX/$type/";
-    foreach($triples->source() as $id => $info)
+    $records = $triples->source();
+    if(isset($records['#source']))
+    {
+      $graph->addCompressedTriple($ontology, 'prov:wasDerivedFrom', $records['#source']);
+      $graph->addCompressedTriple($records['#source'], 'rdf:type', 'foaf:Document');
+    }
+    foreach($records as $id => $info)
     {
       if(str_starts_with($id, '#') || !is_array($info)) continue;
       $id = $triples->unmapId($id);
