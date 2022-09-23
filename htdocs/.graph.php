@@ -886,12 +886,17 @@ function addServiceTriples($graph, $service, $queries = false)
     addIanaRecord($graph, $subject, $info);
     if(!empty($info['protocol']))
     {
-      $port = $info['number'];
       $protocol = strtolower($info['protocol']);
-      $specific = "port:$port#$protocol";
-      $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:Port');
-      $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
-      $graph->addCompressedTriple($subject, 'dbp:ports', $specific);
+      if(!empty($info['number']))
+      {
+        $port = $info['number'];
+        $specific = "port:$port#$protocol";
+        $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:Port');
+        $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
+        $graph->addCompressedTriple($subject, 'dbp:ports', $specific);
+      }else{
+        $specific = $subject;
+      }
       $graph->addCompressedTriple(addProtocolTriples($graph, $protocol), 'dcterms:hasPart', $specific);
     }
     $info = @$info['additional'];
