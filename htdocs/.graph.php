@@ -30,6 +30,7 @@ function initGraph()
   $graph->ns('dbo', 'http://dbpedia.org/ontology/');
   $graph->ns('dbp', 'http://dbpedia.org/property/');
   $graph->ns('prov', 'http://www.w3.org/ns/prov#');
+  $graph->ns('vann', 'http://purl.org/vocab/vann/');
   
   return $graph;
 }
@@ -39,8 +40,19 @@ abstract class Triples
   public $link_old;
   abstract public function add($graph, $uri, $queries = false);
   
+  public function source()
+  {
+    return array();
+  }
+  
+  public function unmapId($id)
+  {
+    return $id;
+  }
+  
   static $map;
-  public static function addForType($type, $graph, $uri, $queries = false, &$link_old = false)
+  
+  static function map($type)
   {
     if(!isset(self::$map))
     {
@@ -57,17 +69,35 @@ abstract class Triples
         'protocol' => new ProtocolTriples
       );
     }
-    $triples = self::$map[$type];
-    $link_old = $triples->link_old;
-    return $triples->add($graph, $uri, $queries);
+    return self::$map[$type];
   }
   
-  protected function LABELS()
+  public static function addForType($type, $graph, $id, $queries = false, &$link_old = false)
+  {
+    $triples = self::map($type);
+    $link_old = $triples->link_old;
+    return $triples->add($graph, $id, $queries);
+  }
+  
+  public static function addAllForType($type, $graph, $queries = false, &$link_old = false)
+  {
+    global $PREFIX;
+    $triples = self::map($type);
+    $link_old = $triples->link_old;
+    foreach($triples->source() as $id => $info)
+    {
+      if(str_starts_with($id, '#')) continue;
+      $subject = $triples->add($graph, $triples->unmapId($id), $queries);
+    }
+    return "$PREFIX/$type/";
+  }
+  
+  protected final function LABELS()
   {
     return 'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }';
   }
   
-  protected function CONSTRUCT_LABEL($entity, $target = null)
+  protected final function CONSTRUCT_LABEL($entity, $target = null)
   {
     $label = $entity.'Label';
     $alt_label = $entity.'AltLabel';
@@ -89,7 +119,7 @@ EOF;
     }
   }
   
-  protected function CONSTRUCT_PAGE($entity, $target = null)
+  protected final function CONSTRUCT_PAGE($entity, $target = null)
   {
     $page = $entity.'_page';
     $db = $entity.'_db';
@@ -101,7 +131,7 @@ $target foaf:page $page .
 EOF;
   }
   
-  protected function MATCH_PAGE($entity, $ids = true)
+  protected final function MATCH_PAGE($entity, $ids = true)
   {
     $page = $entity.'_page';
     $page_id = $entity.'_page_id';
@@ -208,6 +238,15 @@ function graphEntity($type, $id)
   $graph = initGraph();
   $subject = Triples::addForType($type, $graph, $id, true, $link_old);
   addBoilerplateTriples($graph, $subject, $id, $link_old);
+  return $graph;
+}
+
+function graphAll($type)
+{
+  $graph = initGraph();
+  $subject = Triples::addAllForType($type, $graph, false, $link_old);
+  $graph->addCompressedTriple($subject, 'rdf:type', 'owl:Ontology');
+  addBoilerplateTriples($graph, $subject, $type, $link_old);
   return $graph;
 }
 
@@ -414,7 +453,7 @@ function addIanaRecord($graph, $subject, $records, $key)
   foreach($info['refs'] as $url => $label)
   {
     $graph->addCompressedTriple($subject, 'uriv:IANARef', $url);
-    if(str_starts_with($url, 'http://www.rfc-editor.org/rfc/'))
+    if(str_starts_with($url, 'http:') || str_starts_with($url, 'https:'))
     {
       $graph->addCompressedTriple($subject, 'foaf:page', $url);
       $graph->addCompressedTriple($url, 'rdf:type', 'foaf:Document');
@@ -430,9 +469,12 @@ function addIanaRecord($graph, $subject, $records, $key)
   if(isset($records['#source']))
   {
     $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $records['#source']);
+    $graph->addCompressedTriple($records['#source'], 'rdf:type', 'foaf:Document');
     if(isset($info['registry']))
     {
-      $graph->addCompressedTriple($subject, 'vs:moreinfo', $records['#source'].'#table-'.$info['registry']);
+      $registry = $records['#source'].'#table-'.$info['registry'];
+      $graph->addCompressedTriple($subject, 'vs:moreinfo', $registry);
+      $graph->addCompressedTriple($registry, 'rdf:type', 'foaf:Document');
     }
   }
   
@@ -442,6 +484,16 @@ function addIanaRecord($graph, $subject, $records, $key)
 class DomainTriples extends Triples
 {
   public $link_old = true;
+  
+  public function source()
+  {
+    return get_tlds();
+  }
+  
+  public function unmapId($id)
+  {
+    return rtrim($id, '.');
+  }
 
   public function add($graph, $domain, $queries = false, &$special_type = null)
   {
@@ -491,6 +543,7 @@ class DomainTriples extends Triples
     if(isset($tlds['#source']))
     {
       $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $tlds['#source']);
+      $graph->addCompressedTriple($tlds['#source'], 'rdf:type', 'foaf:Document');
     }
     if(isset($tlds[$domain_idn]))
     {
@@ -600,6 +653,11 @@ class MIMETriples extends Triples
 {
   public $link_old = true;
   
+  public function source()
+  {
+    return get_mime_types();
+  }
+  
   public function add($graph, $mime, $queries = false)
   {
     $subject = 'mime:'.urlencode_minimal($mime);
@@ -684,6 +742,11 @@ class SchemeTriples extends Triples
 {
   public $link_old = true;
   
+  public function source()
+  {
+    return get_schemes();
+  }
+  
   public function add($graph, $scheme, $queries = false)
   {
     $subject = 'scheme:'.urlencode_minimal($scheme);
@@ -737,6 +800,11 @@ class URNNamespaceTriples extends Triples
 {
   public $link_old = false;
   
+  public function source()
+  {
+    return get_urn_namespaces();
+  }
+  
   public function add($graph, $ns, $queries = false)
   {
     $subject = 'urnns:'.urlencode_minimal($ns);
@@ -783,6 +851,11 @@ class WellknownTriples extends Triples
 {
   public $link_old = false;
   
+  public function source()
+  {
+    return get_wellknown_uris();
+  }
+  
   public function add($graph, $suffix, $queries = false)
   {
     $subject = 'wellknown:'.urlencode_minimal($suffix);
@@ -801,6 +874,11 @@ class WellknownTriples extends Triples
 class PortTriples extends Triples
 {
   public $link_old = false;
+  
+  public function source()
+  {
+    return get_ports();
+  }
   
   public function add($graph, $port, $queries = false)
   {
@@ -950,6 +1028,11 @@ EOF;
 class ProtocolTriples extends Triples
 {
   public $link_old = false;
+  
+  public function source()
+  {
+    return get_protocols();
+  }
   
   public function add($graph, $protocol, $queries = false)
   {

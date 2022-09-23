@@ -163,6 +163,7 @@ if(empty($format))
 }
 
 if($type == 'vocab') $graph = graphVocab($id);
+elseif(empty($id)) $graph = graphAll($type);
 else $graph = graphEntity($type, $id);
 
 if($format == 'html')

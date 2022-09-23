@@ -66,11 +66,13 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
   
   static $hidden_properties = array(
     'http://www.w3.org/2000/01/rdf-schema#label' => true,
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy' => true,
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy ' => true,
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' => true,
     'http://www.w3.org/2004/02/skos/core#exactMatch' => true,
     'http://purl.org/dc/terms/replaces' => true,
-    'http://purl.org/uri4uri/vocab#IANARef #inverseRelation' => true
+    'http://purl.org/uri4uri/vocab#IANARef #inverseRelation' => true,
+    'http://www.w3.org/ns/prov#wasDerivedFrom #inverseRelation' => true,
+    'http://www.w3.org/2003/06/sw-vocab-status/ns#moreinfo #inverseRelation' => true
   );
   
   static $atomic_properties = array();

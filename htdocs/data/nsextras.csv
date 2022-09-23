@@ -28,7 +28,7 @@ skos:broader,p,broader concept
 skos:narrower,p,narrower concept
 skos:altLabel,p,alternative label
 rdfs:seeAlso,p,see also
-rdfs:isDefinedBy,p,defined by
+rdfs:isDefinedBy,p,vocabulary
 xsd:float,d,Floating-point number
 xsd:double,d,Double-precision floating-point number
 xsd:positiveInteger,d,Postitive Integer
@@ -46,3 +46,4 @@ dbo:Country,c,Country
 rdfs:Class,c,Class
 rdf:Property,c,Property
 rdfs:Datatype,c,Datatype
+owl:Ontology,c,Ontology
