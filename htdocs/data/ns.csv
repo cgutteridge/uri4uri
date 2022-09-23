@@ -57,8 +57,11 @@ URNNamespace-Experimental,c,new,Experimental URN Namespace
 URNNamespaceDatatype,d,new,URN Namespace Identifier
 WellKnownURISuffix,c,new,Well-Known URI Suffix
 WellKnownURISuffixDatatype,d,new,Well-Known URI Suffix Identifier
-PortNumber,c,new,Port Number
+Port,c,new,Port
 Protocol,c,new,Protocol
+ProtocolDatatype,d,new,Protocol Identifier
+Service,c,new,Named Service
+ServiceDatatype,d,new,Named Service Identifier
 Statement,c,old,Statement (reified)
 object,p,old,object,object identified by
 predicate,p,old,predicate,predicate identified by

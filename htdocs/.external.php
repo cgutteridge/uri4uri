@@ -163,6 +163,11 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
         $record_data['protocol'] = trim($item->wholeText);
         break;
       }
+      foreach($xpath->query('reg:number/text()', $record) as $item)
+      {
+        $record_data['number'] = trim($item->wholeText);
+        break;
+      }
       $refs = array();
       foreach($xpath->query('.//reg:xref[not(parent::reg:template)]', $record) as $xref)
       {
@@ -302,6 +307,14 @@ function get_ports()
   return get_json_source(__DIR__.'/data/ports.json', function($cache_file)
   {
     return update_iana_records($cache_file, 'service-names-port-numbers', 'number', false);
+  });
+}
+
+function get_services()
+{
+  return get_json_source(__DIR__.'/data/services.json', function($cache_file)
+  {
+    return update_iana_records($cache_file, 'service-names-port-numbers', 'name', false);
   });
 }
 
