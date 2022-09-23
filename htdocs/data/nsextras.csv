@@ -2,6 +2,8 @@ rdf:type,p,type
 foaf:primaryTopic,p,primary topic
 skos:notation,p,notation
 vs:term_status,p,term status
+vs:moreinfo,p,status info
+prov:wasDerivedFrom,p,derived from
 foaf:page,p,page
 foaf:homepage,p,homepage
 dbp:cctld,p,country code top-level domain
@@ -19,11 +21,14 @@ dcterms:description,p,description
 dcterms:replaces,p,replaces
 dcterms:isReplacedBy,p,replaced by
 dcterms:hasPart,p,part
+dcterms:date,p,date
+dcterms:modified,p,modified
 skos:exactMatch,p,exactly matches
 skos:broader,p,broader concept
 skos:narrower,p,narrower concept
 skos:altLabel,p,alternative label
 rdfs:seeAlso,p,see also
+rdfs:isDefinedBy,p,defined by
 xsd:float,d,Floating-point number
 xsd:double,d,Double-precision floating-point number
 xsd:positiveInteger,d,Postitive Integer
@@ -31,6 +36,7 @@ xsd:unsignedShort,d,Unsigned 16-bit Integer
 xsd:string,d,String
 xsd:boolean,d,Boolean
 xsd:anyURI,d,URI
+xsd:date,d,Date
 foaf:Document,c,Document
 foaf:Organization,c,Organization
 foaf:Agent,c,Agent

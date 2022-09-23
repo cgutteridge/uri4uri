@@ -29,6 +29,7 @@ function initGraph()
   $graph->ns('vs', 'http://www.w3.org/2003/06/sw-vocab-status/ns#');
   $graph->ns('dbo', 'http://dbpedia.org/ontology/');
   $graph->ns('dbp', 'http://dbpedia.org/property/');
+  $graph->ns('prov', 'http://www.w3.org/ns/prov#');
   
   return $graph;
 }
@@ -45,12 +46,21 @@ $SPARQL = new class
     $label = $entity.'Label';
     $alt_label = $entity.'AltLabel';
     $description = $entity.'Description';
-    if(empty($target)) $target = $entity;
-    return <<<EOF
+    if(empty($target))
+    {
+      return <<<EOF
+$entity rdfs:label $label .
+  $entity skos:altLabel $alt_label .
+  $entity dct:description $description .
+EOF;
+    }else{
+      return <<<EOF
 $target rdfs:label $label .
   $target skos:altLabel $alt_label .
   $target dct:description $description .
+  $target prov:wasDerivedFrom $entity .
 EOF;
+    }
   }
   
   public function CONSTRUCT_PAGE($entity, $target = null)
@@ -265,6 +275,7 @@ function addURITriples($graph, $uri, $queries = false)
   global $SPARQL;
   
   $subject = 'uri:'.urlencode_minimal($uri);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'uri:');
   $b = parse_url_fixed($uri);
 
   if(isset($b['fragment']))
@@ -401,11 +412,83 @@ EOF;
   return $subject;
 }
 
+function addIanaRecord($graph, $subject, $records, $key)
+{
+  $info = @$records[$key];
+  if(empty($info))
+  {
+    $graph->addCompressedTriple($subject, 'vs:term_status', 'unstable', 'literal');
+    return;
+  }
+  if(!is_array($info))
+  {
+    return;
+  }
+  
+  static $tmap = array(
+    'permanent' => 'stable',
+    'provisional' => 'testing',
+    'historical' => 'archaic',
+    'obsoleted' => 'archaic'
+  );
+  
+  if(isset($info['description']))
+  {
+    $graph->addCompressedTriple($subject, 'rdfs:label', $info['description'], 'literal');
+  }
+  if(isset($info['type']))
+  {
+    $graph->addCompressedTriple($subject, 'vs:term_status', $tmap[$info['type']], 'literal');
+  }else{
+    $graph->addCompressedTriple($subject, 'vs:term_status', 'stable', 'literal');
+  }
+  if(isset($info['template']))
+  {
+    $graph->addCompressedTriple($subject, 'rdfs:seeAlso', $info['template']);
+    $graph->addCompressedTriple($info['template'], 'rdf:type', 'foaf:Document');
+  }
+  if(isset($info['date']))
+  {
+    $graph->addCompressedTriple($subject, 'dcterms:date', $info['date'], 'xsd:date');
+  }
+  if(isset($info['updated']))
+  {
+    $graph->addCompressedTriple($subject, 'dcterms:modified', $info['updated'], 'xsd:date');
+  }
+  foreach($info['refs'] as $url => $label)
+  {
+    $graph->addCompressedTriple($subject, 'uriv:IANARef', $url);
+    if(str_starts_with($url, 'http://www.rfc-editor.org/rfc/'))
+    {
+      $graph->addCompressedTriple($subject, 'foaf:page', $url);
+      $graph->addCompressedTriple($url, 'rdf:type', 'foaf:Document');
+    }else{
+      $graph->addCompressedTriple($url, 'rdf:type', 'foaf:Agent');
+    }
+    if(!empty($label))
+    {
+      $graph->addCompressedTriple($url, 'rdfs:label', $label, 'literal');
+    }
+  }
+  
+  if(isset($records['#source']))
+  {
+    $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $records['#source']);
+    if(isset($info['registry']))
+    {
+      $graph->addCompressedTriple($subject, 'vs:moreinfo', $records['#source'].'#table-'.$info['registry']);
+    }
+  }
+  
+  return $info;
+}
+
 function addDomainTriples($graph, $domain, $queries = false, &$special_type = null)
 {
   global $SPARQL;
   
   $subject = 'domain:'.urlencode_minimal($domain);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'domain:');
   
   $domain_idn = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
   
@@ -421,7 +504,7 @@ function addDomainTriples($graph, $domain, $queries = false, &$special_type = nu
   $special_domains = get_special_domains();
   if(isset($special_domains["$domain_idn."]))
   {
-    addIanaRecord($graph, $subject, $special_domains["$domain_idn."]);
+    addIanaRecord($graph, $subject, $special_domains, "$domain_idn.");
     $special_type = 'uriv:Domain-Special';
   }
 
@@ -447,10 +530,15 @@ function addDomainTriples($graph, $domain, $queries = false, &$special_type = nu
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:TopLevelDomain');
   
   $tlds = get_tlds();
+  if(isset($tlds['#source']))
+  {
+    $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $tlds['#source']);
+  }
   if(isset($tlds[$domain_idn]))
   {
     $tld = $tlds[$domain_idn];
     $graph->addCompressedTriple($subject, 'uriv:delegationRecordPage', "http://www.iana.org$tld[url]");
+    $graph->addCompressedTriple($subject, 'vs:moreinfo', "http://www.iana.org$tld[url]");
     $graph->addCompressedTriple($subject, 'foaf:page', "http://www.iana.org$tld[url]");
     $graph->addCompressedTriple("http://www.iana.org$tld[url]", 'rdf:type', 'foaf:Document');
     $type = str_replace(' ', '', ucwords(str_replace('-', ' ', $tld['type'])));
@@ -468,7 +556,7 @@ function addDomainTriples($graph, $domain, $queries = false, &$special_type = nu
 CONSTRUCT {
   $subject_node owl:sameAs ?domain .
   {$SPARQL->CONSTRUCT_PAGE('?domain', $subject_node)}
-  {$SPARQL->CONSTRUCT_LABEL('?domain')}
+  {$SPARQL->CONSTRUCT_LABEL('?domain', $subject_node)}
   ?country dbp:cctld $subject_node .
   ?country a dbo:Country .
   {$SPARQL->CONSTRUCT_LABEL('?country')}
@@ -504,6 +592,7 @@ function addSuffixTriples($graph, $suffix, $queries = false)
   global $SPARQL;
   
   $subject = 'suffix:'.urlencode_minimal($suffix);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'suffix:');
   
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Suffix');
   $graph->addCompressedTriple($subject, 'rdfs:label', ".$suffix", 'xsd:string');
@@ -545,69 +634,19 @@ EOF;
   return $subject;
 }
 
-function addIanaRecord($graph, $subject, $info)
-{
-  if(empty($info))
-  {
-    $graph->addCompressedTriple($subject, 'vs:term_status', 'unstable', 'literal');
-    return;
-  }
-  if(!is_array($info))
-  {
-    return;
-  }
-  
-  static $tmap = array(
-    'permanent' => 'stable',
-    'provisional' => 'testing',
-    'historical' => 'archaic',
-    'obsoleted' => 'archaic'
-  );
-  
-  if(isset($info['description']))
-  {
-    $graph->addCompressedTriple($subject, 'rdfs:label', $info['description'], 'literal');
-  }
-  if(isset($info['type']))
-  {
-    $graph->addCompressedTriple($subject, 'vs:term_status', $tmap[$info['type']], 'literal');
-  }else{
-    $graph->addCompressedTriple($subject, 'vs:term_status', 'stable', 'literal');
-  }
-  if(isset($info['template']))
-  {
-    $graph->addCompressedTriple($subject, 'rdfs:seeAlso', $info['template']);
-    $graph->addCompressedTriple($info['template'], 'rdf:type', 'foaf:Document');
-  }
-  foreach($info['refs'] as $url => $label)
-  {
-    $graph->addCompressedTriple($subject, 'uriv:IANARef', $url);
-    if(str_starts_with($url, 'http://www.rfc-editor.org/rfc/'))
-    {
-      $graph->addCompressedTriple($subject, 'foaf:page', $url);
-      $graph->addCompressedTriple($url, 'rdf:type', 'foaf:Document');
-    }else{
-      $graph->addCompressedTriple($url, 'rdf:type', 'foaf:Agent');
-    }
-    if(!empty($label))
-    {
-      $graph->addCompressedTriple($url, 'rdfs:label', $label, 'literal');
-    }
-  }
-}
-
 function addMimeTriples($graph, $mime, $queries = false)
 {
   global $SPARQL;
   
   $subject = 'mime:'.urlencode_minimal($mime);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'mime:');
   
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Mimetype');
   $graph->addCompressedTriple($subject, 'rdfs:label', $mime, 'literal');
   $graph->addCompressedTriple($subject, 'skos:notation', $mime, 'uriv:MimetypeDatatype');
   
   $mime_types = get_mime_types();
-  addIanaRecord($graph, $subject, @$mime_types[$mime]);
+  addIanaRecord($graph, $subject, $mime_types, $mime);
     
   @list(, $suffix_type) = explode("+", $mime, 2);
   if(!empty($suffix_type))
@@ -681,12 +720,13 @@ function addSchemeTriples($graph, $scheme, $queries = false)
   global $SPARQL;
   
   $subject = 'scheme:'.urlencode_minimal($scheme);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'scheme:');
   
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIScheme');
   $graph->addCompressedTriple($subject, 'skos:notation', $scheme, 'uriv:URISchemeDatatype');
 
   $schemes = get_schemes();
-  addIanaRecord($graph, $subject, @$schemes[$scheme]);
+  addIanaRecord($graph, $subject, $schemes, $scheme);
   
   if(!$queries) return $subject;
   
@@ -730,6 +770,7 @@ function addURNNamespaceTriples($graph, $ns, $queries = false)
   global $SPARQL;
   
   $subject = 'urnns:'.urlencode_minimal($ns);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'urnns:');
   
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URNNamespace');
   if(str_starts_with($ns, 'x-'))
@@ -744,7 +785,7 @@ function addURNNamespaceTriples($graph, $ns, $queries = false)
   $graph->addCompressedTriple($subject, 'skos:notation', $ns, 'uriv:URNNamespaceDatatype');
 
   $namespaces = get_urn_namespaces();
-  addIanaRecord($graph, $subject, @$namespaces[$ns]);
+  addIanaRecord($graph, $subject, $namespaces, $ns);
   
   if(!$queries) return $subject;
   
@@ -772,12 +813,13 @@ function addWellknownTriples($graph, $suffix, $queries = false)
   global $SPARQL;
   
   $subject = 'wellknown:'.urlencode_minimal($suffix);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'wellknown:');
   
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:WellKnownURISuffix');
   $graph->addCompressedTriple($subject, 'skos:notation', $suffix, 'uriv:WellKnownURISuffixDatatype');
 
   $wellknown = get_wellknown_uris();
-  addIanaRecord($graph, $subject, @$wellknown[$suffix]);
+  addIanaRecord($graph, $subject, $wellknown, $suffix);
   
   return $subject;
 }
@@ -787,6 +829,7 @@ function addPortTriples($graph, $port, $queries = false)
   global $SPARQL;
   
   $subject = 'port:'.urlencode_minimal($port);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'port:');
   
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Port');
   $graph->addCompressedTriple($subject, 'skos:notation', $port, 'xsd:unsignedShort');
@@ -795,7 +838,7 @@ function addPortTriples($graph, $port, $queries = false)
   $info = @$ports[$port];
   if(empty($info))
   {
-    addIanaRecord($graph, $subject, null);
+    addIanaRecord($graph, $subject, $ports, null);
   }else while(is_array($info) && !empty($info))
   {
     if(!empty($info['protocol']))
@@ -806,12 +849,13 @@ function addPortTriples($graph, $port, $queries = false)
       $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:Port');
       $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
       $graph->addCompressedTriple($specific, 'rdfs:label', $port.' ('.strtoupper($protocol).')', 'literal');
-      addIanaRecord($graph, $specific, ($info['description'] !== "Unassigned" && $info['description'] !== "Reserved") ? $info : null);
+      addIanaRecord($graph, $specific, $ports, ($info['description'] !== "Unassigned" && $info['description'] !== "Reserved") ? $port : null);
       $graph->addCompressedTriple(addProtocolTriples($graph, $protocol), 'dcterms:hasPart', $specific);
       if(!empty($info['name']))
       {
         $service = $info['name'];
         $service_node = 'service:'.urlencode_minimal($service);
+        $graph->addCompressedTriple($service_node, 'rdfs:isDefinedBy', 'service:');
         $graph->addCompressedTriple($service_node, 'rdf:type', 'uriv:Service');
         $graph->addCompressedTriple($service_node, 'skos:notation', $service, 'uriv:ServiceDatatype');
         $graph->addCompressedTriple($service_node, 'dbp:ports', $specific);
@@ -872,6 +916,7 @@ function addServiceTriples($graph, $service, $queries = false)
   global $SPARQL;
   
   $subject = 'service:'.urlencode_minimal($service);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'service:');
   
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Service');
   $graph->addCompressedTriple($subject, 'skos:notation', $service, 'uriv:ServiceDatatype');
@@ -880,10 +925,10 @@ function addServiceTriples($graph, $service, $queries = false)
   $info = @$services[$service];
   if(empty($info))
   {
-    addIanaRecord($graph, $subject, null);
+    addIanaRecord($graph, $subject, $services, null);
   }else while(is_array($info) && !empty($info))
   {
-    addIanaRecord($graph, $subject, $info);
+    addIanaRecord($graph, $subject, $services, $service);
     if(!empty($info['protocol']))
     {
       $protocol = strtolower($info['protocol']);
@@ -927,11 +972,13 @@ function addProtocolTriples($graph, $protocol, $queries = false)
   global $SPARQL;
   
   $subject = 'protocol:'.urlencode_minimal($protocol);
+  $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'protocol:');
   
   $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Protocol');
+  $graph->addCompressedTriple($subject, 'skos:notation', $protocol, 'uriv:ProtocolDatatype');
 
   $protocols = get_protocols();
-  addIanaRecord($graph, $subject, @$protocols[$protocol]);
+  addIanaRecord($graph, $subject, $protocols, $protocol);
   
   if(!$queries) return $subject;
   

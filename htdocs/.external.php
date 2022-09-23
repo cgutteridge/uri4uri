@@ -110,7 +110,8 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
   libxml_set_streams_context(get_stream_context());
   $xml = new DOMDocument;
   $xml->preserveWhiteSpace = false;
-  if($xml->load("https://www.iana.org/assignments/$assignments/$assignments.xml") === false)
+  $source = "https://www.iana.org/assignments/$assignments/$assignments.xml";
+  if($xml->load($source) === false)
   {
     return;
   }
@@ -142,6 +143,21 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
           $registry = $registry_id->nodeValue;
           $id = "$registry/$id";
         }
+      }
+      foreach($xpath->query("ancestor::reg:registry[position() = 1]/@id", $record) as $item)
+      {
+        $record_data['registry'] = $item->nodeValue;
+        break;
+      }
+      foreach($xpath->query('@date', $record) as $item)
+      {
+        $record_data['date'] = $item->nodeValue;
+        break;
+      }
+      foreach($xpath->query('@updated', $record) as $item)
+      {
+        $record_data['updated'] = $item->nodeValue;
+        break;
       }
       foreach($xpath->query('reg:status/text()', $record) as $item)
       {
@@ -230,6 +246,8 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
   }
   
   ksort($records);
+  
+  $records['#source'] = $source;
   
   if(file_exists($file))
   {
@@ -332,13 +350,15 @@ function get_tlds()
   {
     libxml_set_streams_context(get_stream_context());
     $html = new DOMDocument;
-    if(@$html->loadHTMLFile('https://www.iana.org/domains/root/db.html') === false)
+    $source = 'https://www.iana.org/domains/root/db.html';
+    if(@$html->loadHTMLFile($source) === false)
     {
       return;
     }
     $xpath = new DOMXPath($html);
     
     $domains = array();
+    $domains['#source'] = $source;
     foreach($xpath->query('//table[@id="tld-table"]/tbody/tr') as $domain_item)
     {
       $cells = iterator_to_array($xpath->query('td', $domain_item));
@@ -360,6 +380,8 @@ function get_tlds()
       }
     }
     ksort($domains);
+    
+    $records['#source'] = $source;
     
     if(file_exists($cache_file))
     {
