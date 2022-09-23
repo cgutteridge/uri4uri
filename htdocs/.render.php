@@ -9,6 +9,10 @@ function substituteLink($href)
   global $page_url;
   if(str_starts_with($href, $page_url))
   {
+    if(str_ends_with($page_url, '#'))
+    {
+      return substr($href, strlen($page_url) - 1);
+    }
     return substr($href, strlen($page_url));
   }
   if(str_starts_with($href, $PREFIX))

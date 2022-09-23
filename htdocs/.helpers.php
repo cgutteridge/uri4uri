@@ -8,6 +8,15 @@ if(!function_exists('str_starts_with'))
   }
 }
 
+if(!function_exists('str_ends_with'))
+{
+  function str_ends_with($haystack, $needle)
+  {
+    $needle_len = strlen($needle);
+    return ($needle_len === 0 || 0 === substr_compare($haystack, $needle, - $needle_len));
+  }
+}
+
 function urlencode_minimal($str)
 {
   return preg_replace_callback("/[^!$&-;=@A-Z_a-z~\u{00A0}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFEF}]+/u", function($matches)
