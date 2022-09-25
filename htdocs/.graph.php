@@ -474,6 +474,19 @@ class URIPartTriples extends Triples
       $parts = preg_split('/[;&]/', $part);
       if(!empty($parts))
       {
+        if(count($parts) === 1)
+        {
+          $kv = $parts[0];
+          if(strpos($kv, '=') !== false)
+          {
+            list($key, $value) = explode('=', $kv, 2);
+            $graph->addCompressedTriple($subject, 'schema:propertyID', urldecode($key), 'literal');
+            $graph->addCompressedTriple($subject, 'schema:value', urldecode($value), 'literal');
+          }else{
+            $graph->addCompressedTriple($subject, 'schema:propertyID', urldecode($kv), 'literal');
+          }
+        }
+      
         $graph->addCompressedTriple($subject, 'rdf:type', 'rdf:Seq');
         $i = 0;
         foreach($parts as $kv)
