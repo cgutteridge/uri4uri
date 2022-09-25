@@ -59,7 +59,7 @@ if($path == "/")
   require_once("ui/template.php");
   exit;
 }
-if(!preg_match("/^\/(vocab|uri|scheme|suffix|part|field|domain|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:\/([^\?]*))?(\?.*)?$/", $path, $b))
+if(!preg_match("/^\/(vocab|uri|scheme|suffix|part|field|host|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:\/([^\?]*))?(\?.*)?$/", $path, $b))
 {
   serve404();
   exit;
@@ -67,7 +67,7 @@ if(!preg_match("/^\/(vocab|uri|scheme|suffix|part|field|domain|mime|urn|well-kno
 @list(, $type, $format, $id, $query) = $b;
 
 $decoded_id = rawurldecode($id);
-if($type === 'domain')
+if($type === 'host')
 {
   $decoded_id = idn_to_utf8($decoded_id, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
 }

@@ -12,7 +12,7 @@ function initGraph()
   $graph->ns('uriv', "$PREFIX/vocab#");
   $graph->ns('uri', "$PREFIX/uri/");
   $graph->ns('scheme', "$PREFIX/scheme/");
-  $graph->ns('domain', "$PREFIX/domain/");
+  $graph->ns('host', "$PREFIX/host/");
   $graph->ns('suffix', "$PREFIX/suffix/");
   $graph->ns('uripart', "$PREFIX/part/");
   $graph->ns('field', "$PREFIX/field/");
@@ -25,7 +25,7 @@ function initGraph()
   $graph->ns('olduri', "$PREFIX_OLD/uri/");
   $graph->ns('olduriv', "$PREFIX_OLD/vocab#");
   $graph->ns('oldscheme', "$PREFIX_OLD/scheme/");
-  $graph->ns('olddomain', "$PREFIX_OLD/domain/");
+  $graph->ns('oldhost', "$PREFIX_OLD/domain/");
   $graph->ns('oldsuffix', "$PREFIX_OLD/suffix/");
   $graph->ns('oldmime', "$PREFIX_OLD/mime/");
   $graph->ns('vs', 'http://www.w3.org/2003/06/sw-vocab-status/ns#');
@@ -66,7 +66,7 @@ abstract class Triples
         'suffix' => new SuffixTriples,
         'part' => new URIPartTriples,
         'field' => new FieldTriples,
-        'domain' => new DomainTriples,
+        'host' => new HostTriples,
         'mime' => new MIMETriples,
         'urn' => new URNNamespaceTriples,
         'well-known' => new WellknownTriples,
@@ -317,8 +317,8 @@ class URITriples extends Triples
     
     if(!empty($b['host']))
     {
-      $domain_subject = self::addForType('domain', $graph, strtolower($b['host']));
-      $graph->addCompressedTriple($subject, 'uriv:host', $domain_subject);
+      $host_subject = self::addForType('host', $graph, strtolower($b['host']));
+      $graph->addCompressedTriple($subject, 'uriv:host', $host_subject);
     }
   
     if(!empty($b['scheme']))
@@ -337,7 +337,7 @@ class URITriples extends Triples
           }
           $homepage.='/';
     
-          $graph->addCompressedTriple($domain_subject, 'foaf:homepage', $homepage);
+          $graph->addCompressedTriple($host_subject, 'foaf:homepage', $homepage);
           $graph->addCompressedTriple($homepage, 'rdf:type', 'foaf:Document');
         }
         if(!empty($b['path']))
@@ -638,7 +638,7 @@ function addIanaRecord($graph, $subject, $records, $key)
   return $info;
 }
 
-class DomainTriples extends Triples
+class HostTriples extends Triples
 {
   protected $link_old = true;
   
@@ -652,17 +652,54 @@ class DomainTriples extends Triples
     return rtrim($id, '.');
   }
 
-  protected function add($graph, $domain, $queries = false, &$special_type = null)
+  protected function add($graph, $host, $queries = false, &$special_type = null, $is_domain = false)
   {
-    $subject = 'domain:'.urlencode_minimal($domain);
-    $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'domain:');
+    $subject = 'host:'.urlencode_minimal($host);
+    $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'host:');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $host, 'xsd:string');
+    $graph->addCompressedTriple($subject, 'skos:notation', $host, 'uriv:HostDatatype');
+    $host_idn = idn_to_ascii($host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+    $graph->addCompressedTriple($subject, 'skos:notation', $host_idn, 'uriv:HostDatatype-Encoded');
+    if(!$is_domain)
+    {
+      if(filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false)
+      {
+        return $this->addIPv4($graph, $subject, $host, $queries, $special_type);
+      }
+      if(preg_match('/^\[(.+)\]$/s', $host, $matches))
+      {
+        if(filter_var($matches[1], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false)
+        {
+          return $this->addIPv6($graph, $subject, $host, $matches[1], $queries, $special_type);
+        }else{
+          return $this->addIPFuture($graph, $subject, $host, $matches[1], $queries, $special_type);
+        }
+      }
+    }
+    return $this->addDomain($graph, $subject, $host, $host_idn, $queries, $special_type);
+  }
+  
+  protected function addIPv4($graph, $subject, $ip, $queries, &$special_type)
+  {
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IPv4');
+    return $subject;
+  }
+  
+  protected function addIPv6($graph, $subject, $ip_wrapped, $ip, $queries, &$special_type)
+  {
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IPv6');
+    return $subject;
+  }
+  
+  protected function addIPFuture($graph, $subject, $ip_wrapped, $ip, $queries, &$special_type)
+  {
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IP-Future');
+    return $subject;
+  }
     
-    $domain_idn = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
-    
+  protected function addDomain($graph, $subject, $domain, $domain_idn, $queries = false, &$special_type = null)
+  {
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Domain');
-    $graph->addCompressedTriple($subject, 'rdfs:label', $domain, 'xsd:string');
-    $graph->addCompressedTriple($subject, 'skos:notation', $domain, 'uriv:DomainDatatype');
-    $graph->addCompressedTriple($subject, 'skos:notation', $domain_idn, 'uriv:DomainDatatype-Encoded');
     $graph->addCompressedTriple($subject, 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain_idn");
     
     $special_domains = get_special_domains();
@@ -676,7 +713,7 @@ class DomainTriples extends Triples
     if(strpos($domain, ".") !== false)
     {
       list($domain_name, $domain) = explode(".", $domain, 2);
-      $inner_subject = $this->add($graph, $domain, $queries, $special_type);
+      $inner_subject = $this->add($graph, $domain, $queries, $special_type, true);
       $graph->addCompressedTriple($inner_subject, 'uriv:subDom', $subject);
       if(!empty($special_type))
       {
