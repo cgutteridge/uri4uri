@@ -59,7 +59,7 @@ if($path == "/")
   require_once("ui/template.php");
   exit;
 }
-if(!preg_match("/^\/(vocab|uri|scheme|suffix|domain|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:\/([^\?]*))?(\?.*)?$/", $path, $b))
+if(!preg_match("/^\/(vocab|uri|scheme|suffix|part|field|domain|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:\/([^\?]*))?(\?.*)?$/", $path, $b))
 {
   serve404();
   exit;

@@ -23,12 +23,14 @@ noPortSpecified,,old,No Port Specified
 pass,p,old,password
 path,p,old,path
 port,p,old,port
-Query,c,old,URI Query Part
-QueryKey,c,old,URI Query Key
-QueryKVP,c,old,URI Query Key-Value Pair
+Query,c,old-deprecated,URI Query Part
+QueryKey,c,old-deprecated,URI Query Key
+QueryKVP,c,old-deprecated,URI Query Key-Value Pair
 query,p,old,query
-queryString,p,old,query string
-QueryValue,c,old,URI Query Value
+queryString,p,old-deprecated,query string
+QueryValue,c,old-deprecated,URI Query Value
+URIField,c,new,URI Field
+URIFieldDatatype,d,new,URI Field Identifier
 scheme,p,old,URI scheme
 urnNamespace,p,new,URN namespace
 wellknownSuffix,p,new,well-known URI suffix
@@ -45,7 +47,7 @@ TopLevelDomain-Infrastructure,c,old,Infrastructure Top-Level Domain
 TopLevelDomain-Sponsored,c,old,Sponsored Top-Level Domain
 TopLevelDomain-Test,c,old,Test Top-Level Domain
 URI,c,old,URI
-URIDatatype,d,old,URI Identifier
+URIDatatype,d,old-deprecated,URI Identifier
 URIScheme,c,old,URI Scheme
 URISchemeDatatype,d,old,URI Scheme Identifier
 URI-WellKnown,c,new,Well-Known URI
@@ -57,6 +59,9 @@ URNNamespace-Experimental,c,new,Experimental URN Namespace
 URNNamespaceDatatype,d,new,URN Namespace Identifier
 WellKnownURISuffix,c,new,Well-Known URI Suffix
 WellKnownURISuffixDatatype,d,new,Well-Known URI Suffix Identifier
+URIPart,c,new,URI Part
+URIPartDatatype,d,new,URI Part Identifier
+URIPartDatatype-Decoded,d,new,URI Part Identifier (Percent-Decoded)
 Port,c,new,Port
 Protocol,c,new,Protocol
 ProtocolDatatype,d,new,Protocol Identifier
@@ -70,7 +75,7 @@ trueAt,p,old,trueAt,statement true at
 usedForFormat,p,old-deprecated,used for format,dbp:mime
 usedForSuffix,p,old-deprecated,used for suffix,dbp:extension
 user,p,old,user
-value,p,old,value
+value,p,old-deprecated,value
 whoIsRecord,p,old,whois record
 WhoisServer,c,old,Whois Server
 hasWhoIsServer,p,old,whois server

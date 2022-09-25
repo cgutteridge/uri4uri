@@ -23,6 +23,8 @@ dcterms:isReplacedBy,p,replaced by
 dcterms:hasPart,p,part
 dcterms:date,p,date
 dcterms:modified,p,modified
+schema:propertyID,p,key
+schema:value,p,value
 skos:exactMatch,p,exactly matches
 skos:broader,p,broader concept
 skos:narrower,p,narrower concept
@@ -46,4 +48,5 @@ dbo:Country,c,Country
 rdfs:Class,c,Class
 rdf:Property,c,Property
 rdfs:Datatype,c,Datatype
+rdf:Seq,c,Sequence
 owl:Ontology,c,Ontology

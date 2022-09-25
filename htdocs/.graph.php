@@ -14,6 +14,8 @@ function initGraph()
   $graph->ns('scheme', "$PREFIX/scheme/");
   $graph->ns('domain', "$PREFIX/domain/");
   $graph->ns('suffix', "$PREFIX/suffix/");
+  $graph->ns('uripart', "$PREFIX/part/");
+  $graph->ns('field', "$PREFIX/field/");
   $graph->ns('mime', "$PREFIX/mime/");
   $graph->ns('urnns', "$PREFIX/urn/");
   $graph->ns('wellknown', "$PREFIX/well-known/");
@@ -31,6 +33,7 @@ function initGraph()
   $graph->ns('dbp', 'http://dbpedia.org/property/');
   $graph->ns('prov', 'http://www.w3.org/ns/prov#');
   $graph->ns('vann', 'http://purl.org/vocab/vann/');
+  $graph->ns('schema', 'http://schema.org/');
   
   return $graph;
 }
@@ -38,6 +41,7 @@ function initGraph()
 abstract class Triples
 {
   public $link_old;
+  public $vocab_full = false; 
   abstract public function add($graph, $uri, $queries = false);
   
   public function source()
@@ -60,6 +64,8 @@ abstract class Triples
         'uri' => new URITriples,
         'scheme' => new SchemeTriples,
         'suffix' => new SuffixTriples,
+        'part' => new URIPartTriples,
+        'field' => new FieldTriples,
         'domain' => new DomainTriples,
         'mime' => new MIMETriples,
         'urn' => new URNNamespaceTriples,
@@ -96,6 +102,11 @@ abstract class Triples
       if(str_starts_with($id, '#') || !is_array($info)) continue;
       $id = $triples->unmapId($id);
       if($id === null) continue;
+      if($triples->vocab_full)
+      {
+        $subject = $triples->add($graph, $id, $queries);
+        continue;
+      }
       $subject = "$PREFIX/$type/".urlencode_minimal($id);
       $graph->addCompressedTriple($subject, 'rdfs:label', $id, 'xsd:string');
       $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', $ontology);
@@ -287,7 +298,7 @@ class URITriples extends Triples
     {
       list($uri_part) = explode('#', $uri, 2);
       $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:FragmentURI');
-      $graph->addCompressedTriple($subject, 'uriv:fragment', $b['fragment'], 'xsd:string');
+      $graph->addCompressedTriple($subject, 'uriv:fragment', self::addForType('part', $graph, $b['fragment']));
       $graph->addCompressedTriple($subject, 'uriv:fragmentOf', self::addForType('uri', $graph, $uri_part));
     }
   
@@ -376,23 +387,7 @@ class URITriples extends Triples
   
     if(isset($b['query']))
     {
-      $graph->addCompressedTriple($subject, 'uriv:queryString', $b['query'], 'xsd:string');
-      $graph->addCompressedTriple($subject, 'uriv:query', "$subject#query");
-      $graph->addCompressedTriple("$subject#query", 'rdf:type', 'uriv:Query');
-      $graph->addCompressedTriple("$subject#query", 'rdf:type', 'rdf:Seq');
-      $i = 0;
-      foreach(explode('&', $b['query']) as $kv)
-      {
-        ++$i;
-        $graph->addCompressedTriple("$subject#query", "rdf:_$i", "$subject#query-$i");
-        $graph->addCompressedTriple("$subject#query-$i", 'rdf:type', 'uriv:QueryKVP');
-        if(strpos($kv, '=') !== false)
-        {
-          list($key, $value) = explode('=', $kv, 2);
-          $graph->addCompressedTriple("$subject#query-$i", 'uriv:key', $key, 'literal');
-          $graph->addCompressedTriple("$subject#query-$i", 'uriv:value', $value, 'literal');
-        }
-      }
+      $graph->addCompressedTriple($subject, 'uriv:query', self::addForType('part', $graph, $b['query']));
     }
     
     if(!$queries) return $subject;
@@ -413,6 +408,120 @@ CONSTRUCT {
 }
 EOF;
     addWikidataResult($graph, $query);
+    
+    return $subject;
+  }
+}
+
+class URIPartTriples extends Triples
+{
+  public $link_old = false;
+  public $vocab_full = true;
+  
+  public function source()
+  {
+    return array('' => array());
+  }
+
+  public function add($graph, $part, $queries = false)
+  {
+    if(empty($part))
+    {
+      $subject = 'uripart:#';
+    }else{
+      $subject = 'uripart:'.urlencode_minimal($part);
+    }
+    $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'uripart:');
+    
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIPart');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $part, 'xsd:string');
+    $graph->addCompressedTriple($subject, 'skos:notation', $part, 'uriv:URIPartDatatype');
+    $graph->addCompressedTriple($subject, 'skos:notation', rawurldecode($part), 'uriv:URIPartDatatype-Decoded');
+    
+    if(empty($part)) return $subject;
+    
+    $parts = preg_split('/[;&]/', $part);
+    if(!empty($parts))
+    {
+      $graph->addCompressedTriple($subject, 'rdf:type', 'rdf:Seq');
+      $i = 0;
+      foreach($parts as $kv)
+      {
+        ++$i;
+        $field_subject = "$subject#_$i";
+        $graph->addCompressedTriple($subject, "rdf:_$i", $field_subject);
+        $graph->addCompressedTriple($field_subject, 'rdf:type', 'uriv:QueryKVP');
+        if(strpos($kv, '=') !== false)
+        {
+          list($key, $value) = explode('=', $kv, 2);
+          $graph->addCompressedTriple($field_subject, 'schema:propertyID', urldecode($key), 'literal');
+          $graph->addCompressedTriple($field_subject, 'schema:value', urldecode($value), 'literal');
+        }else{
+          $graph->addCompressedTriple($field_subject, 'schema:propertyID', urldecode($kv), 'literal');
+        }
+      }
+    }
+    
+    static $find = array(';', "\e", '.', ' ', '%2E', '%2e', '%20');
+    static $replace = array('&', "\e1B", "\e2E", "\e20", "\e2E", "\e2E", "\e20");
+    parse_str(str_replace($find, $replace, $part), $fields);
+    $subject_inner = "$subject#/";
+    foreach($fields as $key => $value)
+    {
+      self::addComplexField($graph, $subject, $subject_inner, true, $key, $value);
+    }
+    
+    return $subject;
+  }
+  
+  static function decodeBack(&$str)
+  {
+    if(!is_string($str)) return;
+    $str = preg_replace_callback('/\e(..)/', function($matches)
+    {
+      return chr(hexdec($matches[1]));
+    }, $str);
+  }
+  
+  static function addComplexField($graph, $subject, $inner, $root, $key, $value)
+  {
+    self::decodeBack($key);
+    self::decodeBack($value);
+    if(!$root && is_numeric($key))
+    {
+      $field = "rdf:_$key";
+    }else{
+      $field = self::addForType('field', $graph, $key);
+    }
+    if(is_array($value))
+    {
+      $inner = $inner.rawurlencode($key);
+      $subject_inner = "$inner/";
+      $graph->addCompressedTriple($subject, $field, $inner);
+      foreach($value as $key2 => $value2)
+      {
+        self::addComplexField($graph, $inner, $subject_inner, false, $key2, $value2);
+      }
+    }else{
+      $graph->addCompressedTriple($subject, $field, $value, 'literal');
+    }
+  }
+}
+
+class FieldTriples extends Triples
+{
+  public $link_old = false;
+
+  public function add($graph, $field, $queries = false)
+  {
+    $subject = 'field:'.urlencode_minimal($field);
+    $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'field:');
+    
+    $graph->addCompressedTriple($subject, 'rdf:type', 'rdf:Property');
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIField');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $field, 'xsd:string');
+    $graph->addCompressedTriple($subject, 'skos:notation', $field, 'uriv:URIFieldDatatype');   
+    $graph->addCompressedTriple($subject, 'schema:propertyID', $field, 'literal');
     
     return $subject;
   }
