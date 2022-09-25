@@ -662,10 +662,7 @@ class DomainTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Domain');
     $graph->addCompressedTriple($subject, 'rdfs:label', $domain, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $domain, 'uriv:DomainDatatype');
-    if($domain_idn !== $domain)
-    {
-      $graph->addCompressedTriple($subject, 'skos:notation', $domain_idn, 'uriv:DomainDatatype-Encoded');
-    }
+    $graph->addCompressedTriple($subject, 'skos:notation', $domain_idn, 'uriv:DomainDatatype-Encoded');
     $graph->addCompressedTriple($subject, 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain_idn");
     
     $special_domains = get_special_domains();
