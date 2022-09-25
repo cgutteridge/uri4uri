@@ -46,11 +46,17 @@ function prettyResourceLink($resource, $attributes = '')
   return '<a title="'.htmlspecialchars(urldecode($uri)).'" href="'.htmlspecialchars($uri_href).'"'.$attributes.'>'.htmlspecialchars($label).'</a>';
 }
 
+function resourceKey($resource)
+{
+  return "{$resource->nodeType()} {$resource->toString()}";
+}
+
 function renderResource($graph, $resource, &$visited_nodes, $parent = null, $followed_relations = array())
 {
   global $PREFIX;
   $type = $resource->nodeType();
-  $visited_nodes[$resource->toString()] = $resource;
+  $resource_key = resourceKey($resource);
+  $visited_nodes[$resource_key] = $resource;
   echo "<div class='class'>";
   if($resource->hasLabel())
   {
@@ -99,7 +105,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     $res_map = array();
     foreach($resource->all($rel) as $r2)
     {
-      $key = "{$r2->nodeType()} {$r2->toString()}";
+      $key = resourceKey($r2);
       if($key === $parent) continue;
       $res_keys[] = $key;
       $res_map[$key] = $r2;
@@ -112,6 +118,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     {
       $r2 = $res_map[$res_key];
       $type = $r2->nodeType();
+      $value = $r2->toString();
       if($type == '#literal')
       {
         $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\"";
@@ -121,9 +128,9 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
         $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span>";
       }else{
         global $page_url;
-        if(str_starts_with($res_key, "$page_url#") && !isset($visited_nodes[$res_key]))
+        if(str_starts_with($value, "$page_url#") && !isset($visited_nodes[$res_key]))
         {
-          $res_id = substr($res_key, strlen($page_url) + 1);
+          $res_id = substr($value, strlen($page_url) + 1);
         }
         if($rel_followed || isset($visited_nodes[$res_key]) || @$atomic_properties[$rel_key] || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))
         {
@@ -154,7 +161,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
           }else{
             echo "<td class='object'>";
           }
-          renderResource($graph, $r2, $visited_nodes, $resource->toString(), $followed_inner);
+          renderResource($graph, $r2, $visited_nodes, $resource_key, $followed_inner);
           echo "</td></tr>";
           continue;
         }

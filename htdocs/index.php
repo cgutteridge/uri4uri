@@ -239,7 +239,7 @@ if($format == 'html')
     {
       $page_thingy_type =" <span class='classType'>[".$resource->all('rdf:type')->label()->join(", ")."]</span>";
     }
-    renderResource($graph, $resource, $visited, $document_url);
+    renderResource($graph, $resource, $visited, resourceKey($doc));
   }
   $page_content = ob_get_contents();
   ob_end_clean();
