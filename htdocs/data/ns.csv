@@ -61,6 +61,8 @@ URNNamespaceDatatype,d,new,URN Namespace Identifier
 WellKnownURISuffix,c,new,Well-Known URI Suffix
 WellKnownURISuffixDatatype,d,new,Well-Known URI Suffix Identifier
 URIPart,c,new,URI Part
+URIPart-XPointer,c,new,XPointer
+URIPart-Media,c,new,Media Fragment
 URIPartDatatype,d,new,URI Part Identifier
 URIPartDatatype-Decoded,d,new,URI Part Identifier (Percent-Decoded)
 Port,c,new,Port

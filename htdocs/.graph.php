@@ -453,57 +453,66 @@ class URIPartTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIPart');
     $graph->addCompressedTriple($subject, 'rdfs:label', $part, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $part, 'uriv:URIPartDatatype');
-    $graph->addCompressedTriple($subject, 'skos:notation', rawurldecode($part), 'uriv:URIPartDatatype-Decoded');
+    $part_decoded = rawurldecode($part);
+    $graph->addCompressedTriple($subject, 'skos:notation', $part_decoded, 'uriv:URIPartDatatype-Decoded');
     
     if(empty($part)) return $subject;
     
-    $parts = preg_split('/[;&]/', $part);
-    if(!empty($parts))
+    if(empty(preg_replace_callback('/((?'.'>(?:[^()^]+|\^[()^])*))(\((?R)*\))?/', function($matches)
     {
-      $graph->addCompressedTriple($subject, 'rdf:type', 'rdf:Seq');
-      $i = 0;
-      foreach($parts as $kv)
+      if(empty($matches[0])) return '';
+      @list(, $name, $args) = $matches;
+      if(empty($args) || !is_valid_qname($name))
       {
-        ++$i;
-        $field_subject = "$subject#_$i";
-        $graph->addCompressedTriple($subject, "rdf:_$i", $field_subject);
-        $graph->addCompressedTriple($field_subject, 'rdf:type', 'uriv:QueryKVP');
-        if(strpos($kv, '=') !== false)
+        return '.';
+      }
+      return '';
+    }, $part_decoded)))
+    {
+      $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIPart-XPointer');
+    }else{
+      $parts = preg_split('/[;&]/', $part);
+      if(!empty($parts))
+      {
+        $graph->addCompressedTriple($subject, 'rdf:type', 'rdf:Seq');
+        $i = 0;
+        foreach($parts as $kv)
         {
-          list($key, $value) = explode('=', $kv, 2);
-          $graph->addCompressedTriple($field_subject, 'schema:propertyID', urldecode($key), 'literal');
-          $graph->addCompressedTriple($field_subject, 'schema:value', urldecode($value), 'literal');
-        }else{
-          $graph->addCompressedTriple($field_subject, 'schema:propertyID', urldecode($kv), 'literal');
+          ++$i;
+          $field_subject = "$subject#_$i";
+          $graph->addCompressedTriple($subject, "rdf:_$i", $field_subject);
+          $graph->addCompressedTriple($field_subject, 'rdf:type', 'uriv:QueryKVP');
+          if(strpos($kv, '=') !== false)
+          {
+            list($key, $value) = explode('=', $kv, 2);
+            $graph->addCompressedTriple($field_subject, 'schema:propertyID', urldecode($key), 'literal');
+            $graph->addCompressedTriple($field_subject, 'schema:value', urldecode($value), 'literal');
+          }else{
+            $graph->addCompressedTriple($field_subject, 'schema:propertyID', urldecode($kv), 'literal');
+          }
         }
       }
-    }
-    
-    static $find = array(';', "\e", '.', ' ', '%2E', '%2e', '%20');
-    static $replace = array('&', "\e1B", "\e2E", "\e20", "\e2E", "\e2E", "\e20");
-    parse_str(str_replace($find, $replace, $part), $fields);
-    $subject_inner = "$subject#/";
-    foreach($fields as $key => $value)
-    {
-      self::addComplexField($graph, $subject, $subject_inner, true, $key, $value);
+      
+      $fields = parse_str_raw($part);
+      if(isset($fields['t']) || isset($fields['xywh']))
+      {
+        $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIPart-Media');
+      }
+      
+      $subject_inner = "$subject#/";
+      foreach($fields as $key => $value)
+      {
+        self::addComplexField($graph, $subject, $subject_inner, true, $key, $value);
+      }
     }
     
     return $subject;
   }
   
-  static function decodeBack(&$str)
-  {
-    if(!is_string($str)) return;
-    $str = preg_replace_callback('/\e(..)/', function($matches)
-    {
-      return chr(hexdec($matches[1]));
-    }, $str);
-  }
-  
   static function addComplexField($graph, $subject, $inner, $root, $key, $value)
   {
-    self::decodeBack($key);
-    self::decodeBack($value);
+    unescaped_parsed($key);
+    unescaped_parsed($value);
     if(!$root && is_numeric($key))
     {
       $field = "rdf:_$key";

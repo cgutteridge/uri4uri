@@ -69,3 +69,32 @@ function parse_url_fixed($uri)
   
   return $result;
 }
+
+function is_valid_qname($name)
+{
+  if(empty($name) || str_starts_with($name, ':')) return false;
+  try{
+    new DOMElement($name, null, 'about:invalid');
+    return true;
+  }catch(DOMException $e)
+  {
+    return false;
+  }
+}
+
+function parse_str_raw($str)
+{
+  static $find = array(';', "\e", '.', ' ', '%2E', '%2e', '%20');
+  static $replace = array('&', "\e1B", "\e2E", "\e20", "\e2E", "\e2E", "\e20");
+  parse_str(str_replace($find, $replace, $str), $fields);
+  return $fields;
+}
+
+function unescaped_parsed(&$str)
+{
+  if(!is_string($str)) return;
+  $str = preg_replace_callback('/\e(..)/', function($matches)
+  {
+    return chr(hexdec($matches[1]));
+  }, $str);
+}
