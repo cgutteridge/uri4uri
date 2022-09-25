@@ -642,7 +642,7 @@ class DomainTriples extends Triples
     $graph->addCompressedTriple($subject, 'skos:notation', $domain, 'uriv:DomainDatatype');
     if($domain_idn !== $domain)
     {
-      $graph->addCompressedTriple($subject, 'skos:notation', $domain_idn, 'uriv:DomainDatatype');
+      $graph->addCompressedTriple($subject, 'skos:notation', $domain_idn, 'uriv:DomainDatatype-Encoded');
     }
     $graph->addCompressedTriple($subject, 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain_idn");
     

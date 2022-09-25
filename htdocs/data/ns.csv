@@ -2,6 +2,7 @@ account,p,old,account
 delegationRecordPage,p,old,delegation record page
 Domain,c,old,Internet Domain
 DomainDatatype,d,old,Internet Domain Identifier
+DomainDatatype-Encoded,d,old,Internet Domain Identifier (Encoded) 
 Domain-Invalid,c,old,Invalid Internet Domain
 Domain-Valid,c,old,Valid Internet Domain
 Domain-Special,c,new,Special-Use Domain
