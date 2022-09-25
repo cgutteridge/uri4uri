@@ -13,9 +13,10 @@ dbp:ports,p,port
 dbp:mime,p,MIME type
 dbp:extension,p,suffix
 dbp:extendedFrom,p,extends
-owl:sameAs,p,is the same as
-owl:equivalentClass,p,is equivalent class to
-owl:equivalentProperty,p,is equivalent property to
+owl:sameAs,p,same entity
+owl:differentFrom,p,different entity
+owl:equivalentClass,p,equivalent class
+owl:equivalentProperty,p,equivalent property
 owl:deprecated,p,deprecated
 geo:lat,p,latitude
 geo:long,p,longitude
@@ -25,6 +26,7 @@ dcterms:isReplacedBy,p,replaced by
 dcterms:hasPart,p,part
 dcterms:date,p,date
 dcterms:modified,p,modified
+dcterms:relation,p,related
 schema:propertyID,p,key
 schema:value,p,value
 skos:exactMatch,p,exactly matches

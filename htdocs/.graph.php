@@ -363,6 +363,19 @@ class URITriples extends Triples
     else if(!empty($b['host']))
     {
       $graph->addCompressedTriple($subject, 'uriv:port', 'uriv:noPortSpecified');
+      
+      $service = @get_services()[$b['scheme']];
+      $added_ports = array();
+      while(is_array($service) && !empty($service))
+      {
+        $port = @$service['number'];
+        if(!empty($port) && !isset($added_ports[$port]))
+        {
+          $added_ports[$port] = true;
+          $graph->addCompressedTriple($subject, 'uriv:port', self::addForType('port', $graph, $port));
+        }
+        $service = @$service['additional'];
+      }
     }
     
     if(isset($b['user']))
@@ -880,6 +893,13 @@ class SchemeTriples extends Triples
   
     $schemes = get_schemes();
     addIanaRecord($graph, $subject, $schemes, $scheme);
+    
+    if(isset(get_services()[$scheme]))
+    {
+      $service = self::addForType('service', $graph, $scheme);
+      $graph->addCompressedTriple($subject, 'dcterms:relation', $service);
+      $graph->addCompressedTriple($subject, 'owl:differentFrom', $service);
+    }
     
     if(!$queries) return $subject;
     
