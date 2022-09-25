@@ -30,7 +30,7 @@ function resourceLink($resource, $attributes = '')
 {
   $uri = $resource->url();
   $uri_href = substituteLink($uri);
-  return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($uri)."</a>";
+  return '<a title="'.htmlspecialchars(urldecode($uri)).'" href="'.htmlspecialchars($uri_href).'"'.$attributes.'>'.htmlspecialchars($uri).'</a>';
 }
 
 function prettyResourceLink($resource, $attributes = '')
@@ -43,7 +43,7 @@ function prettyResourceLink($resource, $attributes = '')
   {
     $label = "#".$b[1];
   }
-  return "<a title='".htmlspecialchars(urldecode($uri))."' href='".htmlspecialchars($uri_href)."'$attributes>".htmlspecialchars($label)."</a>";
+  return '<a title="'.htmlspecialchars(urldecode($uri)).'" href="'.htmlspecialchars($uri_href).'"'.$attributes.'>'.htmlspecialchars($label).'</a>';
 }
 
 function renderResource($graph, $resource, &$visited_nodes, $parent = null, $followed_relations = array())
@@ -99,7 +99,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     $res_map = array();
     foreach($resource->all($rel) as $r2)
     {
-      $key = $r2->toString();
+      $key = "{$r2->nodeType()} {$r2->toString()}";
       if($key === $parent) continue;
       $res_keys[] = $key;
       $res_map[$key] = $r2;
