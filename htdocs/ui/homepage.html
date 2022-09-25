@@ -22,7 +22,7 @@
 <tr>
 <td>
 <div class='class'>
-<div class='classLabel'>Domain</div>
+<div class='classLabel'>Domain/IP Address</div>
 <div class='class2'>
 <form>
 <input autocomplete="off" spellcheck="false" placeholder="www.iana.org" style='padding:4px;width:80%;border-radius:5px' name='host' id='host'>
@@ -57,7 +57,7 @@
 </td>
 <td>
 <div class='class'>
-<div class='classLabel'>Suffix</div>
+<div class='classLabel'>File Extension</div>
 <div class='class2'>
 <form>
 <input autocomplete="off" spellcheck="false" placeholder="exe" style='padding:4px;width:80%;border-radius:5px' name='suffix' id='suffix'>
@@ -115,25 +115,49 @@
 </div>
 </td>
 </tr>
+<tr>
+<td>
+<div class='class'>
+<div class='classLabel'>Named Service</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="smtp" style='padding:4px;width:80%;border-radius:5px' name='service' id='service'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+<td>
+<div class='class'>
+<div class='classLabel'>URI Query/Fragment</div>
+<div class='class2'>
+<form>
+<input autocomplete="off" spellcheck="false" placeholder="v=dQw4w9WgXcQ&amp;feature=youtu.be" style='padding:4px;width:80%;border-radius:5px' name='part' id='part'>
+<button type="submit">Generate!</button>
+</form>
+</div>
+</div>
+</td>
+</tr>
 </table>
 </div>
 </div>
 </div>
 
 <h3>How does it work?</h3>
-<p>The URI resolver just parses the URI to get the parts, then uses registries and external queries to retrieve information about MIME types, top level domains and so forth. This data is taken from IANA and Wikidata and is periodically updated.</p>
+<p>The URI resolver just parses the URI to get the parts, then uses registries and external queries to retrieve information about MIME types, top-level domains and so forth. This data is taken from IANA and Wikidata and is periodically updated.</p>
 
 <p>It accepts any possible URI, including 
-<a href="/uri/http%3A%2F%2Ftotl.net%2F">web addresses</a>, 
-<a href="/uri/mailto%3Awebmaster%40microsoft.com">email addresses</a>, 
-<a href="/uri/urn%3Aisbn%3A817224164X">ISBNs</a> as well as some more obscure schemes such as
-<a href="/uri/gopher%3A%2F%2Fsdf.org%3A70%2F1%2Fcomputers%2Fapple%2Fmac%2Fhypercard">Gopher</a>.</p> 
+<a href="/uri/http://totl.net/">web addresses</a>, 
+<a href="/uri/mailto:webmaster@microsoft.com">email addresses</a>, 
+<a href="/uri/urn:isbn:817224164X">ISBNs</a> as well as some more obscure schemes such as
+<a href="/uri/gopher://sdf.org:70/1/computers/apple/mac/hypercard">Gopher</a>.</p> 
 
 <h3>URIs</h3>
 
 <p>The URIs on this site are in the format:</p>
 <p class='code'>http://purl.org/uri4uri/&lt;type&gt;/&lt;identifier&gt;</p>
-<p>...where <code>&lt;type&gt;</code> is one of <code>uri</code>, <code>scheme</code>, <code>domain</code>, <code>mime</code>, <code>suffix</code>, <code>urn</code>, <code>well-known</code>, <code>port</code>, <code>protocol</code>. Percent-encoding <code>&lt;identifier&gt;</code> is necessary only for <code>?<code> and <code>#</code> and usual invalid characters.</p>
+<p>...where <code>&lt;type&gt;</code> is one of <code>uri</code>, <code>scheme</code>, <code>host</code>, <code>part</code>, <code>mime</code>, <code>suffix</code>, <code>urn</code>, <code>well-known</code>, <code>port</code>, <code>protocol</code>, <code>service</code>. Percent-encoding <code>&lt;identifier&gt;</code> is necessary only for <code>?<code> and <code>#</code> and the usual invalid characters.</p>
 <p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF/XML, JSON-LD or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, jsonld, nt, html. These have URLs in the following formats:</p>
 <p class='code'>http://purl.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</p>
 <p>Examples:</p>
