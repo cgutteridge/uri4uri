@@ -43,6 +43,8 @@ xsd:string,d,String
 xsd:boolean,d,Boolean
 xsd:anyURI,d,URI
 xsd:date,d,Date
+xsd:hexBinary,d,Hex
+xsd:base64Binary,d,Base64
 foaf:Document,c,Document
 foaf:Organization,c,Organization
 foaf:Agent,c,Agent

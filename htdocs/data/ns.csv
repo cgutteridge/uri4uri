@@ -1,14 +1,16 @@
 account,p,old,account
 delegationRecordPage,p,old,delegation record page
 HostDatatype,d,new,URI Host Identifier
-HostDatatype-Encoded,d,new,URI Host Identifier (Encoded) 
+HostDatatype-Encoded,d,new,URI Host Identifier (ASCII) 
 Domain,c,old,Internet Domain
 Domain-Invalid,c,old,Invalid Internet Domain
 Domain-Valid,c,old,Valid Internet Domain
 Domain-Special,c,new,Special-Use Domain
+IP,c,new,IP Address
 IPv4,c,new,IPv4 Address
 IPv6,c,new,IPv6 Address
 IP-Future,c,new,Future IP Address
+address,p,new,IP address
 filename,p,old,filename
 Format,c,old,File Format
 fragmentOf,p,old,fragment of

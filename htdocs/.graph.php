@@ -679,21 +679,82 @@ class HostTriples extends Triples
     return $this->addDomain($graph, $subject, $host, $host_idn, $queries, $special_type);
   }
   
+  protected function resolveDomain($graph, $subject, $ip)
+  {
+    static $localhost = array("\x7F\x00\x00\x01", "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01");
+    if(in_array(@inet_pton($ip), $localhost))
+    {
+      $graph->addCompressedTriple($this->add($graph, 'localhost'), 'uriv:address', $subject);
+    }else if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false)
+    {
+      $domain = gethostbyaddr($ip);
+      if(!empty($domain) && filter_var($domain, FILTER_VALIDATE_IP) === false)
+      {
+        $graph->addCompressedTriple($this->add($graph, $domain), 'uriv:address', $subject);
+      }
+    }
+  }
+  
   protected function addIPv4($graph, $subject, $ip, $queries, &$special_type)
   {
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IP');
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IPv4');
+    
+    $packed = inet_pton($ip);
+    $graph->addCompressedTriple($subject, 'skos:notation', bin2hex($packed), 'xsd:hexBinary');
+    $graph->addCompressedTriple($subject, 'skos:notation', base64_encode($packed), 'xsd:base64Binary');
+    
+    if(!$queries) return $subject;
+    
+    $packed = array_reverse(str_split($packed));
+    foreach($packed as &$byte)
+    {
+      $byte = ord($byte);
+    }
+    $packed[] = 'in-addr.arpa';
+    $rdns_domain = implode('.', $packed);
+    $graph->addCompressedTriple($this->add($graph, $rdns_domain), 'uriv:address', $subject);
+    
+    $this->resolveDomain($graph, $subject, $ip);
+    
     return $subject;
   }
   
   protected function addIPv6($graph, $subject, $ip_wrapped, $ip, $queries, &$special_type)
   {
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IP');
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IPv6');
+    
+    $packed = inet_pton($ip);
+    $graph->addCompressedTriple($subject, 'skos:notation', bin2hex($packed), 'xsd:hexBinary');
+    $graph->addCompressedTriple($subject, 'skos:notation', base64_encode($packed), 'xsd:base64Binary');
+    
+    if(!$queries) return $subject;
+    
+    $packed = array_reverse(str_split($packed));
+    foreach($packed as &$byte)
+    {
+      $ord = ord($byte);
+      $byte = sprintf('%x.%x', $ord & 0xF, $ord >> 4);
+    }
+    $packed[] = 'ip6.arpa';
+    $rdns_domain = implode('.', $packed);
+    $graph->addCompressedTriple($this->add($graph, $rdns_domain), 'uriv:address', $subject);
+    
+    $this->resolveDomain($graph, $subject, $ip);
+    
     return $subject;
   }
   
   protected function addIPFuture($graph, $subject, $ip_wrapped, $ip, $queries, &$special_type)
   {
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IP');
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IP-Future');
+    
+    if(!$queries) return $subject;
+    
+    $this->resolveDomain($graph, $subject, $ip);
+    
     return $subject;
   }
     
@@ -708,12 +769,40 @@ class HostTriples extends Triples
       addIanaRecord($graph, $subject, $special_domains, "$domain_idn.");
       $special_type = 'uriv:Domain-Special';
     }
+    
+    if($queries)
+    {
+      $addresses = gethostbynamel("$domain_idn.");
+      if(!empty($addresses))
+      {
+        foreach($addresses as $address)
+        {
+          $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, $address));
+        }
+      }
+      
+      if(preg_match('/^((?:[0-9]+\.){4})in-addr\.arpa$/', $domain_idn, $matches))
+      {
+        $address = @inet_pton(rtrim($matches[1], '.'));
+        if(!empty($address))
+        {
+          $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, inet_ntop(strrev($address))));
+        }
+      }else if(preg_match('/^((?:[0-9a-zA-Z]\.){32})ip6\.arpa$/', $domain_idn, $matches))
+      {
+        $address = @inet_ntop(hex2bin(strrev(str_replace('.', '', $matches[1]))));
+        if(!empty($address))
+        {
+          $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, "[$address]"));
+        }
+      }
+    }
   
     # Super Domains
     if(strpos($domain, ".") !== false)
     {
       list($domain_name, $domain) = explode(".", $domain, 2);
-      $inner_subject = $this->add($graph, $domain, $queries, $special_type, true);
+      $inner_subject = $this->add($graph, $domain, false, $special_type, true);
       $graph->addCompressedTriple($inner_subject, 'uriv:subDom', $subject);
       if(!empty($special_type))
       {
