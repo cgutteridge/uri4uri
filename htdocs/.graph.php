@@ -40,16 +40,16 @@ function initGraph()
 
 abstract class Triples
 {
-  public $link_old;
-  public $vocab_full = false; 
-  abstract public function add($graph, $uri, $queries = false);
+  protected $link_old = false;
+  protected $vocab_full = false; 
+  abstract protected function add($graph, $uri, $queries = false);
   
-  public function source()
+  protected function source()
   {
     return array();
   }
   
-  public function unmapId($id)
+  protected function unmapId($id)
   {
     return $id;
   }
@@ -286,9 +286,9 @@ function addBoilerplateTriples($graph, $uri, $title, $link_old = true)
 
 class URITriples extends Triples
 {
-  public $link_old = true;
+  protected $link_old = true;
 
-  public function add($graph, $uri, $queries = false)
+  protected function add($graph, $uri, $queries = false)
   {
     $subject = 'uri:'.urlencode_minimal($uri);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'uri:');
@@ -415,15 +415,14 @@ EOF;
 
 class URIPartTriples extends Triples
 {
-  public $link_old = false;
-  public $vocab_full = true;
+  protected $vocab_full = true;
   
-  public function source()
+  protected function source()
   {
     return array('' => array());
   }
 
-  public function add($graph, $part, $queries = false)
+  protected function add($graph, $part, $queries = false)
   {
     if(empty($part))
     {
@@ -510,9 +509,7 @@ class URIPartTriples extends Triples
 
 class FieldTriples extends Triples
 {
-  public $link_old = false;
-
-  public function add($graph, $field, $queries = false)
+  protected function add($graph, $field, $queries = false)
   {
     $subject = 'field:'.urlencode_minimal($field);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'field:');
@@ -603,19 +600,19 @@ function addIanaRecord($graph, $subject, $records, $key)
 
 class DomainTriples extends Triples
 {
-  public $link_old = true;
+  protected $link_old = true;
   
-  public function source()
+  protected function source()
   {
     return get_tlds();
   }
   
-  public function unmapId($id)
+  protected function unmapId($id)
   {
     return rtrim($id, '.');
   }
 
-  public function add($graph, $domain, $queries = false, &$special_type = null)
+  protected function add($graph, $domain, $queries = false, &$special_type = null)
   {
     $subject = 'domain:'.urlencode_minimal($domain);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'domain:');
@@ -723,7 +720,7 @@ class SuffixTriples extends Triples
 {
   public $link_old = true;
   
-  public function add($graph, $suffix, $queries = false)
+  protected function add($graph, $suffix, $queries = false)
   {
     $subject = 'suffix:'.urlencode_minimal($suffix);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'suffix:');
@@ -773,12 +770,12 @@ class MIMETriples extends Triples
 {
   public $link_old = true;
   
-  public function source()
+  protected function source()
   {
     return get_mime_types();
   }
   
-  public function add($graph, $mime, $queries = false)
+  protected function add($graph, $mime, $queries = false)
   {
     $subject = 'mime:'.urlencode_minimal($mime);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'mime:');
@@ -860,14 +857,14 @@ EOF;
 
 class SchemeTriples extends Triples
 {
-  public $link_old = true;
+  protected $link_old = true;
   
-  public function source()
+  protected function source()
   {
     return get_schemes();
   }
   
-  public function add($graph, $scheme, $queries = false)
+  protected function add($graph, $scheme, $queries = false)
   {
     $subject = 'scheme:'.urlencode_minimal($scheme);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'scheme:');
@@ -919,14 +916,12 @@ EOF;
 
 class URNNamespaceTriples extends Triples
 {
-  public $link_old = false;
-  
-  public function source()
+  protected function source()
   {
     return get_urn_namespaces();
   }
   
-  public function add($graph, $ns, $queries = false)
+  protected function add($graph, $ns, $queries = false)
   {
     $subject = 'urnns:'.urlencode_minimal($ns);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'urnns:');
@@ -971,14 +966,12 @@ EOF;
 
 class WellknownTriples extends Triples
 {
-  public $link_old = false;
-  
-  public function source()
+  protected function source()
   {
     return get_wellknown_uris();
   }
   
-  public function add($graph, $suffix, $queries = false)
+  protected function add($graph, $suffix, $queries = false)
   {
     $subject = 'wellknown:'.urlencode_minimal($suffix);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'wellknown:');
@@ -996,19 +989,17 @@ class WellknownTriples extends Triples
 
 class PortTriples extends Triples
 {
-  public $link_old = false;
-  
-  public function source()
+  protected function source()
   {
     return get_ports();
   }
   
-  public function unmapId($id)
+  protected function unmapId($id)
   {
     return is_numeric($id) ? $id : null;
   }
   
-  public function add($graph, $port, $queries = false)
+  protected function add($graph, $port, $queries = false)
   {
     $subject = 'port:'.urlencode_minimal($port);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'port:');
@@ -1103,14 +1094,12 @@ EOF;
 
 class ServiceTriples extends Triples
 {
-  public $link_old = false;
-  
-  public function source()
+  protected function source()
   {
     return get_services();
   }
   
-  public function add($graph, $service, $queries = false)
+  protected function add($graph, $service, $queries = false)
   {
     $subject = 'service:'.urlencode_minimal($service);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'service:');
@@ -1169,14 +1158,12 @@ EOF;
 
 class ProtocolTriples extends Triples
 {
-  public $link_old = false;
-  
-  public function source()
+  protected function source()
   {
     return get_protocols();
   }
   
-  public function add($graph, $protocol, $queries = false)
+  protected function add($graph, $protocol, $queries = false)
   {
     $subject = 'protocol:'.urlencode_minimal($protocol);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'protocol:');
