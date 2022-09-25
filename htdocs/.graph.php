@@ -199,9 +199,12 @@ EOF;
 function graphVocab($id)
 {
   $graph = initGraph();
-  addBoilerplateTriples($graph, 'uriv:', "URI Vocabulary");
-  $graph->addCompressedTriple('uriv:', 'rdf:type', 'owl:Ontology');
-  $graph->addCompressedTriple('uriv:', 'dcterms:title', "URI Vocabulary", 'literal');
+  $subject = 'uriv:';
+  addBoilerplateTriples($graph, $subject, "URI Vocabulary");
+  $graph->addCompressedTriple($subject, 'rdf:type', 'owl:Ontology');
+  $graph->addCompressedTriple($subject, 'dcterms:title', "URI Vocabulary", 'literal', 'en');
+  $graph->addCompressedTriple($subject, 'vann:preferredNamespaceUri', $graph->expandURI($subject), 'xsd:anyURI');
+  $graph->addCompressedTriple($subject, 'vann:preferredNamespacePrefix', rtrim($subject, ':'), 'xsd:string');
   addVocabTriples($graph);
 
   return $graph;
@@ -268,6 +271,8 @@ function graphAll($type)
   $graph = initGraph();
   $subject = Triples::addAllForType($type, $graph, false, $link_old);
   $graph->addCompressedTriple($subject, 'rdf:type', 'owl:Ontology');
+  $graph->addCompressedTriple($subject, 'vann:preferredNamespaceUri', $subject, 'xsd:anyURI');
+  $graph->addCompressedTriple($subject, 'vann:preferredNamespacePrefix', rtrim($graph->shrinkURI($subject), ':'), 'xsd:string');
   addBoilerplateTriples($graph, $subject, $type, $link_old);
   return $graph;
 }

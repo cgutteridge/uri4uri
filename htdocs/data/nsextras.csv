@@ -4,6 +4,8 @@ skos:notation,p,notation
 vs:term_status,p,term status
 vs:moreinfo,p,status info
 prov:wasDerivedFrom,p,derived from
+vann:preferredNamespacePrefix,p,preferred prefix
+vann:preferredNamespaceUri,p,preferred namespace
 foaf:page,p,page
 foaf:homepage,p,homepage
 dbp:cctld,p,country code top-level domain
