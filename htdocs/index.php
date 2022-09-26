@@ -154,7 +154,7 @@ if(empty($format))
   if($wants == 'application/ld+json') $format = 'jsonld';
 
   http_response_code(303);
-  if(!empty($reencoded_id))
+  if($reencoded_id !== '')
   {
     $reencoded_id = "/$reencoded_id";
   }
@@ -162,8 +162,8 @@ if(empty($format))
   exit;
 }
 
-if($type == 'vocab') $graph = graphVocab($id);
-elseif(empty($id)) $graph = graphAll($type);
+if($type === 'vocab') $graph = graphVocab($id);
+elseif($id === '') $graph = graphAll($type);
 else $graph = graphEntity($type, $id);
 
 if($format == 'html')
