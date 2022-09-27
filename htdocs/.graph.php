@@ -778,7 +778,21 @@ class HostTriples extends Triples
       {
         foreach($addresses as $address)
         {
-          $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, $address));
+          if(!empty($address))
+          {
+            $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, $address));
+          }
+        }
+      }
+      $addresses = gethostbynamel6("$domain_idn.");
+      if(!empty($addresses))
+      {
+        foreach($addresses as $address)
+        {
+          if(!empty($address))
+          {
+            $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, "[$address]"));
+          }
         }
       }
       

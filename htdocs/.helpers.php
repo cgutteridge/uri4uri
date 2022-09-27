@@ -17,6 +17,16 @@ if(!function_exists('str_ends_with'))
   }
 }
 
+function gethostbynamel6($host)
+{
+  $list = dns_get_record($host, DNS_AAAA);
+  if(count($list) < 1) return false;
+  return array_map(function($elem)
+  {
+    return @$elem['ipv6'];
+  }, $list);
+}
+
 function urlencode_minimal($str)
 {
   return preg_replace_callback("/[^!$&-;=@A-Z_a-z~\u{00A0}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFEF}]+/u", function($matches)
