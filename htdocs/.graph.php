@@ -773,29 +773,6 @@ class HostTriples extends Triples
     
     if($queries)
     {
-      $addresses = gethostbynamel("$domain_idn.");
-      if(!empty($addresses))
-      {
-        foreach($addresses as $address)
-        {
-          if(!empty($address))
-          {
-            $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, $address));
-          }
-        }
-      }
-      $addresses = gethostbynamel6("$domain_idn.");
-      if(!empty($addresses))
-      {
-        foreach($addresses as $address)
-        {
-          if(!empty($address))
-          {
-            $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, "[$address]"));
-          }
-        }
-      }
-      
       if(preg_match('/^((?:[0-9]+\.){4})in-addr\.arpa$/', $domain_idn, $matches))
       {
         $address = @inet_pton(rtrim($matches[1], '.'));
@@ -809,6 +786,29 @@ class HostTriples extends Triples
         if(!empty($address))
         {
           $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, "[$address]"));
+        }
+      }else{
+        $addresses = gethostbynamel("$domain_idn.");
+        if(!empty($addresses))
+        {
+          foreach($addresses as $address)
+          {
+            if(!empty($address))
+            {
+              $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, $address));
+            }
+          }
+        }
+        $addresses = gethostbynamel6("$domain_idn.");
+        if(!empty($addresses))
+        {
+          foreach($addresses as $address)
+          {
+            if(!empty($address))
+            {
+              $graph->addCompressedTriple($subject, 'uriv:address', $this->add($graph, "[$address]"));
+            }
+          }
         }
       }
     }
