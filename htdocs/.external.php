@@ -202,9 +202,9 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
               {
                 $person = $people[$data];
                 $name = null;
-                foreach($xpath->query('reg:name/text()') as $name_item)
+                foreach($xpath->query('reg:name/text()', $person) as $name_item)
                 {
-                  $name = $name_item->wholeText;
+                  $name = trim($name_item->wholeText);
                   break;
                 }
                 foreach($xpath->query('reg:uri/text()', $person) as $uri_item)
