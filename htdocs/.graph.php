@@ -272,7 +272,8 @@ function graphAll($type)
   $subject = Triples::addAllForType($type, $graph, false, $link_old);
   $graph->addCompressedTriple($subject, 'rdf:type', 'owl:Ontology');
   $graph->addCompressedTriple($subject, 'vann:preferredNamespaceUri', $subject, 'xsd:anyURI');
-  $graph->addCompressedTriple($subject, 'vann:preferredNamespacePrefix', rtrim($graph->shrinkURI($subject), ':'), 'xsd:string');
+  $subject = $graph->shrinkURI($subject);
+  $graph->addCompressedTriple($subject, 'vann:preferredNamespacePrefix', rtrim($subject, ':'), 'xsd:string');
   addBoilerplateTriples($graph, $subject, $type, $link_old);
   return $graph;
 }
