@@ -74,6 +74,8 @@ if($type === 'host')
 if($type !== 'uri')
 {
   $decoded_id = strtolower($decoded_id);
+}else{
+  $decoded_id = urlencode_chars($decoded_id, '<>');
 }
 $reencoded_id = urlencode_minimal($decoded_id);
 if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id))

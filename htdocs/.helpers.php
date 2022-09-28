@@ -27,20 +27,22 @@ function gethostbynamel6($host)
   }, $list);
 }
 
-function urlencode_minimal($str)
+function urlencode_chars($str, $charpattern)
 {
-  return preg_replace_callback("/[^!$&-;=@A-Z_a-z~\u{00A0}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFEF}]+/u", function($matches)
+  return preg_replace_callback("/[$charpattern]+|%(?:$|[^0-9a-zA-Z](?:$|[^0-9a-zA-Z]))/u", function($matches)
   {
     return rawurlencode($matches[0]);
   }, $str);
 }
 
+function urlencode_minimal($str)
+{
+  return urlencode_chars($str, "^!$&-;=@A-Z_a-z~\u{00A0}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFEF}");
+}
+
 function urlencode_utf8($str)
 {
-  return preg_replace_callback("/[\u{0080}-\u{FFFF}]+/u", function($matches)
-  {
-    return rawurlencode($matches[0]);
-  }, $str);
+  return urlencode_chars($str, "\u{0080}-\u{FFFF}");
 }
 
 function parse_url_fixed($uri)

@@ -114,6 +114,16 @@ abstract class Triples
     return $ontology;
   }
   
+  protected final function STR($arg)
+  {
+    return addslashes($arg);
+  }
+  
+  protected final function URI($arg)
+  {
+    return urlencode_chars($arg, '<>');
+  }
+  
   protected final function LABELS()
   {
     return 'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . }';
@@ -431,7 +441,7 @@ class URITriples extends Triples
     
     if(!$queries) return $subject;
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $query = <<<EOF
 CONSTRUCT {
@@ -439,7 +449,7 @@ CONSTRUCT {
   {$this->CONSTRUCT_PAGE('?thing')}
   {$this->CONSTRUCT_LABEL('?thing')}
 } WHERE {
-  ?thing ?prop <$uri> .
+  ?thing ?prop <{$this->URI($uri)}> .
   ?prop_node wikibase:directClaim ?prop .
   ?prop_node wikibase:propertyType wikibase:Url .
   {$this->MATCH_PAGE('?thing')}
@@ -876,7 +886,7 @@ class HostTriples extends Triples
     
     if(!$queries) return $subject;
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $query = <<<EOF
 CONSTRUCT {
@@ -891,7 +901,7 @@ CONSTRUCT {
   ?country geo:long ?long .
 } WHERE {
   # IANA Root Zone Database ID
-  ?domain wdt:P5914 "$domain_idn" .
+  ?domain wdt:P5914 "{$this->STR($domain_idn)}" .
   {$this->MATCH_PAGE('?domain')}
   OPTIONAL {
     # country
@@ -932,7 +942,7 @@ class SuffixTriples extends Triples
     $suffix_lower = strtolower($suffix);
     $suffix_upper = strtoupper($suffix);
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $query = <<<EOF
 CONSTRUCT {
@@ -946,14 +956,14 @@ CONSTRUCT {
   ?mime skos:notation ?mime_notation .
 } WHERE {
   # file extension
-  { ?format wdt:P1195 "$suffix_lower" . } UNION { ?format wdt:P1195 "$suffix_upper" . }
+  { ?format wdt:P1195 "{$this->STR($suffix_lower)}" . } UNION { ?format wdt:P1195 "{$this->STR($suffix_upper)}" . }
   {$this->MATCH_PAGE('?format')}
   OPTIONAL {
     # MIME type
     ?format wdt:P1163 ?mime_str .
     FILTER (isLiteral(?mime_str) && STR(?mime_str) != "application/octet-stream")
     BIND(STRDT(?mime_str, uriv:MimetypeDatatype) AS ?mime_notation)
-    BIND(URI(CONCAT("{$graph->expandURI("mime:")}", ?mime_str)) AS ?mime)
+    BIND(URI(CONCAT("{$this->STR($this->URI($graph->expandURI("mime:")))}", ?mime_str)) AS ?mime)
   }
   {$this->LABELS()}
 }
@@ -1000,7 +1010,7 @@ class MIMETriples extends Triples
     
     if(!$queries) return $subject;
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $filter_query = '';
     if($mime === 'text/plain' || $mime === 'application/octet-stream')
@@ -1008,17 +1018,17 @@ class MIMETriples extends Triples
       $filter_query = <<<EOF
     # MIME type
     ?format p:P1163 ?mime_prop .
-    ?mime_prop ps:P1163 "$mime" .
+    ?mime_prop ps:P1163 "{$this->STR($mime)}" .
     ?mime_prop prov:wasDerivedFrom ?mime_source .
     FILTER NOT EXISTS {
       ?format wdt:P1163 ?other_mime .
-      FILTER(STR(?other_mime) != "$mime")
+      FILTER(STR(?other_mime) != "{$this->STR($mime)}")
     }
 EOF;
     }else{
       $filter_query = <<<EOF
     # MIME type
-    ?format wdt:P1163 "$mime" .
+    ?format wdt:P1163 "{$this->STR($mime)}" .
 EOF;
     }
     
@@ -1042,7 +1052,7 @@ CONSTRUCT {
     BIND(LCASE(STR(?suffix_strcs)) AS ?suffix_str)
     BIND(CONCAT(".", ?suffix_str) AS ?suffix_label)
     BIND(STRDT(?suffix_str, uriv:SuffixDatatype) AS ?suffix_notation)
-    BIND(URI(CONCAT("{$graph->expandURI("suffix:")}", ?suffix_str)) AS ?suffix)
+    BIND(URI(CONCAT("{$this->STR($this->URI($graph->expandURI("suffix:")))}", ?suffix_str)) AS ?suffix)
   }
   {$this->LABELS()}
 }
@@ -1083,7 +1093,7 @@ class SchemeTriples extends Triples
     
     if(!$queries) return $subject;
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $query = <<<EOF
 CONSTRUCT {
@@ -1096,14 +1106,14 @@ CONSTRUCT {
 } WHERE {
   OPTIONAL {
     # Uniform Resource Identifier Scheme
-    ?scheme wdt:P4742 "$scheme" .
+    ?scheme wdt:P4742 "{$this->STR($scheme)}" .
     # instance of Uniform Resource Identifier scheme
     ?scheme wdt:P31 wd:Q37071 .
     {$this->MATCH_PAGE('?scheme')}
   }
   OPTIONAL {
     # Uniform Resource Identifier Scheme
-    ?technology wdt:P4742 "$scheme" .
+    ?technology wdt:P4742 "{$this->STR($scheme)}" .
     FILTER NOT EXISTS {
       # instance of Uniform Resource Identifier scheme
       ?technology wdt:P31 wd:Q37071 .
@@ -1149,7 +1159,7 @@ class URNNamespaceTriples extends Triples
     
     if(!$queries) return $subject;
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $query = <<<EOF
 CONSTRUCT {
@@ -1158,7 +1168,7 @@ CONSTRUCT {
   {$this->CONSTRUCT_PAGE('?technology')}
 } WHERE {
   # URN formatter
-  ?technology wdt:P7470 "urn:$ns:\$1" .
+  ?technology wdt:P7470 "urn:{$this->STR($this->URI($ns))}:\$1" .
   {$this->MATCH_PAGE('?technology')}
   {$this->LABELS()}
 }
@@ -1247,7 +1257,7 @@ class PortTriples extends Triples
     
     if(!$queries) return $subject;
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $protocol_values = array();
     foreach(get_protocols() as $protocol)
@@ -1255,7 +1265,7 @@ class PortTriples extends Triples
       if(is_array($protocol))
       {
         $name = strtolower($protocol['id']);
-        $protocol_values[] = "\"$name\"";
+        $protocol_values[] = "\"{$this->STR($name)}\"";
       }
     }
     $protocol_values = implode(' ', $protocol_values);
@@ -1264,8 +1274,8 @@ class PortTriples extends Triples
 CONSTRUCT {
   ?technology dbp:ports ?subject .
   ?subject a uriv:Port .
-  ?subject rdfs:label "$port" .
-  ?subject skos:notation "$port"^^xsd:unsignedShort .
+  ?subject rdfs:label "{$this->STR($port)}" .
+  ?subject skos:notation "{$this->STR($port)}"^^xsd:unsignedShort .
   $subject_node skos:narrower ?subject .
   ?protocol_node dcterms:hasPart ?subject .
   ?technology dcterms:hasPart ?service_node .
@@ -1274,18 +1284,18 @@ CONSTRUCT {
 } WHERE {
   # port
   ?technology p:P1641 ?port_prop .
-  ?port_prop ps:P1641 "$port"^^xsd:decimal .
+  ?port_prop ps:P1641 "{$this->STR($port)}"^^xsd:decimal .
   # of
   ?port_prop pq:P642 ?protocol .
   VALUES ?protocol_lower { $protocol_values }
   BIND(UCASE(?protocol_lower) AS ?protocol_upper)
   { ?protocol ?protocol_label_prop ?protocol_lower . } UNION { ?protocol ?protocol_label_prop ?protocol_upper . }
-  BIND(URI(CONCAT("{$graph->expandURI($subject)}#", ?protocol_lower)) AS ?subject)
-  BIND(URI(CONCAT("{$graph->expandURI('protocol:')}", ?protocol_lower)) AS ?protocol_node)
+  BIND(URI(CONCAT("{$this->STR($this->URI($graph->expandURI($subject)))}#", ?protocol_lower)) AS ?subject)
+  BIND(URI(CONCAT("{$this->STR($this->URI($graph->expandURI('protocol:')))}", ?protocol_lower)) AS ?protocol_node)
   # IANA service name
   OPTIONAL {
     ?technology wdt:P5814 ?service_name .
-    BIND(URI(CONCAT("{$graph->expandURI('service:')}", LCASE(?service_name))) AS ?service_node)
+    BIND(URI(CONCAT("{$this->STR($this->URI($graph->expandURI('service:')))}", LCASE(?service_name))) AS ?service_node)
   }
   {$this->MATCH_PAGE('?technology')}
   {$this->LABELS()}
@@ -1342,7 +1352,7 @@ class ServiceTriples extends Triples
     
     if(!$queries) return $subject;
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $query = <<<EOF
 CONSTRUCT {
@@ -1351,7 +1361,7 @@ CONSTRUCT {
   {$this->CONSTRUCT_PAGE('?service', $subject_node)}
 } WHERE {
   # IANA service name
-  ?service wdt:P5814 "$service" .
+  ?service wdt:P5814 "{$this->STR($service)}" .
   {$this->LABELS()}
 }
 EOF;
@@ -1384,7 +1394,7 @@ class ProtocolTriples extends Triples
     
     $protocol_upper = strtoupper($protocol);
     
-    $subject_node = "<{$graph->expandURI($subject)}>";
+    $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $query = <<<EOF
 CONSTRUCT {
@@ -1401,7 +1411,7 @@ CONSTRUCT {
     # of
     ?port_prop pq:P642 ?protocol .
   }
-  { ?protocol ?protocol_label_prop "$protocol" . } UNION { ?protocol ?protocol_label_prop "$protocol_upper" . }
+  { ?protocol ?protocol_label_prop "{$this->STR($protocol)}" . } UNION { ?protocol ?protocol_label_prop "{$this->STR($protocol_upper)}" . }
   {$this->MATCH_PAGE('?protocol')}
   {$this->LABELS()}
 }
