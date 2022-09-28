@@ -36,6 +36,7 @@ if(str_starts_with($path, '/?') && count($_GET) === 1)
   {
     $target_uri = "$BASE/$key/".urlencode_minimal($value);
     header("Location: $target_uri");
+    break;
   }
   exit;
 }
@@ -59,12 +60,12 @@ if($path == "/")
   require_once("ui/template.php");
   exit;
 }
-if(!preg_match("/^\/(vocab|uri|scheme|suffix|part|field|host|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:\/([^\?]*))?(\?.*)?$/", $path, $b))
+if(!preg_match("/^\/(vocab|uri|scheme|suffix|part|field|host|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:(\/)([^\?]*))?(\?.*)?$/", $path, $b))
 {
   serve404();
   exit;
 }
-@list(, $type, $format, $id, $query) = $b;
+@list(, $type, $format, $separator, $id, $query) = $b;
 
 $decoded_id = rawurldecode($id);
 if($type === 'host')
@@ -78,7 +79,7 @@ if($type !== 'uri')
   $decoded_id = urlencode_chars($decoded_id, '<>');
 }
 $reencoded_id = urlencode_minimal($decoded_id);
-if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id))
+if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id) || (empty($separator) && $type !== 'vocab'))
 {
   if(empty($format))
   {
@@ -90,11 +91,20 @@ if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id))
   }
   exit;
 }
-if($type === 'vocab' && !empty($id))
+if($type === 'vocab')
 {
-  http_response_code(301);
-  header("Location: $BASE/$type$query#$id");
-  exit;
+  if(!empty($id))
+  {
+    http_response_code(301);
+    header("Location: $BASE/$type$query#$id");
+    exit;
+  }
+  if(!empty($separator))
+  {
+    http_response_code(301);
+    header("Location: $BASE/$type$query");
+    exit;
+  }
 }
 $id = $decoded_id;
 
