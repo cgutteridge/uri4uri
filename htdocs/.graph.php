@@ -160,6 +160,9 @@ EOF;
     $prop = $entity.'_prop';
     $prop_res = $entity.'_prop_res';
     $formatter = $entity.'_formatter';
+    $formatter_pattern = $entity.'_formatter_pattern';
+    $formatter_pattern_whole = $entity.'_formatter_pattern_whole';
+    $formatter_prop = $entity.'_formatter_prop';
     $db = $entity.'_db';
     $ids_query = '';
     if($ids)
@@ -173,8 +176,25 @@ EOF;
       # source website for the property
       $prop_res wdt:P1896 [] .
       # formatter URL
-      $prop_res wdt:P1630 $formatter .
-      BIND(URI(REPLACE(STR($page_id), "^(.*)$", STR($formatter))) AS $page)
+      $prop_res p:P1630 $formatter_prop .
+      $formatter_prop ps:P1630 $formatter .
+      OPTIONAL {
+        {
+          # format as a regular expression
+          $formatter_prop pq:P1793 $formatter_pattern .
+          BIND(CONCAT("^", STR($formatter_pattern), "$") AS $formatter_pattern_whole)
+        } UNION {
+          # applies if regular expression matches
+          $formatter_prop pq:P8460 $formatter_pattern_whole .
+        }
+      }
+      BIND(COALESCE(URI(
+        COALESCE(
+          REPLACE(STR($page_id), $formatter_pattern_whole, STR($formatter)),
+          REPLACE(STR($page_id), "^(.*)$", STR($formatter))
+        )
+      ), false) AS $page)
+      FILTER isURI($page)
     }
 EOF;
     }
