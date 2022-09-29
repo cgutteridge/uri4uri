@@ -119,9 +119,16 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
       $r2 = $res_map[$res_key];
       $type = $r2->nodeType();
       $value = $r2->toString();
-      if($type == '#literal')
+      if($type === '#literal')
       {
-        $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\"";
+        $lang = $r2->language();
+        if(!empty($lang))
+        {
+          $lang = htmlspecialchars($lang);
+          $value = "\"<span class='literal' lang='$lang'>".htmlspecialchars($r2)."</span>\" <span class='datatype'>($lang)</span>";
+        }else{
+          $value = "\"<span class='literal'>".htmlspecialchars($r2)."</span>\"";
+        }
       }else if(!str_starts_with($type, '#'))
       {
         $rt = $graph->resource($type);
