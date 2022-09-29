@@ -106,7 +106,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     foreach($resource->all($rel) as $r2)
     {
       $key = resourceKey($r2);
-      if($key === $parent) continue;
+      if($key === $parent || isset($res_map[$key])) continue;
       $res_keys[] = $key;
       $res_map[$key] = $r2;
     }
