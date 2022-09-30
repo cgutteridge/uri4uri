@@ -27,6 +27,9 @@ dcterms:hasPart,p,part
 dcterms:date,p,date
 dcterms:modified,p,modified
 dcterms:relation,p,related
+dcterms:title,p,title
+dcterms:publisher,p,publisher
+dcterms:source,p,source
 schema:propertyID,p,key
 schema:value,p,value
 skos:exactMatch,p,exactly matches
@@ -41,6 +44,7 @@ xsd:positiveInteger,d,Postitive Integer
 xsd:unsignedShort,d,Unsigned 16-bit Integer
 xsd:string,d,String
 xsd:boolean,d,Boolean
+xsd:integer,d,Integer
 xsd:anyURI,d,URI
 xsd:date,d,Date
 xsd:hexBinary,d,Hex
@@ -56,3 +60,14 @@ rdf:Property,c,Property
 rdfs:Datatype,c,Datatype
 rdf:Seq,c,Sequence
 owl:Ontology,c,Ontology
+void:Dataset,c,Dataset
+void:feature,p,feature
+void:dataDump,p,data dump
+void:vocabulary,p,vocabulary
+void:uriSpace,p,URI space
+void:uriRegexPattern,p,URI pattern
+void:rootResource,p,root
+void:classPartition,p,class partition
+void:class,p,class
+void:entities,p,number of entities
+void:inDataset,p,dataset

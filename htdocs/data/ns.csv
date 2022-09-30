@@ -1,7 +1,8 @@
 account,p,old,account
 delegationRecordPage,p,old,delegation record page
 HostDatatype,d,new,URI Host Identifier
-HostDatatype-Encoded,d,new,URI Host Identifier (ASCII) 
+HostDatatype-Encoded,d,new,URI Host Identifier (ASCII)
+Host,c,new,Host 
 Domain,c,old,Internet Domain
 Domain-Invalid,c,old,Invalid Internet Domain
 Domain-Valid,c,old,Valid Internet Domain
@@ -53,6 +54,7 @@ TopLevelDomain-Infrastructure,c,old,Infrastructure Top-Level Domain
 TopLevelDomain-Sponsored,c,old,Sponsored Top-Level Domain
 TopLevelDomain-Test,c,old,Test Top-Level Domain
 URI,c,old,URI
+URIReference,c,new,URI Reference
 URIDatatype,d,old-deprecated,URI Identifier
 URIScheme,c,old,URI Scheme
 URISchemeDatatype,d,old,URI Scheme Identifier

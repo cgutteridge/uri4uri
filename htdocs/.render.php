@@ -78,7 +78,8 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     'http://purl.org/dc/terms/replaces' => true,
     'http://purl.org/uri4uri/vocab#IANARef #inverseRelation' => true,
     'http://www.w3.org/ns/prov#wasDerivedFrom #inverseRelation' => true,
-    'http://www.w3.org/2003/06/sw-vocab-status/ns#moreinfo #inverseRelation' => true
+    'http://www.w3.org/2003/06/sw-vocab-status/ns#moreinfo #inverseRelation' => true,
+    'http://rdfs.org/ns/void#inDataset #relation' => true
   );
   
   static $atomic_properties = array();

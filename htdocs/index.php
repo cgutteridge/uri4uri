@@ -16,17 +16,25 @@ $ARCHIVE_BASE = '//web.archive.org/web/20220000000000/';
 
 $path = substr($_SERVER['REQUEST_URI'], 0);
 
-if($path == '')
+if($path === '')
 {
+  http_response_code(301);
   header("Location: $BASE/");
   exit;
 }
 
-if($path == "/robots.txt")
+if($path === "/robots.txt")
 {
   header("Content-type: text/plain");
   echo "User-agent: *\n";
   echo "Allow: /\n"; 
+  exit;
+}
+
+if($path === '/.well-known/void')
+{
+  http_response_code(302);
+  header("Location: $BASE/void");
   exit;
 }
 
@@ -60,7 +68,7 @@ if($path == "/")
   require_once("ui/template.php");
   exit;
 }
-if(!preg_match("/^\/(vocab|uri|scheme|suffix|part|field|host|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:(\/)([^\?]*))?(\?.*)?$/", $path, $b))
+if(!preg_match("/^\/(vocab|void|uri|scheme|suffix|part|field|host|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:(\/)([^\?]*))?(\?.*)?$/", $path, $b))
 {
   serve404();
   exit;
@@ -79,30 +87,32 @@ if($type !== 'uri')
   $decoded_id = urlencode_chars($decoded_id, '<>');
 }
 $reencoded_id = urlencode_minimal($decoded_id);
-if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id) || (empty($separator) && $type !== 'vocab'))
+if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id) || (empty($separator) && $type !== 'vocab' && $type !== 'void'))
 {
+  http_response_code(301);
   if(empty($format))
   {
-    http_response_code(301);
     header("Location: $BASE/$type/$reencoded_id$query");
   }else{
-    http_response_code(301);
     header("Location: $BASE/$type.$format/$reencoded_id$query");
   }
   exit;
 }
-if($type === 'vocab')
+if($type === 'vocab' || $type === 'void')
 {
   if(!empty($id))
   {
-    http_response_code(301);
-    header("Location: $BASE/$type$query#$id");
-    exit;
+    $id = "#$id";
   }
   if(!empty($separator))
   {
     http_response_code(301);
-    header("Location: $BASE/$type$query");
+    if(empty($format))
+    {
+      header("Location: $BASE/$type$query$id");
+    }else{
+      header("Location: $BASE/$type.$format$query$id");
+    }
     exit;
   }
 }
@@ -175,13 +185,14 @@ if(empty($format))
 }
 
 if($type === 'vocab') $graph = graphVocab($id);
+else if($type === 'void') $graph = graphVoid($id);
 elseif($id === '') $graph = graphAll($type);
 else $graph = graphEntity($type, $id);
 
 if($format == 'html')
 {
   http_response_code(200);
-  $document_url = $PREFIX.$_SERVER['REQUEST_URI'];
+  $document_url = $BASE.$_SERVER['REQUEST_URI'];
   $doc = $graph->resource($document_url);
   $page_title = $doc->label();
   if($doc->has('foaf:primaryTopic'))

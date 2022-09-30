@@ -34,6 +34,7 @@ function initGraph()
   $graph->ns('prov', 'http://www.w3.org/ns/prov#');
   $graph->ns('vann', 'http://purl.org/vocab/vann/');
   $graph->ns('schema', 'http://schema.org/');
+  $graph->ns('void', 'http://rdfs.org/ns/void#');
   
   return $graph;
 }
@@ -42,6 +43,7 @@ abstract class Triples
 {
   protected $link_old = false;
   protected $vocab_full = false; 
+  protected $entity_type = null; 
   abstract protected function add($graph, $uri, $queries = false);
   
   protected function source()
@@ -56,7 +58,7 @@ abstract class Triples
   
   static $map;
   
-  static function map($type)
+  static function map()
   {
     if(!isset(self::$map))
     {
@@ -75,20 +77,23 @@ abstract class Triples
         'protocol' => new ProtocolTriples
       );
     }
-    return self::$map[$type];
+    return self::$map;
   }
   
   public static function addForType($type, $graph, $id, $queries = false, &$link_old = false)
   {
-    $triples = self::map($type);
+    global $BASE;
+    $triples = self::map()[$type];
     $link_old = $triples->link_old;
-    return $triples->add($graph, $id, $queries);
+    $subject = $triples->add($graph, $id, $queries);
+    $graph->addCompressedTriple($subject, 'void:inDataset', "$BASE/void#$type");
+    return $subject;
   }
   
   public static function addAllForType($type, $graph, $queries = false, &$link_old = false)
   {
     global $PREFIX;
-    $triples = self::map($type);
+    $triples = self::map()[$type];
     $link_old = $triples->link_old;
     $ontology = "$PREFIX/$type/";
     $records = $triples->source();
@@ -112,6 +117,35 @@ abstract class Triples
       $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', $ontology);
     }
     return $ontology;
+  }
+  
+  public static function addSources($graph, $subject)
+  {
+    global $BASE;
+    global $PREFIX;
+    foreach(self::map() as $type => $triples)
+    {
+      $records = $triples->source();
+      if(isset($records['#source']))
+      {
+        $subset = "$subject#$type";
+        if(empty($triples->entity_type))
+        {
+          $graph->addCompressedTriple($subject, 'void:subset', $subset);
+        }else{
+          $graph->addCompressedTriple($subject, 'void:classPartition', $subset);
+          $graph->addCompressedTriple($subset, 'void:class', $triples->entity_type);
+        }
+        
+        $graph->addCompressedTriple($subset, 'rdf:type', 'void:Dataset');
+        $graph->addCompressedTriple($subset, 'dcterms:source', $records['#source']);
+        $graph->addCompressedTriple($subset, 'void:dataDump', "$BASE/$type");
+        $graph->addCompressedTriple($subset, 'void:rootResource', "$PREFIX/$type/");
+        $graph->addCompressedTriple($subset, 'void:entities', count($records), 'xsd:integer');
+        $graph->addCompressedTriple($subset, 'void:uriSpace', "$PREFIX/$type/", 'literal');
+        $graph->addCompressedTriple($subset, 'void:uriRegexPattern', '^'.addcslashes($PREFIX, "\\.")."/$type/", 'literal');
+      }
+    }
   }
   
   protected final function STR($arg)
@@ -230,12 +264,36 @@ function graphVocab($id)
 {
   $graph = initGraph();
   $subject = 'uriv:';
-  addBoilerplateTriples($graph, $subject, "URI Vocabulary");
+  addBoilerplateTriples($graph, $subject, "URI Vocabulary", true);
   $graph->addCompressedTriple($subject, 'rdf:type', 'owl:Ontology');
   $graph->addCompressedTriple($subject, 'dcterms:title', "URI Vocabulary", 'literal', 'en');
   $graph->addCompressedTriple($subject, 'vann:preferredNamespaceUri', $graph->expandURI($subject), 'xsd:anyURI');
   $graph->addCompressedTriple($subject, 'vann:preferredNamespacePrefix', rtrim($subject, ':'), 'xsd:string');
   addVocabTriples($graph);
+
+  return $graph;
+}
+
+function graphVoid($id)
+{
+  global $BASE;
+  global $PREFIX;
+  $graph = initGraph();
+  $subject = $BASE.'void';
+  $document = addBoilerplateTriples($graph, $subject, "VoID Dataset", false);
+  $graph->addCompressedTriple($document, 'rdf:type', 'void:DatasetDescription');
+  $graph->addCompressedTriple($subject, 'rdf:type', 'void:Dataset');
+  $graph->addCompressedTriple($subject, 'foaf:homepage', '/');
+  $graph->addCompressedTriple($subject, 'dcterms:title', "The uri4uri Dataset", 'literal', 'en');
+  $graph->addCompressedTriple($subject, 'dcterms:publisher', 'http://my.data.is4.site/people/is4');
+  $graph->addCompressedTriple($subject, 'void:vocabulary', "$PREFIX/vocab");
+  $graph->addCompressedTriple($subject, 'void:feature', 'http://www.w3.org/ns/formats/Turtle');
+  $graph->addCompressedTriple($subject, 'void:feature', 'http://www.w3.org/ns/formats/RDF_XML');
+  $graph->addCompressedTriple($subject, 'void:feature', 'http://www.w3.org/ns/formats/N-Triples');
+  $graph->addCompressedTriple($subject, 'void:feature', 'http://www.w3.org/ns/formats/JSON-LD');
+  $graph->addCompressedTriple($subject, 'void:uriSpace', "$PREFIX/", 'literal');
+  $graph->addCompressedTriple($subject, 'void:uriRegexPattern', '^'.addcslashes($PREFIX, "\\.").'/\w+/', 'literal');
+  Triples::addSources($graph, $subject);
 
   return $graph;
 }
@@ -308,21 +366,22 @@ function graphAll($type)
   return $graph;
 }
 
-function addBoilerplateTriples($graph, $uri, $title, $link_old = true)
+function addBoilerplateTriples($graph, $uri, $title, $link_old)
 {
-  global $PREFIX;
-  global $PREFIX_OLD;
-  $document_url = $PREFIX.$_SERVER['REQUEST_URI'];
+  global $BASE;
+  $document_url = $BASE.$_SERVER['REQUEST_URI'];
   $graph->addCompressedTriple($document_url, 'rdf:type', 'foaf:Document');
   $graph->addCompressedTriple($document_url, 'dcterms:title', $title, 'literal');
   $graph->addCompressedTriple($document_url, 'foaf:primaryTopic', $uri);
   
   if($link_old) linkOldConcept($graph, $uri, '');
+  return $document_url;
 }
 
 class URITriples extends Triples
 {
   protected $link_old = true;
+  protected $entity_type = 'uriv:URIReference'; 
 
   protected function add($graph, $uri, $queries = false)
   {
@@ -344,6 +403,7 @@ class URITriples extends Triples
     }else{
       $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:RelativeURI');
     }
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIReference');
     $graph->addCompressedTriple($subject, 'skos:notation', $uri, 'xsd:anyURI');
     
     if(!empty($b['host']))
@@ -465,6 +525,7 @@ EOF;
 class URIPartTriples extends Triples
 {
   protected $vocab_full = true;
+  protected $entity_type = 'uriv:URIPart'; 
   
   protected function source()
   {
@@ -580,6 +641,8 @@ class URIPartTriples extends Triples
 
 class FieldTriples extends Triples
 {
+  protected $entity_type = 'uriv:URIField'; 
+  
   protected function add($graph, $field, $queries = false)
   {
     $subject = 'field:'.urlencode_minimal($field);
@@ -672,6 +735,7 @@ function addIanaRecord($graph, $subject, $records, $key)
 class HostTriples extends Triples
 {
   protected $link_old = true;
+  protected $entity_type = 'uriv:Host'; 
   
   protected function source()
   {
@@ -687,6 +751,7 @@ class HostTriples extends Triples
   {
     $subject = 'host:'.urlencode_minimal($host);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'host:');
+    $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Host');
     $graph->addCompressedTriple($subject, 'rdfs:label', $host, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $host, 'uriv:HostDatatype');
     $host_idn = idn_to_ascii($host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
@@ -927,6 +992,7 @@ EOF;
 class SuffixTriples extends Triples
 {
   public $link_old = true;
+  protected $entity_type = 'uriv:Suffix'; 
   
   protected function add($graph, $suffix, $queries = false)
   {
@@ -977,6 +1043,7 @@ EOF;
 class MIMETriples extends Triples
 {
   public $link_old = true;
+  protected $entity_type = 'uriv:Mimetype'; 
   
   protected function source()
   {
@@ -1066,6 +1133,7 @@ EOF;
 class SchemeTriples extends Triples
 {
   protected $link_old = true;
+  protected $entity_type = 'uriv:URIScheme';
   
   protected function source()
   {
@@ -1131,6 +1199,8 @@ EOF;
 
 class URNNamespaceTriples extends Triples
 {
+  protected $entity_type = 'uriv:URNNamespace';
+  
   protected function source()
   {
     return get_urn_namespaces();
@@ -1181,6 +1251,8 @@ EOF;
 
 class WellknownTriples extends Triples
 {
+  protected $entity_type = 'uriv:WellKnownURISuffix';
+  
   protected function source()
   {
     return get_wellknown_uris();
@@ -1204,6 +1276,8 @@ class WellknownTriples extends Triples
 
 class PortTriples extends Triples
 {
+  protected $entity_type = 'uriv:Port';
+  
   protected function source()
   {
     return get_ports();
@@ -1309,6 +1383,8 @@ EOF;
 
 class ServiceTriples extends Triples
 {
+  protected $entity_type = 'uriv:Service';
+  
   protected function source()
   {
     return get_services();
@@ -1373,6 +1449,8 @@ EOF;
 
 class ProtocolTriples extends Triples
 {
+  protected $entity_type = 'uriv:Protocol';
+  
   protected function source()
   {
     return get_protocols();
