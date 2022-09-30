@@ -279,7 +279,7 @@ function graphVoid($id)
   global $BASE;
   global $PREFIX;
   $graph = initGraph();
-  $subject = $BASE.'void';
+  $subject = "$BASE/void";
   $document = addBoilerplateTriples($graph, $subject, "VoID Dataset", false);
   $graph->addCompressedTriple($document, 'rdf:type', 'void:DatasetDescription');
   $graph->addCompressedTriple($subject, 'rdf:type', 'void:Dataset');
