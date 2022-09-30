@@ -63,7 +63,14 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     echo "<div class='classLabel'>".$resource->label();
     if($resource->has('rdf:type'))
     {
-      echo " <span class='classType'>[".$resource->all('rdf:type')->map(function($r) { return prettyResourceLink($r); })->join(", ")."]</span>";
+      $types = $resource->all('rdf:type');
+      $count = $types->count();
+      $types = $types->map(function($r) use ($count)
+      {
+        if($count > 1 && $r->url() === 'http://www.w3.org/2004/02/skos/core#Concept') return null;
+        return prettyResourceLink($r);
+      });
+      echo " <span class='classType'>[".$types->join(", ")."]</span>";
     }
     echo "</div>";
   }
