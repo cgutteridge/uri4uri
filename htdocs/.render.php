@@ -60,7 +60,24 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
   echo "<div class='class'>";
   if($resource->hasLabel())
   {
-    echo "<div class='classLabel'>".$resource->label();
+    $label = $resource->label();
+  }
+  if(!isset($label) || (string)$label === '')
+  {
+    if($resource->has('rdf:type'))
+    {
+      $label = substituteLink($resource->url());
+      if($label === '')
+      {
+        unset($label);
+      }
+    }else{
+      unset($label);
+    }
+  }
+  if(isset($label))
+  {
+    echo "<div class='classLabel'>".$label;
     if($resource->has('rdf:type'))
     {
       $types = $resource->all('rdf:type');

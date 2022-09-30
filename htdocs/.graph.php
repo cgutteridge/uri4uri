@@ -426,6 +426,7 @@ class URITriples extends Triples
     }
     $graph->addCompressedTriple($subject, 'rdf:type', 'skos:Concept');
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIReference');
+    $graph->addCompressedTriple($subject, 'rdfs:label', $uri, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $uri, 'xsd:anyURI');
     
     if(!empty($b['host']))
@@ -605,6 +606,7 @@ class URIPartTriples extends Triples
           $field_subject = "$subject#_$i";
           $graph->addCompressedTriple($subject, "rdf:_$i", $field_subject);
           $graph->addCompressedTriple($field_subject, 'rdf:type', 'uriv:QueryKVP');
+          $graph->addCompressedTriple($field_subject, 'rdfs:label', $kv, 'xsd:string');
           if(strpos($kv, '=') !== false)
           {
             list($key, $value) = explode('=', $kv, 2);
