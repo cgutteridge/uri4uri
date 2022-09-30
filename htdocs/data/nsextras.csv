@@ -71,3 +71,4 @@ void:classPartition,p,class partition
 void:class,p,class
 void:entities,p,number of entities
 void:inDataset,p,dataset
+void:exampleResource,p,example

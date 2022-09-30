@@ -139,6 +139,15 @@ abstract class Triples
         
         $graph->addCompressedTriple($subset, 'rdf:type', 'void:Dataset');
         $graph->addCompressedTriple($subset, 'dcterms:source', $records['#source']);
+        foreach(array_rand($records, 2) as $id)
+        {
+          if(str_starts_with($id, '#') || !is_array($records[$id])) continue;
+          $id = $triples->unmapId($id);
+          if($id === null) continue;
+          $example = $triples->add($graph, $id, false);
+          $graph->addCompressedTriple($subset, 'void:exampleResource', $example);
+          break;
+        }
         $graph->addCompressedTriple($subset, 'void:dataDump', "$BASE/$type");
         $graph->addCompressedTriple($subset, 'void:rootResource', "$PREFIX/$type/");
         $graph->addCompressedTriple($subset, 'void:entities', count($records), 'xsd:integer');
