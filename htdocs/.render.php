@@ -51,6 +51,18 @@ function resourceKey($resource)
   return "{$resource->nodeType()} {$resource->toString()}";
 }
 
+function getResourceTypeString($resource)
+{
+  $types = $resource->all('rdf:type');
+  $count = $types->count();
+  $types = $types->map(function($r) use ($count)
+  {
+    if($count > 1 && $r->url() === 'http://www.w3.org/2004/02/skos/core#Concept') return null;
+    return prettyResourceLink($r);
+  });
+  return " <span class='classType'>[".$types->join(", ")."]</span>";
+}
+
 function renderResource($graph, $resource, &$visited_nodes, $parent = null, $followed_relations = array())
 {
   global $PREFIX;
@@ -80,14 +92,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     echo "<div class='classLabel'>".$label;
     if($resource->has('rdf:type'))
     {
-      $types = $resource->all('rdf:type');
-      $count = $types->count();
-      $types = $types->map(function($r) use ($count)
-      {
-        if($count > 1 && $r->url() === 'http://www.w3.org/2004/02/skos/core#Concept') return null;
-        return prettyResourceLink($r);
-      });
-      echo " <span class='classType'>[".$types->join(", ")."]</span>";
+      echo getResourceTypeString($resource);
     }
     echo "</div>";
   }

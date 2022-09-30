@@ -260,7 +260,7 @@ if($format == 'html')
     $resource = $graph->resource($page_url);
     if($resource->has('rdf:type'))
     {
-      $page_thingy_type = " <span class='classType'>[".$resource->all('rdf:type')->label()->join(", ")."]</span>";
+      $page_thingy_type = getResourceTypeString($resource);
     }
     if($resource->has('dct:description'))
     {
