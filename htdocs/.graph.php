@@ -1435,7 +1435,6 @@ function addExtraVocabTriples($graph)
   {
     list($term, $type, $name) = explode(",", rtrim($line));
     $graph->addCompressedTriple("$term", 'rdf:type', $tmap[$type]);
-    $graph->addCompressedTriple("$term", 'rdfs:isDefinedBy', 'uriv:');
     $graph->addCompressedTriple("$term", 'rdfs:label', $name, 'literal');
   }
 }
