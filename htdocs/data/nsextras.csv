@@ -1,43 +1,11 @@
+rdf:Property,c,Property
+rdfs:Class,c,Class
+rdfs:Datatype,c,Datatype
+rdf:Seq,c,Sequence
 rdf:type,p,type
-foaf:primaryTopic,p,primary topic
-skos:notation,p,notation
-vs:term_status,p,term status
-vs:moreinfo,p,status info
-prov:wasDerivedFrom,p,derived from
-vann:preferredNamespacePrefix,p,preferred prefix
-vann:preferredNamespaceUri,p,preferred namespace
-foaf:page,p,page
-foaf:homepage,p,homepage
-dbp:cctld,p,country code top-level domain
-dbp:ports,p,port
-dbp:mime,p,MIME type
-dbp:extension,p,suffix
-dbp:extendedFrom,p,extends
-owl:sameAs,p,same entity
-owl:differentFrom,p,different entity
-owl:equivalentClass,p,equivalent class
-owl:equivalentProperty,p,equivalent property
-owl:deprecated,p,deprecated
-geo:lat,p,latitude
-geo:long,p,longitude
-dcterms:description,p,description
-dcterms:replaces,p,replaces
-dcterms:isReplacedBy,p,replaced by
-dcterms:hasPart,p,part
-dcterms:date,p,date
-dcterms:modified,p,modified
-dcterms:relation,p,related
-dcterms:title,p,title
-dcterms:publisher,p,publisher
-dcterms:source,p,source
-schema:propertyID,p,key
-schema:value,p,value
-skos:exactMatch,p,exactly matches
-skos:broader,p,broader concept
-skos:narrower,p,narrower concept
-skos:altLabel,p,alternative label
 rdfs:seeAlso,p,see also
 rdfs:isDefinedBy,p,vocabulary
+
 xsd:float,d,Floating-point number
 xsd:double,d,Double-precision floating-point number
 xsd:positiveInteger,d,Postitive Integer
@@ -49,17 +17,53 @@ xsd:anyURI,d,URI
 xsd:date,d,Date
 xsd:hexBinary,d,Hex
 xsd:base64Binary,d,Base64
+
 foaf:Document,c,Document
 foaf:Organization,c,Organization
 foaf:Agent,c,Agent
 foaf:Person,c,Person
+foaf:primaryTopic,p,primary topic
+foaf:page,p,page
+foaf:homepage,p,homepage
+
 skos:Concept,c,Concept
-dbo:Country,c,Country
-rdfs:Class,c,Class
-rdf:Property,c,Property
-rdfs:Datatype,c,Datatype
-rdf:Seq,c,Sequence
+skos:notation,p,notation
+skos:exactMatch,p,exactly matches
+skos:broader,p,broader concept
+skos:narrower,p,narrower concept
+skos:altLabel,p,alternative label
+
+dcterms:description,p,description
+dcterms:replaces,p,replaces
+dcterms:isReplacedBy,p,replaced by
+dcterms:hasPart,p,part
+dcterms:date,p,date
+dcterms:modified,p,modified
+dcterms:relation,p,related
+dcterms:title,p,title
+dcterms:publisher,p,publisher
+dcterms:source,p,source
+
 owl:Ontology,c,Ontology
+owl:sameAs,p,same entity
+owl:differentFrom,p,different entity
+owl:equivalentClass,p,equivalent class
+owl:equivalentProperty,p,equivalent property
+owl:deprecated,p,deprecated
+
+dbo:Country,c,Country
+dbp:cctld,p,country code top-level domain
+dbp:ports,p,port
+dbp:mime,p,MIME type
+dbp:extension,p,suffix
+dbp:extendedFrom,p,extends
+
+schema:propertyID,p,key
+schema:value,p,value
+
+geo:lat,p,latitude
+geo:long,p,longitude
+
 void:Dataset,c,Dataset
 void:feature,p,feature
 void:dataDump,p,data dump
@@ -72,3 +76,11 @@ void:class,p,class
 void:entities,p,number of entities
 void:inDataset,p,dataset
 void:exampleResource,p,example
+
+vs:term_status,p,term status
+vs:moreinfo,p,status info
+
+prov:wasDerivedFrom,p,derived from
+
+vann:preferredNamespacePrefix,p,preferred prefix
+vann:preferredNamespaceUri,p,preferred namespace

@@ -1,92 +1,112 @@
+URIReference,c,new,URI Reference
+URI,c,old,URI
+RelativeURI,c,new,Relative URI Reference
+URI-WellKnown,c,new,Well-Known URI
+URN,c,new,URN
+FragmentURI,c,old,URI with Fragment Identifier
+scheme,p,old,URI scheme
+user,p,old,user
+pass,p,old,password
 account,p,old,account
-delegationRecordPage,p,old,delegation record page
+host,p,old,host
+port,p,old,port
+noPortSpecified,,old,No Port Specified
+path,p,old,path
+filename,p,old,filename
+suffix,p,old,suffix
+query,p,old,query
+fragment,p,old,fragment
+fragmentOf,p,old,fragment of
+urnNamespace,p,new,URN namespace
+wellknownSuffix,p,new,well-known URI suffix
+
+identifiedBy,p,old,identified by URI
+
+IANARef,p,old,IANA reference
+
+URIScheme,c,old,URI Scheme
+URISchemeDatatype,d,old,URI Scheme Identifier
+
+Host,c,new,Host 
 HostDatatype,d,new,URI Host Identifier
 HostDatatype-Encoded,d,new,URI Host Identifier (ASCII)
-Host,c,new,Host 
+
 Domain,c,old,Internet Domain
 Domain-Invalid,c,old,Invalid Internet Domain
 Domain-Valid,c,old,Valid Internet Domain
 Domain-Special,c,new,Special-Use Domain
-IP,c,new,IP Address
-IPv4,c,new,IPv4 Address
-IPv6,c,new,IPv6 Address
-IP-Future,c,new,Future IP Address
-address,p,new,IP address
-filename,p,old,filename
-Format,c,old,File Format
-fragmentOf,p,old,fragment of
-fragment,p,old,fragment
-FragmentURI,c,old,URI with Fragment Identifier
-host,p,old,host
-IANAPage,p,old,IANA page
-IANARef,p,old,IANA reference
-identifiedBy,p,old,identified by URI
-key,p,old,key
-length,p,old,length
-md5,p,old,md5 hash
-Mimetype,c,old,MIME Type
-MimetypeDatatype,d,old,MIME Type Identifier
-noPortSpecified,,old,No Port Specified
-pass,p,old,password
-path,p,old,path
-port,p,old,port
-Query,c,old-deprecated,URI Query Part
-QueryKey,c,old-deprecated,URI Query Key
-QueryKVP,c,old-deprecated,URI Query Key-Value Pair
-query,p,old,query
-queryString,p,old-deprecated,query string
-QueryValue,c,old-deprecated,URI Query Value
-URIField,c,new,URI Field
-URIFieldDatatype,d,new,URI Field Identifier
-scheme,p,old,URI scheme
-urnNamespace,p,new,URN namespace
-wellknownSuffix,p,new,well-known URI suffix
-sponsor,p,old,sponsor
-subDom,p,old,subdomain
-Suffix,c,old,Filename Suffix
-SuffixDatatype,d,old,Filename Suffix Identifier
-suffix,p,old,suffix
-TopLevelDomain-CountryCode,c,old,Country Top-Level Domain
 TopLevelDomain,c,old,Top-Level Domain
+TopLevelDomain-CountryCode,c,old,Country Top-Level Domain
 TopLevelDomain-Generic,c,old,Generic Top-Level Domain
 TopLevelDomain-GenericRestricted,c,old,Restricted Generic Top-Level Domain
 TopLevelDomain-Infrastructure,c,old,Infrastructure Top-Level Domain
 TopLevelDomain-Sponsored,c,old,Sponsored Top-Level Domain
 TopLevelDomain-Test,c,old,Test Top-Level Domain
-URI,c,old,URI
-URIReference,c,new,URI Reference
-URIDatatype,d,old-deprecated,URI Identifier
-URIScheme,c,old,URI Scheme
-URISchemeDatatype,d,old,URI Scheme Identifier
-URI-WellKnown,c,new,Well-Known URI
-URN,c,new,URN
+address,p,new,IP address
+delegationRecordPage,p,old,delegation record page
+sponsor,p,old,sponsor
+subDom,p,old,subdomain
+whoIsRecord,p,old,whois record
+
+IP,c,new,IP Address
+IPv4,c,new,IPv4 Address
+IPv6,c,new,IPv6 Address
+IP-Future,c,new,Future IP Address
+
+Port,c,new,Port
+
+Protocol,c,new,Protocol
+ProtocolDatatype,d,new,Protocol Identifier
+
+Service,c,new,Named Service
+ServiceDatatype,d,new,Named Service Identifier
+
+Mimetype,c,old,MIME Type
+MimetypeDatatype,d,old,MIME Type Identifier
+
+Suffix,c,old,Filename Suffix
+SuffixDatatype,d,old,Filename Suffix Identifier
+
+Format,c,old,File Format
+
+URIField,c,new,URI Field
+URIFieldDatatype,d,new,URI Field Identifier
+
 URNNamespace,c,new,URN Namespace
 URNNamespace-Formal,c,new,Formal URN Namespace
 URNNamespace-Informal,c,new,Informal URN Namespace
 URNNamespace-Experimental,c,new,Experimental URN Namespace
 URNNamespaceDatatype,d,new,URN Namespace Identifier
+
 WellKnownURISuffix,c,new,Well-Known URI Suffix
 WellKnownURISuffixDatatype,d,new,Well-Known URI Suffix Identifier
+
 URIPart,c,new,URI Part
 URIPart-XPointer,c,new,XPointer
 URIPart-Media,c,new,Media Fragment
 URIPartDatatype,d,new,URI Part Identifier
 URIPartDatatype-Decoded,d,new,URI Part Identifier (Percent-Decoded)
-Port,c,new,Port
-Protocol,c,new,Protocol
-ProtocolDatatype,d,new,Protocol Identifier
-Service,c,new,Named Service
-ServiceDatatype,d,new,Named Service Identifier
-Statement,c,old,Statement (reified)
-object,p,old,object,object identified by
-predicate,p,old,predicate,predicate identified by
-subject,p,old,subject,subject identified by
-trueAt,p,old,trueAt,statement true at
-usedForFormat,p,old-deprecated,used for format,dbp:mime
-usedForSuffix,p,old-deprecated,used for suffix,dbp:extension
-user,p,old,user
-value,p,old-deprecated,value
-whoIsRecord,p,old,whois record
+
+# Unused
 WhoisServer,c,old,Whois Server
 hasWhoIsServer,p,old,whois server
-RelativeURI,c,new,Relative URI Reference
+
+# Removed
+key,p,old-deprecated,key
+length,p,old-deprecated,length
+md5,p,old-deprecated,md5 hash
+Query,c,old-deprecated,URI Query Part
+QueryKey,c,old-deprecated,URI Query Key
+QueryKVP,c,old-deprecated,URI Query Key-Value Pair
+usedForFormat,p,old-deprecated,used for format,dbp:mime
+usedForSuffix,p,old-deprecated,used for suffix,dbp:extension
+value,p,old-deprecated,value
+Statement,c,old-deprecated,Statement (reified)
+object,p,old-deprecated,object,object identified by
+predicate,p,old-deprecated,predicate,predicate identified by
+subject,p,old-deprecated,subject,subject identified by
+trueAt,p,old-deprecated,trueAt,statement true at
+URIDatatype,d,old-deprecated,URI Identifier
+queryString,p,old-deprecated,query string
+QueryValue,c,old-deprecated,URI Query Value
+IANAPage,p,old-deprecated,IANA page

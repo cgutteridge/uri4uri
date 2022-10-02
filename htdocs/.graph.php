@@ -341,6 +341,7 @@ function addVocabTriples($graph)
   );
   foreach($lines as $line)
   {
+    if(preg_match('/^\s*(?:#|$)/', $line)) continue;
     @list($term, $type, $status, $name, $replaced) = explode(",", rtrim($line));
     $term = "uriv:$term";
     $graph->addCompressedTriple($term, 'rdf:type', $tmap[$type]);
@@ -1541,6 +1542,7 @@ function addExtraVocabTriples($graph)
     'd'=>'rdfs:Datatype');
   foreach($lines as $line)
   {
+    if(preg_match('/^\s*(?:#|$)/', $line)) continue;
     list($term, $type, $name) = explode(",", rtrim($line));
     $graph->addCompressedTriple("$term", 'rdf:type', $tmap[$type]);
     $graph->addCompressedTriple("$term", 'rdfs:label', $name, 'literal');
