@@ -432,8 +432,40 @@ class URITriples extends Triples
     
     if(!empty($b['host']))
     {
-      $host_subject = self::addForType('host', $graph, strtolower($b['host']));
+      $host = strtolower($b['host']);
+      $host_subject = self::addForType('host', $graph, $host);
       $graph->addCompressedTriple($subject, 'uriv:host', $host_subject);
+      
+      static $purl_hosts = array('purl.org', 'purl.com', 'purl.net');
+      if(in_array($host, $purl_hosts))
+      {
+        $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:PURL');
+        $path = $b['path'];
+        $purls = get_purls();
+        $pos = strlen($path);
+        do{
+          $purl_domain = strtolower(substr($path, 0, $pos));
+          if(isset($purls[$purl_domain]))
+          {
+            if($pos === strlen($path) && !isset($b['query']) && !isset($b['fragment']))
+            {
+              $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:PURL-Domain');
+              $graph->addCompressedTriple($subject, 'vs:term_status', 'stable', 'literal');
+            }else{
+              $domain_url = $b;
+              $domain_url['path'] = substr($path, 0, $pos);
+              unset($domain_url['query']);
+              unset($domain_url['fragment']); 
+              $graph->addCompressedTriple($subject, 'uriv:purlDomain', self::addForType('uri', $graph, unparse_url($domain_url)));
+            }
+            break;
+          }
+        }while(($pos = @strrpos($path, '/', $pos - strlen($path) - 1)) !== false);
+        if($pos === false)
+        {
+          $graph->addCompressedTriple($subject, 'vs:term_status', 'unstable', 'literal');
+        }
+      }
     }
   
     if(!empty($b['scheme']))

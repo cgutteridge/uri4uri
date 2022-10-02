@@ -390,3 +390,30 @@ function get_tlds()
     return $domains;
   });
 }
+
+function get_purls()
+{
+  return get_json_source(__DIR__.'/data/purls.json', function($cache_file)
+  {
+    $source = 'https://archive.org/advancedsearch.php?q=collection:purl_collection%20AND%20subject:purl_data_md&fl[]=identifier&fl[]=title&fl[]=publicdate&rows=1000000&output=json';
+    $data = json_decode(file_get_contents($source, false, get_stream_context()), true);
+    
+    $records = array();
+    foreach($data['response']['docs'] as &$found)
+    {
+      $record = array();
+      $id = $found['title'];
+      $record['id'] = $id;
+      $record['key'] = $found['identifier'];
+      $record['date'] = @$found['publicdate'];
+      $records[strtolower($id)] = $record;
+    }
+    $records['#source'] = $source;
+    
+    if(file_exists($cache_file))
+    {
+      file_put_contents($cache_file, json_encode($records, JSON_UNESCAPED_SLASHES));
+    }
+    return $records;
+  });
+}

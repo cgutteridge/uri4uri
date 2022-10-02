@@ -110,3 +110,18 @@ function unescaped_parsed(&$str)
     return chr(hexdec($matches[1]));
   }, $str);
 }
+
+function unparse_url($uri)
+{
+  $scheme = isset($uri['scheme']) ? "$uri[scheme]:" : '';
+  $start = isset($uri['host']) ? '//' : '';
+  $host = @$uri['host'];
+  $port = isset($uri['port']) ? ":$uri[port]" : '';
+  $user = @$uri['user'];
+  $pass = isset($uri['pass']) ? ":$uri[pass]" : '';
+  $pass = ($user || $pass) ? "$pass@" : '';
+  $path = @$uri['path'];
+  $query = isset($uri['query']) ? "?$uri[query]" : '';
+  $fragment = isset($uri['fragment']) ? "#$uri[fragment]" : '';
+  return "$scheme$start$user$pass$host$port$path$query$fragment";
+}

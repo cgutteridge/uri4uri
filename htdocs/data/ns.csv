@@ -3,6 +3,8 @@ URI,c,old,URI
 RelativeURI,c,new,Relative URI Reference
 URI-WellKnown,c,new,Well-Known URI
 URN,c,new,URN
+PURL,c,new,Persistent URL
+PURL-Domain,c,new,Persistent URL Domain
 FragmentURI,c,old,URI with Fragment Identifier
 scheme,p,old,URI scheme
 user,p,old,user
@@ -18,7 +20,8 @@ query,p,old,query
 fragment,p,old,fragment
 fragmentOf,p,old,fragment of
 urnNamespace,p,new,URN namespace
-wellknownSuffix,p,new,well-known URI suffix
+wellknownSuffix,p,new,well-known URI suffix,
+purlDomain,p,new,PURL domain
 
 identifiedBy,p,old,identified by URI
 
