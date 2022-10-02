@@ -54,10 +54,10 @@ $page_show_title = true;
 $page_url = null;
 $page_content = "";
 
-if($path == "/aprilfools")
+if(str_starts_with($realpath = realpath("ui$path.html"), __DIR__.'/ui/') && file_exists($realpath))
 {
   $page_show_title = false;
-  $page_content = file_get_contents("ui/aprilfools.html");
+  $page_content = file_get_contents($realpath);
   require_once("ui/template.php");
   exit;
 }
