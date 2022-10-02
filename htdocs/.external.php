@@ -381,7 +381,7 @@ function get_tlds()
     }
     ksort($domains);
     
-    $records['#source'] = $source;
+    $domains['#source'] = $source;
     
     if(file_exists($cache_file))
     {
