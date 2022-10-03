@@ -273,7 +273,7 @@ elseif($format == 'rdf')
 elseif($format == 'nt')
 {
   http_response_code(200);
-  header("Content-type: text/plain");
+  header("Content-type: application/n-triples");
   echo $graph->serialize('NTriples');
 }
 elseif($format == 'ttl')
