@@ -51,9 +51,18 @@ function resourceKey($resource)
   return "{$resource->nodeType()} {$resource->toString()}";
 }
 
-function getResourceTypeString($resource)
+function getResourceTypeString($graph, $resource)
 {
   $types = $resource->all('rdf:type');
+  static $hidden_types = array(
+    'http://www.w3.org/2002/07/owl#Thing',
+    'http://www.w3.org/2002/07/owl#NamedIndividual'
+  );
+  $types = $types->map(function($r) use ($hidden_types)
+  {
+    if(in_array($r->url(), $hidden_types)) return null;
+    return $r;
+  });
   $count = $types->count();
   $types = $types->map(function($r) use ($count)
   {
@@ -92,7 +101,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     echo "<div class='classLabel'>".$label;
     if($resource->has('rdf:type'))
     {
-      echo getResourceTypeString($resource);
+      echo getResourceTypeString($graph, $resource);
     }
     echo "</div>";
   }

@@ -251,7 +251,7 @@ if($format == 'html')
     $resource = $graph->resource($page_url);
     if($resource->has('rdf:type'))
     {
-      $page_thingy_type = getResourceTypeString($resource);
+      $page_thingy_type = getResourceTypeString($graph, $resource);
     }
     if($resource->has('dct:description'))
     {
