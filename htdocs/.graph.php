@@ -62,6 +62,11 @@ abstract class Triples
     return $id;
   }
   
+  protected function normalizeId($id)
+  {
+    return strtolower($id);
+  }
+  
   static $map;
   
   static function map()
@@ -161,6 +166,18 @@ abstract class Triples
         $graph->addCompressedTriple($subset, 'void:uriRegexPattern', '^'.addcslashes($PREFIX, "\\.")."/$type/", 'literal');
       }
     }
+  }
+  
+  public static function normalizeEntityId($type, $id)
+  {
+    $map = self::map();
+    if(isset($map[$type])) return $map[$type]->normalizeId($id);
+    return $id;
+  }
+  
+  public static function types()
+  {
+    return array_keys(self::map());
   }
   
   protected final function STR($arg)
@@ -273,6 +290,11 @@ OPTIONAL {
   }
 EOF;
   }
+}
+
+function normalizeEntityId($type, $id)
+{
+  return Triples::normalizeEntityId($type, $id);
 }
 
 function graphVocab($id)
@@ -403,6 +425,11 @@ class URITriples extends Triples
   protected function source()
   {
     return array('' => array());
+  }
+  
+  protected function normalizeId($id)
+  {
+    return urlencode_chars($id, '<>');
   }
 
   protected function add($graph, $uri, $queries = false)
@@ -798,6 +825,11 @@ class HostTriples extends Triples
   protected function unmapId($id)
   {
     return rtrim($id, '.');
+  }
+  
+  protected function normalizeId($id)
+  {
+    return parent::normalizeId(idn_to_utf8($id, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46));
   }
 
   protected function add($graph, $host, $queries = false, &$special_type = null, $is_domain = false)

@@ -68,7 +68,7 @@ if($path == "/")
   require_once("ui/template.php");
   exit;
 }
-if(!preg_match("/^\/(vocab|void|uri|scheme|suffix|part|field|host|mime|urn|well-known|port|protocol|service)(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:(\/)([^\?]*))?(\?.*)?$/", $path, $b))
+if(!preg_match('/^\/(vocab|void|'.implode('|', Triples::types()).')(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:(\/)([^\?]*))?(\?.*)?$/', $path, $b))
 {
   serve404();
   exit;
@@ -76,16 +76,7 @@ if(!preg_match("/^\/(vocab|void|uri|scheme|suffix|part|field|host|mime|urn|well-
 @list(, $type, $format, $separator, $id, $query) = $b;
 
 $decoded_id = rawurldecode($id);
-if($type === 'host')
-{
-  $decoded_id = idn_to_utf8($decoded_id, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
-}
-if($type !== 'uri')
-{
-  $decoded_id = strtolower($decoded_id);
-}else{
-  $decoded_id = urlencode_chars($decoded_id, '<>');
-}
+$decoded_id = normalizeEntityId($type, $decoded_id);
 $reencoded_id = urlencode_minimal($decoded_id);
 if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id) || (empty($separator) && $type !== 'vocab' && $type !== 'void'))
 {
