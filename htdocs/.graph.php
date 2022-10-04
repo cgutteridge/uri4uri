@@ -1534,7 +1534,7 @@ class ServiceTriples extends Triples
           $port = $info['number'];
           $specific = "port:$port#$protocol";
           $graph->addCompressedTriple($specific, 'rdf:type', 'uriv:Port');
-          $graph->addCompressedTriple($subject, 'rdfs:label', $port, 'xsd:string');
+          $graph->addCompressedTriple($specific, 'rdfs:label', $port.' ('.strtoupper($protocol).')', 'xsd:string');
           $graph->addCompressedTriple($specific, 'skos:notation', $port, 'xsd:unsignedShort');
           $graph->addCompressedTriple($subject, 'dbp:ports', $specific);
         }else{
