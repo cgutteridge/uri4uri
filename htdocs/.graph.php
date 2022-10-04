@@ -918,12 +918,13 @@ class HostTriples extends Triples
           if(@$link['rel'] === 'self')
           {
             $self = $link['href'];
-            $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $self);
-            $self = parse_url_fixed($self);
-            if(!empty($self['host']))
+            $graph->addCompressedTriple($subject, 'uriv:rdapRecord', $self);
+            $self_parts = parse_url_fixed($self);
+            if(!empty($self_parts['host']))
             {
-              $graph->addCompressedTriple($subject, 'uriv:hasRdapServer', $this->add($graph, $self['host']));
+              $graph->addCompressedTriple($subject, 'uriv:hasRdapServer', $this->add($graph, $self_parts['host']));
             }
+            $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $self);
           }else if(!empty($link['href']))
           {
             $graph->addCompressedTriple($subject, 'rdfs:seeAlso', $link['href']);
