@@ -14,7 +14,10 @@ xsd:string,d,String
 xsd:boolean,d,Boolean
 xsd:integer,d,Integer
 xsd:anyURI,d,URI
+xsd:dateTime,d,Date and Time
 xsd:date,d,Date
+xsd:gYearMonth,d,Year and Month
+xsd:gYear,d,Year
 xsd:hexBinary,d,Hex
 xsd:base64Binary,d,Base64
 

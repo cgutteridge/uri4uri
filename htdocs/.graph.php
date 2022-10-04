@@ -45,6 +45,26 @@ function encodeIdentifier($id)
   return urlencode_minimal($id);
 }
 
+function xsdDateType($value)
+{
+  if(
+    DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $value) !== false || DateTime::createFromFormat('Y-m-d\TH:i:s.u', $value) !== false ||
+    DateTime::createFromFormat('Y-m-d\TH:i:sP', $value) !== false || DateTime::createFromFormat('Y-m-d\TH:i:s', $value) !== false)
+  {
+    return 'xsd:dateTime';
+  }else if(DateTime::createFromFormat('Y-m-dP', $value) !== false || DateTime::createFromFormat('Y-m-d', $value) !== false)
+  {
+    return 'xsd:date';
+  }else if(DateTime::createFromFormat('Y-mP', $value) !== false || DateTime::createFromFormat('Y-m', $value) !== false)
+  {
+    return 'xsd:gYearMonth';
+  }else if(DateTime::createFromFormat('YP', $value) !== false || DateTime::createFromFormat('Y', $value) !== false)
+  {
+    return 'xsd:gYear';
+  }
+  return 'literal';
+}
+
 abstract class Triples
 {
   protected $link_old = false;
@@ -782,11 +802,11 @@ function addIanaRecord($graph, $subject, $records, $key)
   }
   if(isset($info['date']))
   {
-    $graph->addCompressedTriple($subject, 'dcterms:date', $info['date'], 'xsd:date');
+    $graph->addCompressedTriple($subject, 'dcterms:date', $info['date'], xsdDateType($info['date']));
   }
   if(isset($info['updated']))
   {
-    $graph->addCompressedTriple($subject, 'dcterms:modified', $info['updated'], 'xsd:date');
+    $graph->addCompressedTriple($subject, 'dcterms:modified', $info['updated'], xsdDateType($info['updated']));
   }
   foreach($info['refs'] as $url => $label)
   {
@@ -931,7 +951,7 @@ class HostTriples extends Triples
           $action = @$event['eventAction'];
           if(isset($actions[$action]) && !empty($event['eventDate']))
           {
-            $graph->addCompressedTriple($subject, $actions[$action], $event['eventDate'], 'xsd:date');
+            $graph->addCompressedTriple($subject, $actions[$action], $event['eventDate'], xsdDateType($event['eventDate']));
           }
         }
       }
