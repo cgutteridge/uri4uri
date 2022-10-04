@@ -100,13 +100,21 @@ function flush_output()
   flush();
 }
 
+function get_query_timeout()
+{
+  $timeout = filter_input(INPUT_GET, 'timeout', FILTER_VALIDATE_FLOAT);
+  if($timeout === null || $timeout === false || $timeout <= 0) return 2;
+  return $timeout;
+}
+
 function get_stream_context()
 {
   return stream_context_create(array(
     'http' => array(
       'protocol_version' => '1.1',
       'user_agent' => 'uri4uri PHP/'.PHP_VERSION,
-      'header' => 'Connection: close\r\n'
+      'header' => 'Connection: close\r\n',
+      'timeout' => get_query_timeout()
     )
   ));
 }
@@ -432,9 +440,13 @@ function get_rdap_record($type, $object)
 
 function get_whois_record($server, $object)
 {
-  if(($socket = fsockopen($server, 43)) !== false)
+  $timeout = get_query_timeout();
+  if(($socket = fsockopen($server, 43, $error_code, $error_message, $timeout)) !== false)
   {
+    stream_set_timeout($socket, intval($timeout), intval(fmod($timeout, 1) * 1000000));
     fputs($socket, $object."\r\n");
-    return stream_get_contents($socket);
+    $content = stream_get_contents($socket); 
+    fclose($socket);
+    return $content;
   }
 }
