@@ -33,16 +33,19 @@ function resourceLink($resource, $attributes = '')
   return '<a title="'.htmlspecialchars(urldecode($uri)).'" href="'.htmlspecialchars($uri_href).'"'.$attributes.'>'.htmlspecialchars($uri).'</a>';
 }
 
-function prettyResourceLink($resource, $attributes = '')
+function prettyResourceLink($graph, $resource, $attributes = '')
 {
   $uri = $resource->url();
   $uri_href = substituteLink($uri);
-  $label = $uri;
-  if($resource->hasLabel()) { $label = $resource->label(); }
-  else if(preg_match('/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $uri, $b))
+  if($resource->hasLabel())
+  {
+    $label = $resource->label();
+  }else if(preg_match('/^http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#_(\d+)$/', $uri, $b))
   {
     $label = "#".$b[1];
-  }
+  }else{
+    $label = $graph->shrinkURI($uri);
+  } 
   return '<a title="'.htmlspecialchars(urldecode($uri)).'" href="'.htmlspecialchars($uri_href).'"'.$attributes.'>'.htmlspecialchars($label).'</a>';
 }
 
@@ -64,10 +67,10 @@ function getResourceTypeString($graph, $resource)
     return $r;
   });
   $count = $types->count();
-  $types = $types->map(function($r) use ($count)
+  $types = $types->map(function($r) use ($graph, $count)
   {
     if($count > 1 && $r->url() === 'http://www.w3.org/2004/02/skos/core#Concept') return null;
-    return prettyResourceLink($r);
+    return prettyResourceLink($graph, $r);
   });
   return " <span class='classType'>[".$types->join(", ")."]</span>";
 }
@@ -131,7 +134,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     {
       $label = "#".$b[1];
     }
-    $pred = prettyResourceLink($rel, " class='predicate'");
+    $pred = prettyResourceLink($graph, $rel, " class='predicate'");
     if($rel->nodeType() == '#inverseRelation') { $pred = "is $pred of"; }
     
     $rel_key = $rel->toString().' '.$rel->nodeType();
@@ -171,7 +174,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
       }else if(!str_starts_with($type, '#'))
       {
         $rt = $graph->resource($type);
-        $value = "\"<span class='literal'>".nl2br(htmlspecialchars($r2))."</span>\" <span class='datatype'>[".prettyResourceLink($rt)."]</span>";
+        $value = "\"<span class='literal'>".nl2br(htmlspecialchars($r2))."</span>\" <span class='datatype'>[".prettyResourceLink($graph, $rt)."]</span>";
       }else{
         global $page_url;
         if(str_starts_with($value, "$page_url#") && !isset($visited_nodes[$res_key]))
@@ -180,7 +183,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
         }
         if($rel_followed || isset($visited_nodes[$res_key]) || @$atomic_properties[$rel_key] || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))
         {
-          $value = prettyResourceLink($r2);
+          $value = prettyResourceLink($graph, $r2);
           if(isset($res_id))
           {
             $value = "<a name='$res_id'>$value</a>";
