@@ -886,6 +886,58 @@ class HostTriples extends Triples
     }
   }
   
+  protected function queryRdap($graph, $subject, $type, $object)
+  {
+    $record = @get_rdap_record($type, $object);
+    if(!empty($record))
+    {
+      if(!empty($record['links']))
+      {
+        foreach($record['links'] as $link)
+        {
+          if(@$link['rel'] === 'self')
+          {
+            $self = $link['href'];
+            $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $self);
+            $self = parse_url_fixed($self);
+            if(!empty($self['host']))
+            {
+              $graph->addCompressedTriple($subject, 'uriv:hasRdapServer', $this->add($graph, $self['host']));
+            }
+          }else if(!empty($link['href']))
+          {
+            $graph->addCompressedTriple($subject, 'rdfs:seeAlso', $link['href']);
+          }
+        }
+      }
+      if(!empty($record['port43']))
+      {
+        $whois = $record['port43'];
+        $graph->addCompressedTriple($subject, 'uriv:hasWhoIsServer', $this->add($graph, $whois));
+        $whois_record = get_whois_record($whois, $object);
+        if(!empty($record))
+        {
+          $graph->addCompressedTriple($subject, 'uriv:whoIsRecord', $whois_record, 'xsd:string');
+        }
+      }
+      if(!empty($record['events']))
+      {
+        foreach($record['events'] as $event)
+        {
+          static $actions = array(
+            'registration' => 'dcterms:created',
+            'last changed' => 'dcterms:modified'
+          );
+          $action = @$event['eventAction'];
+          if(isset($actions[$action]) && !empty($event['eventDate']))
+          {
+            $graph->addCompressedTriple($subject, $actions[$action], $event['eventDate'], 'xsd:date');
+          }
+        }
+      }
+    }
+  }
+  
   protected function addIPv4($graph, $subject, $ip, $queries, &$special_type)
   {
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:IP');
@@ -907,6 +959,8 @@ class HostTriples extends Triples
     $graph->addCompressedTriple($this->add($graph, $rdns_domain), 'uriv:address', $subject);
     
     $this->resolveDomain($graph, $subject, $ip);
+    
+    $this->queryRdap($graph, $subject, 'ip', $ip);
     
     return $subject;
   }
@@ -934,6 +988,8 @@ class HostTriples extends Triples
     
     $this->resolveDomain($graph, $subject, $ip);
     
+    $this->queryRdap($graph, $subject, 'ip', $ip);
+    
     return $subject;
   }
   
@@ -946,13 +1002,14 @@ class HostTriples extends Triples
     
     $this->resolveDomain($graph, $subject, $ip);
     
+    $this->queryRdap($graph, $subject, 'ip', $ip);
+    
     return $subject;
   }
     
   protected function addDomain($graph, $subject, $domain, $domain_idn, $queries = false, &$special_type = null)
   {
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Domain');
-    $graph->addCompressedTriple($subject, 'uriv:whoIsRecord', "https://www.iana.org/whois?q=$domain_idn");
     
     $special_domains = get_special_domains();
     if(isset($special_domains["$domain_idn."]))
@@ -1004,6 +1061,8 @@ class HostTriples extends Triples
             }
           }
         }
+        
+        $this->queryRdap($graph, $subject, 'domain', $domain_idn);
       }
           
       list($domain_name, $domain) = explode(".", $domain, 2);

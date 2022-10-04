@@ -102,7 +102,13 @@ function flush_output()
 
 function get_stream_context()
 {
-  return stream_context_create(array('http' => array('user_agent' => 'uri4uri PHP/'.PHP_VERSION, 'header' => 'Connection: close\r\n')));
+  return stream_context_create(array(
+    'http' => array(
+      'protocol_version' => '1.1',
+      'user_agent' => 'uri4uri PHP/'.PHP_VERSION,
+      'header' => 'Connection: close\r\n'
+    )
+  ));
 }
 
 function update_iana_records($file, $assignments, $id_element, $combine_id)
@@ -416,4 +422,19 @@ function get_purls()
     }
     return $records;
   });
+}
+
+function get_rdap_record($type, $object)
+{
+  $url = "https://rdap.org/$type/$object";
+  return json_decode(file_get_contents($url, false, get_stream_context()), true);
+}
+
+function get_whois_record($server, $object)
+{
+  if(($socket = fsockopen($server, 43)) !== false)
+  {
+    fputs($socket, $object."\r\n");
+    return stream_get_contents($socket);
+  }
 }

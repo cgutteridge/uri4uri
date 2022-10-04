@@ -49,7 +49,10 @@ address,p,new,IP address
 delegationRecordPage,p,old,delegation record page
 sponsor,p,old,sponsor
 subDom,p,old,subdomain
-whoIsRecord,p,old,whois record
+whoIsRecord,p,old,WHOIS record
+hasWhoIsServer,p,old,WHOIS server
+rdapRecord,p,new,RDAP record
+hasRdapServer,p,new,RDAP server
 
 IP,c,new,IP Address
 IPv4,c,new,IPv4 Address
@@ -90,10 +93,6 @@ URIPart-Media,c,new,Media Fragment
 URIPartDatatype,d,new,URI Part Identifier
 URIPartDatatype-Decoded,d,new,URI Part Identifier (Percent-Decoded)
 
-# Unused
-WhoisServer,c,old,Whois Server
-hasWhoIsServer,p,old,whois server
-
 # Removed
 key,p,old-deprecated,key
 length,p,old-deprecated,length
@@ -113,3 +112,4 @@ URIDatatype,d,old-deprecated,URI Identifier
 queryString,p,old-deprecated,query string
 QueryValue,c,old-deprecated,URI Query Value
 IANAPage,p,old-deprecated,IANA page
+WhoisServer,c,old-deprecated,WHOIS Server

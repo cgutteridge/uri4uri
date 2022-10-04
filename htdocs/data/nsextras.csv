@@ -38,6 +38,7 @@ dcterms:replaces,p,replaces
 dcterms:isReplacedBy,p,replaced by
 dcterms:hasPart,p,part
 dcterms:date,p,date
+dcterms:created,p,created
 dcterms:modified,p,modified
 dcterms:relation,p,related
 dcterms:title,p,title
