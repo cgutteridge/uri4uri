@@ -1,5 +1,7 @@
 URIReference,c,new,URI Reference
 URI,c,old,URI
+URIDatatype-IRI,d,new,IRI
+URIDatatype-ASCII,d,new,URI (ASCII)
 RelativeURI,c,new,Relative URI Reference
 URI-WellKnown,c,new,Well-Known URI
 URN,c,new,URN

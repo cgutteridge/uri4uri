@@ -125,3 +125,37 @@ function unparse_url($uri)
   $fragment = isset($uri['fragment']) ? "#$uri[fragment]" : '';
   return "$scheme$start$user$pass$host$port$path$query$fragment";
 }
+
+function uri_to_iri($uri)
+{
+  if(isset($uri['host']))
+  {
+    $host = idn_to_utf8($uri['host'], IDNA_ALLOW_UNASSIGNED, INTL_IDNA_VARIANT_UTS46, $idna_info);
+    if($host === false)
+    {
+      $host = $idna_info['result'];
+    }
+    $uri['host'] = $host;
+  }
+  return preg_replace_callback("/((?:%[89a-fA-F][0-9a-fA-F])+)/u", function($matches)
+  {
+    return rawurldecode($matches[0]);
+  }, unparse_url($uri));
+}
+
+function uri_to_ascii($uri)
+{
+  if(isset($uri['host']))
+  {
+    $host = idn_to_ascii($uri['host'], IDNA_ALLOW_UNASSIGNED, INTL_IDNA_VARIANT_UTS46, $idna_info);
+    if($host === false)
+    {
+      $host = $idna_info['result'];
+    }
+    $uri['host'] = $host;
+  }
+  return preg_replace_callback("/([\u{0080}-\u{FFFF}]+)/u", function($matches)
+  {
+    return rawurlencode($matches[0]);
+  }, unparse_url($uri));
+}

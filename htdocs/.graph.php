@@ -484,7 +484,7 @@ class URITriples extends Triples
   {
     $subject = 'uri:'.encodeIdentifier($uri);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'uri:');
-    $b = parse_url_fixed($uri);
+    $b = parse_url_fixed($uri);    
   
     if(isset($b['fragment']))
     {
@@ -505,7 +505,10 @@ class URITriples extends Triples
     $graph->addCompressedTriple($subject, 'rdf:type', 'owl:NamedIndividual');
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIReference');
     $graph->addCompressedTriple($subject, 'rdfs:label', $uri, 'xsd:string');
+    
     $graph->addCompressedTriple($subject, 'skos:notation', $uri, 'xsd:anyURI');
+    $graph->addCompressedTriple($subject, 'skos:notation', uri_to_iri($b), 'uriv:URIDatatype-IRI');
+    $graph->addCompressedTriple($subject, 'skos:notation', uri_to_ascii($b), 'uriv:URIDatatype-ASCII');
     
     if(!empty($b['host']))
     {

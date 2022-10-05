@@ -67,6 +67,15 @@
   dcterms:description "A PURL domain is maintained by a single entity and defines redirects for various URLs under it."@en .
 
 
+:URIDatatype-IRI
+  rdfs:subClassOf xsd:anyURI ;
+  dcterms:description "The identifier of an IRI."@en .
+
+:URIDatatype-ASCII
+  rdfs:subClassOf xsd:anyURI ;
+  dcterms:description "The identifier of a URI, with percent-encoded non-ASCII characters."@en .
+
+
 :scheme
   a owl:ObjectProperty ;
   schema:domainIncludes :URI ;
@@ -479,7 +488,7 @@ skos:notation
     :Service , :Mimetype , :Suffix , :URIField , :URNNamespace ,
     :WellKnownURISuffix , :URIPart ;
   schema:rangeIncludes
-    xsd:anyURI , :URISchemeDatatype , :HostDatatype , :HostDatatype-Encoded ,
+    xsd:anyURI , :URIDatatype-IRI , :URIDatatype-ASCII , :URISchemeDatatype , :HostDatatype , :HostDatatype-Encoded ,
     xsd:hexBinary , xsd:base64Binary , xsd:unsignedShort , :ProtocolDatatype ,
     :ServiceDatatype , :MimetypeDatatype , :SuffixDatatype , :URIFieldDatatype ,
     :URNNamespaceDatatype , :WellKnownURISuffixDatatype , :URIPartDatatype , :URIPartDatatype-Decoded .
