@@ -881,7 +881,12 @@ class HostTriples extends Triples
   
   protected function normalizeId($id)
   {
-    return parent::normalizeId(idn_to_utf8($id, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46));
+    $utf = idn_to_utf8($id, IDNA_ALLOW_UNASSIGNED, INTL_IDNA_VARIANT_UTS46, $idna_info);
+    if($utf === false)
+    {
+      $utf = $idna_info['result'];
+    }
+    return parent::normalizeId($utf);
   }
 
   protected function add($graph, $host, $queries = false, &$special_type = null, $is_domain = false)
@@ -894,8 +899,11 @@ class HostTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Host');
     $graph->addCompressedTriple($subject, 'rdfs:label', $host, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $host, 'uriv:HostDatatype');
-    $host_idn = idn_to_ascii($host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
-    $graph->addCompressedTriple($subject, 'skos:notation', $host_idn, 'uriv:HostDatatype-Encoded');
+    $host_idn = idn_to_ascii($host, IDNA_ALLOW_UNASSIGNED, INTL_IDNA_VARIANT_UTS46);
+    if($host_idn !== false)
+    {
+      $graph->addCompressedTriple($subject, 'skos:notation', $host_idn, 'uriv:HostDatatype-Encoded');
+    }
     if(!$is_domain)
     {
       if(filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false)
@@ -1058,7 +1066,7 @@ class HostTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Domain');
     
     $special_domains = get_special_domains();
-    if(isset($special_domains["$domain_idn."]))
+    if($domain_idn !== false && isset($special_domains["$domain_idn."]))
     {
       addIanaRecord($graph, $subject, $special_domains, "$domain_idn.");
       $special_type = 'uriv:Domain-Special';
@@ -1067,7 +1075,7 @@ class HostTriples extends Triples
     # Super Domains
     if(strpos($domain, ".") !== false)
     {
-      if($queries)
+      if($queries && $domain_idn !== false)
       {
         if(preg_match('/^((?:[0-9]+\.){4})in-addr\.arpa$/', $domain_idn, $matches))
         {
@@ -1110,7 +1118,7 @@ class HostTriples extends Triples
         
         $this->queryRdap($graph, $subject, 'domain', $domain_idn);
       }
-          
+      
       list($domain_name, $domain) = explode(".", $domain, 2);
       $inner_subject = $this->add($graph, $domain, false, $special_type, true);
       $graph->addCompressedTriple($inner_subject, 'uriv:subDom', $subject);
@@ -1135,7 +1143,7 @@ class HostTriples extends Triples
       $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $tlds['#source']);
       $graph->addCompressedTriple($tlds['#source'], 'rdf:type', 'foaf:Document');
     }
-    if(isset($tlds[$domain_idn]))
+    if($domain_idn !== false && isset($tlds[$domain_idn]))
     {
       $tld = $tlds[$domain_idn];
       $graph->addCompressedTriple($subject, 'uriv:delegationRecordPage', "http://www.iana.org$tld[url]");
@@ -1149,7 +1157,7 @@ class HostTriples extends Triples
       $graph->addCompressedTriple("$subject#sponsor", 'rdfs:label', $tld['sponsor'], 'xsd:string');
     }
     
-    if(!$queries) return $subject;
+    if(!$queries || $domain_idn === false) return $subject;
     
     $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
