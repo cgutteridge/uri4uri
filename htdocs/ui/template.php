@@ -19,21 +19,19 @@ if(!empty($page_head_content)) echo $page_head_content;
 ?>
  </head>
  <body>
-   <?php 
+  <?php 
 	$qs = $_SERVER["REQUEST_URI"];
 	if( $qs != "/" && $qs != "" ) 
 	{ 
-		print "<div class='gofaster'><a href='/'>« home</a></div>"; 
+		print "<nav><a href='/'>« home</a></nav>"; 
 	} 
 ?>
-   <h1><a href="/">uri4uri</a></h1>
-   <div class="content">
+  <h1><a href="/">uri4uri</a></h1>
+  <main>
 <?php if( !isset( $page_show_title ) || $page_show_title ) { ?>
-     <h2><?php echo htmlspecialchars($page_title); if( @$page_thingy_type ) { print " $page_thingy_type"; } ?></h2>
+   <h2><?php echo htmlspecialchars($page_title); if( @$page_thingy_type ) { print " $page_thingy_type"; } ?></h2>
 <?php } ?>
-     <div class="content2">
-       <?php echo $page_content; ?>
-     </div>
-   </div>
+   <?php echo $page_content; ?>
+  </main>
  </body>
 </html>

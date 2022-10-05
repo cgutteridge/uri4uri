@@ -191,7 +191,7 @@ if($format == 'html')
     $page_url = $doc->getString('foaf:primaryTopic');
   }
   ob_start();
-  echo "<p><span style='font-weight:bold'>Download data:</span> ";
+  echo "<nav><span style='font-weight:bold'>Download data:</span> ";
   $id_href = htmlspecialchars($reencoded_id);
   echo "<a href='$BASE/$type.ttl/$id_href'>Turtle</a>";
   echo " &bull; ";
@@ -200,7 +200,7 @@ if($format == 'html')
   echo "<a href='$BASE/$type.rdf/$id_href'>RDF/XML</a>";
   echo " &bull; ";
   echo "<a href='$BASE/$type.jsonld/$id_href'>JSON-LD</a>";
-  echo "</p>";
+  echo "</nav>";
 
   $visited = array();
   if($type == 'vocab')
@@ -221,28 +221,26 @@ if($format == 'html')
       $skips []= "<a href='#".$s[2]."'>".$s[0]."</a>";
     }
     addExtraVocabTriples($graph);
-    echo "<p><strong style='font-weight:bold'>Jump to:</strong> ".join(" &bull; ", $skips)."</p>";
-    echo "<style type='text/css'>.class .class { margin: 4em 0;} .class .class .class { margin: 1em 0; }</style>";
-    echo "<div class='class'><div class='class2'>";
+    echo "<nav><strong style='font-weight:bold'>Jump to:</strong> ".join(" &bull; ", $skips)."</nav>";
     $prefix_length = strlen("$PREFIX/vocab#");
     foreach($sections as $s)
     {
+      echo "<figure>";
       $resources = array();
       foreach($l[$s[2]] as $resource) 
       { 
         $resources[$resource->toString()] = $resource; 
       }
       ksort($resources);
-      echo "<a name='".$s[2]."'><div class='class'><div class='classLabel'>".$s[0]."</div><div class='class2'>";
+      echo "<figcaption id='".$s[2]."'>$s[0]</figcaption>";
       foreach($resources as $resource) 
       { 
-        echo "<a name='".substr($resource->toString(),$prefix_length)."'></a>";
+        echo "<div id='".substr($resource->toString(),$prefix_length)."'>";
         renderResource($graph, $resource, $visited); 
+        echo "</div>";
       }
-      echo "</div></div>";
+      echo "</figure>";
     }
-
-    echo "</div></div>";
   }
   else
   {

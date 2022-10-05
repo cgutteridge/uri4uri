@@ -80,7 +80,7 @@ function getResourceTypeString($graph, $resource)
     if($count > 1 && in_array($r->url(), $lone_types)) return null;
     return prettyResourceLink($graph, $r);
   });
-  return " <span class='classType'>[".$types->join(", ")."]</span>";
+  return " <small class='classType'>[".$types->join(", ")."]</small>";
 }
 
 function renderResource($graph, $resource, &$visited_nodes, $parent = null, $followed_relations = array())
@@ -89,7 +89,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
   $type = $resource->nodeType();
   $resource_key = resourceKey($resource);
   $visited_nodes[$resource_key] = $resource;
-  echo "<div class='class'>";
+  echo "<figure>";
   if($resource->hasLabel())
   {
     $label = $resource->label();
@@ -109,15 +109,15 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
   }
   if(isset($label))
   {
-    echo "<div class='classLabel'>".$label;
+    echo "<figcaption>".$label;
     if($resource->has('rdf:type'))
     {
       echo getResourceTypeString($graph, $resource);
     }
-    echo "</div>";
+    echo "</figcaption>";
   }
-  echo "<div class='class2'>";
-  echo "<div class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></div>";
+  echo "<ul>";
+  echo "<li class='uri'><span style='font-weight:bold'>URI: </span><span style='font-family:monospace'>".resourceLink($resource)."</span></li>";
   
   static $hidden_properties = array(
     'http://www.w3.org/2000/01/rdf-schema#label' => true,
@@ -185,14 +185,14 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
         if(!empty($lang))
         {
           $lang = htmlspecialchars($lang);
-          $value = "\"<span class='literal' lang='$lang'>".nl2br(htmlspecialchars($r2), false)."</span>\" <span class='datatype'>($lang)</span>";
+          $value = "\"<span class='literal' lang='$lang'>".nl2br(htmlspecialchars($r2), false)."</span>\" <small class='datatype'>($lang)</small>";
         }else{
           $value = "\"<span class='literal'>".nl2br(htmlspecialchars($r2), false)."</span>\"";
         }
       }else if(!str_starts_with($type, '#'))
       {
         $rt = $graph->resource($type);
-        $value = "\"<span class='literal'>".nl2br(htmlspecialchars($r2))."</span>\" <span class='datatype'>[".prettyResourceLink($graph, $rt)."]</span>";
+        $value = "\"<span class='literal'>".nl2br(htmlspecialchars($r2))."</span>\" <small class='datatype'>[".prettyResourceLink($graph, $rt)."]</small>";
       }else{
         global $page_url;
         if(str_starts_with($value, "$page_url#") && !isset($visited_nodes[$res_key]))
@@ -237,17 +237,17 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
           continue;
         }
       }
-      if($close_element !== 'ul></div')
+      if($close_element !== 'ul></li')
       {
         if($close_element) echo "</$close_element>";
-        echo "<div class='relation'>$pred: <ul class='value-list'>";
-        $close_element = 'ul></div';
+        echo "<li class='relation'>$pred: <ul class='value-list'>";
+        $close_element = 'ul></li';
       }
       echo "<li>$value</li>";
     }
     if($close_element) echo "</$close_element>";
   }
 
-  echo "</div>";
-  echo "</div>";
+  echo "</ul>";
+  echo "</figure>";
 }
