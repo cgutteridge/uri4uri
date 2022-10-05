@@ -137,7 +137,7 @@ function uri_to_iri($uri)
     }
     $uri['host'] = $host;
   }
-  return preg_replace_callback("/((?:%[89a-fA-F][0-9a-fA-F])+)/u", function($matches)
+  return preg_replace_callback("/((?:%[89a-fA-F][0-9a-fA-F])+)/", function($matches)
   {
     return rawurldecode($matches[0]);
   }, unparse_url($uri));
@@ -154,7 +154,7 @@ function uri_to_ascii($uri)
     }
     $uri['host'] = $host;
   }
-  return preg_replace_callback("/([\u{0080}-\u{FFFF}]+)/u", function($matches)
+  return preg_replace_callback("/([\x80-\xFF]+)/", function($matches)
   {
     return rawurlencode($matches[0]);
   }, unparse_url($uri));
