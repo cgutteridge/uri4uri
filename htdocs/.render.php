@@ -23,6 +23,10 @@ function substituteLink($href)
   {
     return $ARCHIVE_BASE.$href;
   }
+  if(str_starts_with($href, '_:'))
+  {
+    return '#_'.substr($href, 2);
+  }
   return $href;
 }
 
@@ -61,15 +65,19 @@ function getResourceTypeString($graph, $resource)
     'http://www.w3.org/2002/07/owl#Thing',
     'http://www.w3.org/2002/07/owl#NamedIndividual'
   );
+  static $lone_types = array(
+    'http://www.w3.org/2004/02/skos/core#Concept',
+    'http://www.w3.org/2002/07/owl#Class'
+  );
   $types = $types->map(function($r) use ($hidden_types)
   {
     if(in_array($r->url(), $hidden_types)) return null;
     return $r;
   });
   $count = $types->count();
-  $types = $types->map(function($r) use ($graph, $count)
+  $types = $types->map(function($r) use ($graph, $count, $lone_types)
   {
-    if($count > 1 && $r->url() === 'http://www.w3.org/2004/02/skos/core#Concept') return null;
+    if($count > 1 && in_array($r->url(), $lone_types)) return null;
     return prettyResourceLink($graph, $r);
   });
   return " <span class='classType'>[".$types->join(", ")."]</span>";
@@ -115,15 +123,25 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     'http://www.w3.org/2000/01/rdf-schema#label' => true,
     'http://www.w3.org/2000/01/rdf-schema#isDefinedBy #relation' => true,
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' => true,
-    'http://www.w3.org/2004/02/skos/core#exactMatch' => true,
-    'http://purl.org/dc/terms/replaces' => true,
+    'http://www.w3.org/2004/02/skos/core#exactMatch #inverseRelation' => true,
+    'http://purl.org/dc/terms/replaces #inverseRelation' => true,
     'http://purl.org/uri4uri/vocab#IANARef #inverseRelation' => true,
     'http://www.w3.org/ns/prov#wasDerivedFrom #inverseRelation' => true,
     'http://www.w3.org/2003/06/sw-vocab-status/ns#moreinfo #inverseRelation' => true,
-    'http://rdfs.org/ns/void#inDataset #relation' => true
+    'http://rdfs.org/ns/void#inDataset #relation' => true,
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#first #inverseRelation' => true,
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest #inverseRelation' => true
   );
   
-  static $atomic_properties = array();
+  static $atomic_properties = array(
+    'http://www.w3.org/2000/01/rdf-schema#subClassOf' => true,
+    'http://www.w3.org/2000/01/rdf-schema#domain' => true,
+    'http://www.w3.org/2000/01/rdf-schema#range' => true,
+    'http://schema.org/domainIncludes' => true,
+    'http://schema.org/rangeIncludes' => true,
+    'http://www.w3.org/2002/07/owl#unionOf' => true,
+    'http://www.w3.org/2002/07/owl#disjointWith' => true
+  );
   
   foreach($resource->relations() as $rel)
   {
@@ -180,8 +198,12 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
         if(str_starts_with($value, "$page_url#") && !isset($visited_nodes[$res_key]))
         {
           $res_id = substr($value, strlen($page_url) + 1);
+        }else if(str_starts_with($value, '_:'))
+        {
+          $res_id = '_'.substr($value, 2);
         }
-        if($rel_followed || isset($visited_nodes[$res_key]) || @$atomic_properties[$rel_key] || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))
+        if(str_starts_with($graph->shrinkURI($value), 'old')) continue;
+        if($rel_followed || isset($visited_nodes[$res_key]) || (!str_starts_with($value, '_:') && (@$atomic_properties[$rel->toString()] || @$atomic_properties[$rel_key] || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))))
         {
           $value = prettyResourceLink($graph, $r2);
           if(isset($res_id))

@@ -1,0 +1,515 @@
+@prefix formats: <http://www.w3.org/ns/formats/> .
+
+:identifiedBy
+  a owl:ObjectProperty ;
+  rdfs:domain rdfs:Resource ;
+  schema:domainIncludes owl:NamedIndividual ;
+  schema:rangeIncludes :URI ;
+  dcterms:description "Specifies the identifier for a resource."@en ;
+  skos:narrowMatch wdt:P2699 , schema:url .
+
+:IANARef
+  a owl:ObjectProperty ;
+  rdfs:range foaf:Agent ;
+  rdfs:subPropertyOf rdfs:seeAlso ;
+  dcterms:description "Identifies an IANA-affiliated resource available as a reference for this entity."@en .
+
+# URI
+
+:URIReference
+  dcterms:description "A class of URI references, either as absolute URIs or relative references. This includes IRIs."@en ;
+  owl:equivalentClass [
+    a owl:Class ;
+    owl:unionOf ( :URI :RelativeURI )
+  ] .
+
+:URI
+  rdfs:subClassOf :URIReference ;
+  dcterms:description "An absolute URI or IRI."@en ;
+  owl:disjointWith :RelativeURI ;
+  foaf:page rfc:3986 ;
+  skos:exactMatch wd:Q61694 , dbr:Uniform_Resource_Identifier .
+
+:RelativeURI
+  rdfs:subClassOf :URIReference ;
+  dcterms:description "A relative URI reference which can be combined with a URI."@en ;
+  foaf:page rfc:1808 ;
+  owl:disjointWith :URI .
+
+:FragmentURI
+  rdfs:subClassOf :URIReference ;
+  dcterms:description "A URI with a fragment identifies a portion of a resource defined by the URI reference stripped of the fragment."@en .
+
+:URI-WellKnown
+  rdfs:subClassOf :URI ;
+  dcterms:description "A well-known URI is one using the HTTP or HTTPS scheme with path starting on '/.well-known/'."@en ;
+  foaf:page rfc:8615 ;
+  skos:exactMatch wd:Q109621265 , dbr:Well-known_URI .
+
+:URN
+  rdfs:subClassOf :URI ;
+  dcterms:description "A URI using the URN scheme."@en ;
+  foaf:page rfc:8141 ;
+  skos:exactMatch wd:Q76497 , dbr:Uniform_Resource_Name .
+
+:URL
+  rdfs:subClassOf :URI ;
+  foaf:page rfc:1738 ;
+  skos:exactMatch wd:Q42253 , dbr:URL .
+
+:PURL
+  rdfs:subClassOf :URL ;
+  dcterms:description "A persistent URL points to a redirect to the real resource, which can be changed if the target website is no longer available."@en ;
+  skos:exactMatch wd:Q195305 , dbr:Persistent_uniform_resource_locator .
+
+:PURL-Domain
+  rdfs:subClassOf :PURL ;
+  dcterms:description "A PURL domain is maintained by a single entity and defines redirects for various URLs under it."@en .
+
+
+:scheme
+  a owl:ObjectProperty ;
+  schema:domainIncludes :URI ;
+  rdfs:range :URIScheme ;
+  dcterms:description "Specifies the URI scheme used by an identifier."@en ;
+  skos:closeMatch wdt:P4742 .
+
+:user
+  a owl:DatatypeProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range xsd:string ;
+  dcterms:description "Specifies the username stored in an identifier."@en .
+
+:pass
+  a owl:DatatypeProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range xsd:string ;
+  dcterms:description "Specifies the password stored in an identifier."@en .
+
+:account
+  a owl:ObjectProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range foaf:OnlineAccount ;
+  dcterms:description "Specifies the account referred to by an identifier."@en .
+
+:host
+  a owl:ObjectProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range :Host ;
+  dcterms:description "Specifies the hostname referred to by an identifier."@en .
+
+:port
+  a owl:ObjectProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range :Port ;
+  dcterms:description "Specifies a port referred to by an identifier. The port may also be implied by a URI scheme."@en ;
+  skos:closeMatch dbp:ports , wdt:P1641 .
+
+:noPortSpecified
+  a :Port ;
+  dcterms:description "Indicates that the port is not explicitly stated."@en ;
+  skos:closeMatch <port/0> .
+
+:path
+  a owl:DatatypeProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range rdfs:Literal ;
+  dcterms:description "Specifies the path stored by an identifier."@en .
+
+:filename
+  a owl:DatatypeProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range xsd:string ;
+  dcterms:description "Specifies the file name as part of the path stored by an identifier."@en .
+
+:suffix
+  a owl:ObjectProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range :Suffix ;
+  dcterms:description "Specifies the file suffix indicating the type of the file refererred to by an identifier."@en .
+
+:query
+  a owl:ObjectProperty ;
+  schema:domainIncludes :URIReference ;
+  rdfs:range :URIPart ;
+  dcterms:description "Specifies the query part of an identifier."@en .
+
+:fragment
+  a owl:ObjectProperty ;
+  schema:domainIncludes :FragmentURI ;
+  rdfs:range :URIPart ;
+  dcterms:description "Specifies the fragment part of an identifier."@en .
+
+:fragmentOf
+  a owl:ObjectProperty ;
+  schema:domainIncludes :FragmentURI ;
+  schema:rangeIncludes :URIReference ;
+  dcterms:description "Specifies the base identifier which the subject one is a fragment of."@en .
+
+:urnNamespace
+  a owl:ObjectProperty ;
+  schema:domainIncludes :URN ;
+  rdfs:range :URNNamespace ;
+  dcterms:description "Specifies the URN namespace used by an identifier."@en .
+
+:wellknownSuffix
+  a owl:ObjectProperty ;
+  schema:domainIncludes :URI-WellKnown ;
+  rdfs:range :WellKnownURISuffix ;
+  dcterms:description "Specifies the well-known URI suffix used by an identifier."@en .
+
+:purlDomain
+  schema:domainIncludes :URIReference ;
+  schema:rangeIncludes :URIReference ;
+  dcterms:description "Specifies the PURL domain used by an identifier."@en .
+
+
+# URI Scheme
+
+:URIScheme
+  dcterms:description "A URI scheme defines the structure and interpretation of URIs using it."@en ;
+  foaf:page <https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml> ;
+  skos:exactMatch wd:Q37071 .
+
+
+:URISchemeDatatype
+  dcterms:description "The identifier of a URI scheme."@en .
+
+# Host
+
+:Host
+  dcterms:description "The class of all URI hostnames, either domains or IP addresses."@en ;
+  skos:exactMatch wd:Q1073408 .
+
+:HostDatatype
+  dcterms:description "The identifier of a host, using international characters."@en .
+
+:HostDatatype-Encoded
+  dcterms:description "The identifier of a host, using ASCII only."@en .
+
+:Domain
+  rdfs:subClassOf :Host ;
+  dcterms:description "A class of domain names that serve as identification of internet domains."@en ;
+  owl:disjointWith :IP ;
+  skos:exactMatch wd:Q32635 , dbr:Domain_name .
+
+:Domain-Special
+  rdfs:subClassOf :Domain ;
+  dcterms:description "A domain name that is reserved for a special purpose."@en ;
+  foaf:page <https://www.iana.org/assignments/special-use-domain-names/special-use-domain-names.xhtml> ;
+  foaf:page rfc:6761 ;
+  skos:exactMatch dbr:Special-use_domain_name .
+
+:TopLevelDomain
+  rdfs:subClassOf :Domain ;
+  dcterms:description "A domain that is not a subdomain of any other."@en ;
+  skos:exactMatch wd:Q14296 , dbr:Top-level_domain , dbo:TopLevelDomain .
+
+:TopLevelDomain-CountryCode
+  rdfs:subClassOf :TopLevelDomain ;
+  dcterms:description "A domain name for a country."@en ;
+  skos:exactMatch wd:Q42032 , dbr:Country_code_top-level_domain .
+
+:TopLevelDomain-Generic
+  rdfs:subClassOf :TopLevelDomain ;
+  dcterms:description "A generic domain name."@en ;
+  skos:exactMatch wd:Q29469 , dbr:Generic_top-level_domain .
+
+:TopLevelDomain-GenericRestricted
+  rdfs:subClassOf :TopLevelDomain , :TopLevelDomain-Generic ;
+  dcterms:description "A generic domain name with restricted eligibility."@en .
+
+:TopLevelDomain-Infrastructure
+  rdfs:subClassOf :TopLevelDomain ;
+  dcterms:description "A domain name used for internet infrastructure."@en .
+
+:TopLevelDomain-Sponsored
+  rdfs:subClassOf :TopLevelDomain , :TopLevelDomain-Generic ;
+  dcterms:description "A domain name for specific communities sponsored by an organization."@en ;
+  skos:exactMatch wd:Q29380 , dbr:Sponsored_top-level_domain .
+
+:TopLevelDomain-Proposed
+  rdfs:subClassOf :TopLevelDomain ;
+  dcterms:description "A proposed domain name, not yet incorporated into the registry."@en ;
+  skos:exactMatch wd:Q634997 , dbr:Proposed_top-level_domain .
+
+:TopLevelDomain-Test
+  rdfs:subClassOf :TopLevelDomain ;
+  dcterms:description "A domain name used for testing."@en .
+
+
+:address
+  a owl:ObjectProperty ;
+  schema:domainIncludes :Domain ;
+  rdfs:range :IP ;
+  dcterms:description "Links a resolved IP address to the domain."@en .
+
+:delegationRecordPage
+  a owl:ObjectProperty ;
+  schema:domainIncludes :TopLevelDomain ;
+  rdfs:range foaf:Document ;
+  dcterms:description "Links a page describing the delegation of the top-level domain."@en .
+
+:sponsor
+  a owl:ObjectProperty ;
+  schema:domainIncludes :TopLevelDomain ;
+  rdfs:range foaf:Agent ;
+  dcterms:description "Specifies the sponsor of the top-level domain."@en .
+
+:subDom
+  a owl:ObjectProperty ;
+  rdfs:domain :Domain ;
+  rdfs:range :Domain ;
+  dcterms:description "Links to a subdomain of the domain."@en .
+
+:whoIsRecord
+  a owl:DatatypeProperty ;
+  schema:domainIncludes :Domain ;
+  schema:domainIncludes :IP ;
+  rdfs:range xsd:string ;
+  dcterms:description "Stores the response from a WHOIS server for the domain or IP address."@en .
+
+:hasWhoIsServer
+  a owl:ObjectProperty ;
+  schema:domainIncludes :Domain ;
+  schema:domainIncludes :IP ;
+  schema:rangeIncludes :Domain ;
+  dcterms:description "Links to the domain of the WHOIS server used for the domain or IP address."@en .
+
+:rdapRecord
+  a owl:ObjectProperty ;
+  schema:domainIncludes :Domain ;
+  schema:domainIncludes :IP ;
+  rdfs:range rdfs:Resource ;
+  dcterms:description "Links to the resource storing an RDAP record about the domain or IP address."@en .
+
+:hasRdapServer
+  a owl:ObjectProperty ;
+  schema:domainIncludes :Domain ;
+  schema:domainIncludes :IP ;
+  schema:rangeIncludes :Domain ;
+  dcterms:description "Links to the domain of the RDAP server used for the domain or IP address."@en .
+
+
+:IP
+  rdfs:subClassOf :Host ;
+  dcterms:description "An IP address of any type."@en ;
+  owl:disjointWith :Domain ;
+  skos:exactMatch wd:Q11135 , dbr:IP_address .
+
+:IPv4
+  rdfs:subClassOf :IP ;
+  dcterms:description "An IPv4 address."@en .
+
+:IPv6
+  rdfs:subClassOf :IP ;
+  dcterms:description "An IPv6 address."@en ;
+  skos:exactMatch wd:Q11097 .
+
+:IP-Future
+  rdfs:subClassOf :IP ;
+  dcterms:description "A future IP address used in a URI."@en .
+
+
+# Port
+
+:Port
+  dcterms:description "A port for an internet protocol, with a specific number."@en ;
+  foaf:page <https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml> ;
+  skos:exactMatch wd:Q858321 , <http://dbpedia.org/resource/Port_(computer_networking)> .
+
+
+# Protocol
+
+:Protocol
+  dcterms:description "An internet protocol, such as TCP or UDP."@en ;
+  foaf:page <https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml> ;
+  foaf:age rfc:791 , rfc:8200 ;
+  skos:exactMatch wd:Q15836568 , dbr:Communication_protocol .
+
+
+:ProtocolDatatype
+  dcterms:description "The identifier of a protocol."@en .
+
+
+# Service
+
+:Service
+  dcterms:description "A named internet service, running on specific ports."@en ;
+  foaf:page <https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml> ;
+  skos:exactMatch wd:Q1640628 , dbr:Network_service .
+
+
+:ServiceDatatype
+  dcterms:description "The identifier of a named service."@en .
+
+
+# MIME type
+
+:Mimetype
+  dcterms:description "A media type representing a format or a collection of related formats."@en ;
+  foaf:page <https://www.iana.org/assignments/media-types/media-types.xhtml> ;
+  foaf:page rfc:2046 ;
+  skos:exactMatch wd:Q1667978 , dbr:Media_type .
+
+
+:MimetypeDatatype
+  dcterms:description "The identifier of a MIME type."@en .
+
+
+# Suffix
+
+:Suffix
+  dcterms:description "A filename extension, commonly corresponding to a format."@en ;
+  skos:exactMatch wd:Q186157 , dbr:Filename_extension .
+
+
+:SuffixDatatype
+  dcterms:description "The identifier of a suffix, without the dot."@en .
+
+
+# Format
+
+:Format
+  dcterms:description "A file format, defining the structure of a file."@en ;
+  skos:exactMatch wd:Q235557 , dbr:File_format , formats:Format .
+
+
+# URI field
+
+:URIField
+  rdfs:subClassOf rdf:Property ;
+  dcterms:description "A field in the query or fragment portion of a URI."@en .
+
+
+:URIFieldDatatype
+  dcterms:description "The identifier of a URI field, percent-decoded."@en .
+
+
+# URN namespace
+
+:URNNamespace
+  dcterms:description "A namespace used by a Uniform Resource Identifier."@en ;
+  foaf:page <https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml> ;
+  foaf:page rfc:8141 ;
+  skos:exactMatch wd:Q69647581 .
+
+:URNNamespace-Formal
+  rdfs:subClassOf :URNNamespace ;
+  dcterms:description "A URN namespace with formal registration."@en .
+
+:URNNamespace-Informal
+  rdfs:subClassOf :URNNamespace ;
+  dcterms:description "A URN namespace with informal registration."@en .
+
+:URNNamespace-Experimental
+  rdfs:subClassOf :URNNamespace ;
+  dcterms:description "An unregistered experimental URN namespace."@en .
+
+:URNNamespaceDatatype
+  dcterms:description "The identifier of a URN namespace."@en .
+
+
+# Well-known suffix
+
+:WellKnownURISuffix
+  dcterms:description "The identifier of a well-known resource."@en ;
+  foaf:page <https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml> ;
+  foaf:page rfc:8615 .
+
+
+:WellKnownURISuffixDatatype
+  dcterms:description "The identifier of a well-known URI suffix."@en .
+
+
+# URI part
+
+:URIPart
+  dcterms:description "A non-hierarchical part of a URI, either a query or a fragment."@en .
+
+:URIPart-XPointer
+  rdfs:subClassOf :URIPart;
+  dcterms:description "A URI fragment in the XPointer format."@en ;
+  foaf:page <https://www.w3.org/TR/xptr/> .
+
+:URIPart-Media
+  rdfs:subClassOf :URIPart ;
+  dcterms:description "A URI query or fragment in the Media Fragments format."@en ;
+  foaf:page <https://www.w3.org/TR/media-frags/> .
+
+
+:URIPartDatatype
+  dcterms:description "The query or fragment portion of a URI, undecoded."@en .
+
+:URIPartDatatype-Decoded
+  dcterms:description "The query or fragment portion of a URI, percent-decoded."@en .
+
+
+# Other
+
+dbp:mime
+  schema:domainIncludes :Format ;
+  schema:rangeIncludes :Mimetype ;
+  skos:exactMatch formats:media_type , wdt:P1163 .
+
+
+dbp:extension
+  schema:domainIncludes :Format ;
+  schema:rangeIncludes :Suffix ;
+  skos:exactMatch formats:preferred_suffix , wdt:P1195 .
+
+
+dbp:cctld
+  schema:rangeIncludes :TopLevelDomain-CountryCode ;
+  skos:broadMatch wdt:P78 .
+
+
+dbp:extendedFrom
+  schema:domainIncludes :Mimetype ;
+  schema:rangeIncludes :Mimetype .
+
+
+dbp:ports
+  schema:domainIncludes :Service ;
+  schema:rangeIncludes :Port .
+
+skos:notation
+  schema:domainIncludes
+    :URIRefernce , :URIScheme , :Host , :Port , :Protocol ,
+    :Service , :Mimetype , :Suffix , :URIField , :URNNamespace ,
+    :WellKnownURISuffix , :URIPart ;
+  schema:rangeIncludes
+    xsd:anyURI , :URISchemeDatatype , :HostDatatype , :HostDatatype-Encoded ,
+    xsd:hexBinary , xsd:base64Binary , xsd:unsignedShort , :ProtocolDatatype ,
+    :ServiceDatatype , :MimetypeDatatype , :SuffixDatatype , :URIFieldDatatype ,
+    :URNNamespaceDatatype , :WellKnownURISuffixDatatype , :URIPartDatatype , :URIPartDatatype-Decoded .
+
+# Deprecated
+
+:Query
+  dcterms:description "Deprecated. Both query and fragment are identified using the same class."@en .
+
+:QueryKey
+  dcterms:description "Deprecated. URI fields are treated as properties."@en .
+
+:usedForFormat
+  dcterms:description "Deprecated. Its usage was replaced by an inverse property dbp:mime."@en .
+
+:Statement
+  dcterms:description "Deprecated. Reified URI statements shall be described in another way."@en .
+
+:object
+  rdfs:domain :Statement .
+:predicate
+  rdfs:domain :Statement .
+:subject
+  rdfs:domain :Statement .
+
+:WhoisServer
+  dcterms:description "Deprecated. A WHOIS server is identified by a domain name."@en .
+
+:Domain-Valid
+  dcterms:description "Deprecated. The validity of identifiers is indicated using other means."@en .
+
+:Domain-Invalid
+  dcterms:description "Deprecated. The validity of identifiers is indicated using other means."@en .

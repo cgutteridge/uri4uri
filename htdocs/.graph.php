@@ -29,12 +29,16 @@ function initGraph()
   $graph->ns('oldsuffix', "$PREFIX_OLD/suffix/");
   $graph->ns('oldmime', "$PREFIX_OLD/mime/");
   $graph->ns('vs', 'http://www.w3.org/2003/06/sw-vocab-status/ns#');
+  $graph->ns('dbr', 'http://dbpedia.org/resource/');
   $graph->ns('dbo', 'http://dbpedia.org/ontology/');
   $graph->ns('dbp', 'http://dbpedia.org/property/');
   $graph->ns('prov', 'http://www.w3.org/ns/prov#');
   $graph->ns('vann', 'http://purl.org/vocab/vann/');
   $graph->ns('schema', 'http://schema.org/');
   $graph->ns('void', 'http://rdfs.org/ns/void#');
+  $graph->ns('wd', 'http://www.wikidata.org/entity/');
+  $graph->ns('wdt', 'http://www.wikidata.org/prop/direct/');
+  $graph->ns('rfc', 'https://www.rfc-editor.org/info/rfc');
   
   return $graph;
 }
@@ -319,6 +323,7 @@ function normalizeEntityId($type, $id)
 
 function graphVocab($id)
 {
+  global $PREFIX;
   $graph = initGraph();
   $subject = 'uriv:';
   addBoilerplateTriples($graph, $subject, "URI Vocabulary", true);
@@ -327,6 +332,26 @@ function graphVocab($id)
   $graph->addCompressedTriple($subject, 'vann:preferredNamespaceUri', $graph->expandURI($subject), 'xsd:anyURI');
   $graph->addCompressedTriple($subject, 'vann:preferredNamespacePrefix', rtrim($subject, ':'), 'xsd:string');
   addVocabTriples($graph);
+  
+  $desc = array();
+  foreach($graph->ns as $prefix => $ns)
+  {
+    $desc[] = "@prefix $prefix: <$ns> .";
+  }
+  $desc[] = "@prefix : <{$graph->expandURI('uriv:')}> .";
+  $desc[] = "@base <$PREFIX/> .";
+  $desc[] = file_get_contents(__DIR__.'/data/vocab.ttl');
+  $parser = ARC2::getTurtleParser($graph->arc2config);
+  $parser->parse("", implode("\n", $desc));
+  $errors = $parser->getErrors();
+  if(!empty($errors))
+  {
+    foreach($errors as $error)
+    {
+      trigger_error($error, E_USER_WARNING);
+    }
+  }
+  $graph->addTriples($parser->getTriples());
 
   return $graph;
 }
@@ -377,7 +402,7 @@ function addVocabTriples($graph)
   $lines = file("$filepath/ns.csv");
   static $tmap = array(
     '' => array('skos:Concept', 'owl:Thing', 'owl:NamedIndividual'),
-    'c' => array('rdfs:Class'),  
+    'c' => array('rdfs:Class', 'owl:Class'),  
     'p' => array('rdf:Property'),
     'd' => array('rdfs:Datatype')
   );
@@ -692,7 +717,7 @@ class URIPartTriples extends Triples
           ++$i;
           $field_subject = "$subject#_$i";
           $graph->addCompressedTriple($subject, "rdf:_$i", $field_subject);
-          $graph->addCompressedTriple($field_subject, 'rdf:type', 'uriv:QueryKVP');
+          $graph->addCompressedTriple($field_subject, 'rdf:type', 'schema:PropertyValue');
           $graph->addCompressedTriple($field_subject, 'rdfs:label', $kv, 'xsd:string');
           if(strpos($kv, '=') !== false)
           {

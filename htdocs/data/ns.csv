@@ -3,6 +3,7 @@ URI,c,old,URI
 RelativeURI,c,new,Relative URI Reference
 URI-WellKnown,c,new,Well-Known URI
 URN,c,new,URN
+URL,c,new,URL
 PURL,c,new,Persistent URL
 PURL-Domain,c,new,Persistent URL Domain
 FragmentURI,c,old,URI with Fragment Identifier
@@ -23,7 +24,7 @@ urnNamespace,p,new,URN namespace
 wellknownSuffix,p,new,well-known URI suffix,
 purlDomain,p,new,PURL domain
 
-identifiedBy,p,old,identified by URI
+identifiedBy,p,old,identifier
 
 IANARef,p,old,IANA reference
 
@@ -35,8 +36,6 @@ HostDatatype,d,new,URI Host Identifier
 HostDatatype-Encoded,d,new,URI Host Identifier (ASCII)
 
 Domain,c,old,Internet Domain
-Domain-Invalid,c,old,Invalid Internet Domain
-Domain-Valid,c,old,Valid Internet Domain
 Domain-Special,c,new,Special-Use Domain
 TopLevelDomain,c,old,Top-Level Domain
 TopLevelDomain-CountryCode,c,old,Country Top-Level Domain
@@ -44,6 +43,7 @@ TopLevelDomain-Generic,c,old,Generic Top-Level Domain
 TopLevelDomain-GenericRestricted,c,old,Restricted Generic Top-Level Domain
 TopLevelDomain-Infrastructure,c,old,Infrastructure Top-Level Domain
 TopLevelDomain-Sponsored,c,old,Sponsored Top-Level Domain
+TopLevelDomain-Proposed,c,new,Proposed Top-Level Domain
 TopLevelDomain-Test,c,old,Test Top-Level Domain
 address,p,new,IP address
 delegationRecordPage,p,old,delegation record page
@@ -94,22 +94,24 @@ URIPartDatatype,d,new,URI Part Identifier
 URIPartDatatype-Decoded,d,new,URI Part Identifier (Percent-Decoded)
 
 # Removed
-key,p,old-deprecated,key
+key,p,old-deprecated,key,schema:propertyID
 length,p,old-deprecated,length
 md5,p,old-deprecated,md5 hash
-Query,c,old-deprecated,URI Query Part
-QueryKey,c,old-deprecated,URI Query Key
-QueryKVP,c,old-deprecated,URI Query Key-Value Pair
+Query,c,old-deprecated,URI Query Part,uriv:URIPart
+QueryKey,c,old-deprecated,URI Query Key,uriv:URIField
+QueryKVP,c,old-deprecated,URI Query Key-Value Pair,schema:PropertyValue
 usedForFormat,p,old-deprecated,used for format,dbp:mime
 usedForSuffix,p,old-deprecated,used for suffix,dbp:extension
-value,p,old-deprecated,value
-Statement,c,old-deprecated,Statement (reified)
-object,p,old-deprecated,object,object identified by
-predicate,p,old-deprecated,predicate,predicate identified by
-subject,p,old-deprecated,subject,subject identified by
-trueAt,p,old-deprecated,trueAt,statement true at
-URIDatatype,d,old-deprecated,URI Identifier
+value,p,old-deprecated,value,schema:value
+Statement,c,old-deprecated,Statement (reified),rdf:Statement
+object,p,old-deprecated,object identified by,rdf:object
+predicate,p,old-deprecated,predicate identified by,rdf:predicate
+subject,p,old-deprecated,subject identified by,rdf:subject
+trueAt,p,old-deprecated,statement true at
+URIDatatype,d,old-deprecated,URI Identifier,xsd:anyURI
 queryString,p,old-deprecated,query string
 QueryValue,c,old-deprecated,URI Query Value
-IANAPage,p,old-deprecated,IANA page
+IANAPage,p,old-deprecated,IANA page,foaf:page
 WhoisServer,c,old-deprecated,WHOIS Server
+Domain-Valid,c,old-deprecated,Valid Internet Domain
+Domain-Invalid,c,old-deprecated,Invalid Internet Domain
