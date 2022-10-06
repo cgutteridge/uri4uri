@@ -484,15 +484,7 @@ class URITriples extends Triples
   {
     $subject = 'uri:'.encodeIdentifier($uri);
     $graph->addCompressedTriple($subject, 'rdfs:isDefinedBy', 'uri:');
-    $b = parse_url_fixed($uri);    
-  
-    if(isset($b['fragment']))
-    {
-      list($uri_part) = explode('#', $uri, 2);
-      $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:FragmentURI');
-      $graph->addCompressedTriple($subject, 'uriv:fragment', self::addForType('part', $graph, $b['fragment']));
-      $graph->addCompressedTriple($subject, 'uriv:fragmentOf', self::addForType('uri', $graph, $uri_part));
-    }
+    $b = parse_url_fixed($uri);
   
     if(isset($b['scheme']))
     {
@@ -633,6 +625,14 @@ class URITriples extends Triples
     if(isset($b['query']))
     {
       $graph->addCompressedTriple($subject, 'uriv:query', self::addForType('part', $graph, $b['query']));
+    }
+  
+    if(isset($b['fragment']))
+    {
+      list($uri_part) = explode('#', $uri, 2);
+      $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:FragmentURI');
+      $graph->addCompressedTriple($subject, 'uriv:fragment', self::addForType('part', $graph, $b['fragment']));
+      $graph->addCompressedTriple($subject, 'uriv:fragmentOf', self::addForType('uri', $graph, $uri_part));
     }
     
     if(!$queries) return $subject;
