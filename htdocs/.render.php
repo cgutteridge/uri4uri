@@ -86,6 +86,7 @@ function getResourceTypeString($graph, $resource)
 function renderResource($graph, $resource, &$visited_nodes, $parent = null, $followed_relations = array())
 {
   global $PREFIX;
+  global $PREFIX_OLD;
   $type = $resource->nodeType();
   $resource_key = resourceKey($resource);
   $visited_nodes[$resource_key] = $resource;
@@ -202,7 +203,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
         {
           $res_id = '_'.substr($value, 2);
         }
-        if(str_starts_with($graph->shrinkURI($value), 'old')) continue;
+        if(str_starts_with($value, $PREFIX_OLD)) continue;
         if($rel_followed || isset($visited_nodes[$res_key]) || (!str_starts_with($value, '_:') && (@$atomic_properties[$rel->toString()] || @$atomic_properties[$rel_key] || ($r2 instanceof Graphite_Resource && $r2->isType('foaf:Document')))))
         {
           $value = prettyResourceLink($graph, $r2);
