@@ -329,6 +329,8 @@ function graphVocab($id)
   addBoilerplateTriples($graph, $subject, "URI Vocabulary", true);
   $graph->addCompressedTriple($subject, 'rdf:type', 'owl:Ontology');
   $graph->addCompressedTriple($subject, 'dcterms:title', "URI Vocabulary", 'literal', 'en');
+  $graph->addCompressedTriple($subject, 'dcterms:replaces', 'olduriv:');
+  $graph->addCompressedTriple($subject, 'owl:priorVersion', 'olduriv:');
   $graph->addCompressedTriple($subject, 'vann:preferredNamespaceUri', $graph->expandURI($subject), 'xsd:anyURI');
   $graph->addCompressedTriple($subject, 'vann:preferredNamespacePrefix', rtrim($subject, ':'), 'xsd:string');
   addVocabTriples($graph);
