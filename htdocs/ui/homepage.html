@@ -1,5 +1,5 @@
 
-<p>This site was created for fun on April 1st 2013 by <a href='http://users.ecs.soton.ac.uk/people/cjg'>Christopher Gutteridge</a> (University of Southampton) with a <a href='/aprilfools'>very over-the-top set of claims</a>. Since July 2022, it is developed by <a href="https://is4.site/">IS4</a>.</p>
+<p>This site was created for fun on April 1st 2013 by <a href='http://users.ecs.soton.ac.uk/people/cjg'>Christopher Gutteridge</a> (University of Southampton) with a <a href='/aprilfools'>very over-the-top set of claims</a>. Since July 2022, it is hosted and developed by <a href="//my.data.is4.site/people/is4">IS4</a>.</p>
 
 <figure>
 <figcaption>Generate&hellip;</figcaption>
@@ -118,6 +118,7 @@
 </table>
 </figure>
 
+<section>
 <h3>How does it work?</h3>
 <p>The URI resolver just parses the URI to get the parts, then uses registries and external queries to retrieve information about MIME types, top-level domains and so forth. This data is taken from IANA and Wikidata and is periodically updated.</p>
 
@@ -126,13 +127,14 @@
 <a href="/uri/mailto:webmaster@microsoft.com">email addresses</a>, 
 <a href="/uri/urn:isbn:817224164X">ISBNs</a> as well as some more obscure schemes such as
 <a href="/uri/gopher://sdf.org:70/1/computers/apple/mac/hypercard">Gopher</a>.</p> 
+</section>
 
+<section>
 <h3>URIs</h3>
-
 <p>The URIs on this site are in the format:</p>
 <p><code>http://purl.org/uri4uri/&lt;type&gt;/&lt;identifier&gt;</code></p>
 <p>...where <code>&lt;type&gt;</code> is one of <code>uri</code>, <code>scheme</code>, <code>host</code>, <code>part</code>, <code>mime</code>, <code>suffix</code>, <code>urn</code>, <code>well-known</code>, <code>port</code>, <code>protocol</code>, <code>service</code>. Percent-encoding <code>&lt;identifier&gt;</code> is necessary only for <code>?</code> and <code>#</code> and the usual invalid characters.</p>
-<p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF/XML, JSON-LD or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: ttl, rdf, jsonld, nt, html. These have URLs in the following formats:</p>
+<p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF/XML, JSON-LD or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: <code>ttl</code>, <code>rdf</code>, <code>jsonld</code>, <code>nt</code>, <code>html</code>. These have URLs in the following formats:</p>
 <p><code>http://purl.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</code></p>
 <p>Examples:</p>
 <p><code><a href='/uri/http://xkcd.com/123/'>http://purl.org/uri4uri/uri/http://xkcd.com/123/</a></code> - URI for  "http://xkcd.com/123/"<br>
@@ -145,13 +147,20 @@
 <code><a href='/port/80'>http://purl.org/uri4uri/port/80</a></code> - URI for the port 80<br>
 <code><a href='/protocol/tcp'>http://purl.org/uri4uri/protocol/tcp</a></code> - URI for the TCP protocol
 </p>
+<p>Each identifier is normalized before a description is generated. All identifiers except for URIs are converted to lowercase. Domain names are converted to their Unicode-based variants. Invalid characters in URIs are percent-encoded.</p>
+</section>
 
+<section>
 <h3>How big is it?</h3>
 <p>Virtually infinite, and still growing! Since it generates most results on the fly however, the size can be pretty efficiently compressed to almost 0. The remainder are the registries from IANA, which are cached and take about 2.5 MiB of space in total.</p>
+</section>
 
+<section>
 <h3>What is included</h3>
 <p>URIs, Internet Domains, Mime Types, File Suffixes, URI Schemes, URN Namespaces, Well-Known URIs, Ports, Protocols.</p>
+</section>
 
+<section>
 <h3>How do I find the URI4URI which identifies the URL of a page I'm viewing?</h3>
 <p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://purl.org/uri4uri/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
 <h3>What parts of a URI are supported?</h3>
@@ -159,9 +168,50 @@
 <a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http://foo:bar@bbc.co.uk:80/index.html%3Fa=1&amp;b=2%23fragment'>http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2#fragment</a>, however other URI schemes are supported, e.g.
 <a href='/uri/tel:+2035989395'>tel:</a> or 
 <a href='/uri/secondlife://Ancient Ireland/167/153'>secondlife:</a>.</p>
+</section>
 
-<h3>Uncool URIs</h3>
-<p>Sir Professor TimBL has said to you "<a href='http://www.w3.org/Provider/Style/URI'>Cool URIs don't change</a>". This implies a sad corollary; "Uncool URIs do sometimes change". You may use the uri4uri URIs to describe your own metadata about a URI, including where, why and by whom it was assigned, and what it was the sameAs at a given moment or interval throughout its existence.</p>
-
+<section>
 <h3>Can I see the source code?</h3>
-<p>Sure, you can find the <a href='https://github.com/IllidanS4/uri4uri'>uri4uri source on github.com</a></p>
+<p>Sure, you can find the <a href='//github.com/IllidanS4/uri4uri'>uri4uri source on github.com</a></p>
+<section>
+
+<section>
+<h3>Changelog</h3>
+<p>This section summarizes the changes to this website since July 2022:</p>
+
+<figure>
+<figcaption>General</figcaption>
+<ul>
+<li>Individual pages have semantic <code>&lt;meta&gt;</code> tags!</li>
+<li>JSON-LD was added as a support format of serialization, and is also emitted as part of the HTML documents. Some issues in the other serializers were fixed.</li>
+<li>A lot of new entity types and records were added, for use by URIs: ports, well-known URI suffixes, URN namespaces, protocols and named services.</li>
+<li>Percent-encoding of most characters is optional; only <code>%?#</code> have to be encoded (in addition to the usual forbidden characters). Identifiers are always normalized.</li>
+<li>All databases are generated on-the-fly and frequently updated (from sources such as IANA).</li>
+<li>Under the hood, Wikidata is used to provide additional and rich info, beyond the stored databases. Thanks to this, even proprietary MIME types or file extensions can be resolved.</li>
+<li>Provenance information, term statuses and vocabulary annotations added wherever possible.</li>
+<li>Several pieces of vocabulary were deprecated and replaced with common properties, such as linking to ports, file extensions or MIME types.</li>
+<li>All datasets are published and descriped using <a href="/void">VoID</a>.</li>
+<li>Many general fixes in various parts of the code.</li>
+</figure>
+<figure>
+<figcaption>URIs</figcaption>
+<ul>
+<li>URI parsing improved (fixes PHP's edge cases).</li>
+<li>Relative URIs are properly recognized and supported. Other types or URIs are also recognized (well-known URIs, URNs, PURLs). The port may be implied by the scheme.</li>
+<li>Query and fragment parsing was unified and reworked. Individual query fields are represented as properties. XPointer and Media Fragments are recognized.</li>
+<li>Conversion to ASCII/IRI is included as a notation.</li>
+</ul>
+</figure>
+<figure>
+<figcaption>Domains</figcaption>
+<ul>
+<li>IDN support for domain names added. Domains are normalized to their Unicode form and the ASCII form is added as a notation.</li>
+<li>Different types of hosts are supported ‒ domains (special-use etc.), IPv4, IPv6, IPvFuture. Conversion back and forth using DNS is supported.</li>
+<li>The WHOIS mechanism now uses RDAP to determine the WHOIS server, and can derive several properties from the RDAP record, for both domains and IP addresses.</li>
+</ul>
+</figure>
+<figure>
+<figcaption>Formats</figcaption>
+<li>Structural MIME types (with <code>+xml</code> and similar at the end) link to the base MIME type.</li>
+</figure>
+</section>
