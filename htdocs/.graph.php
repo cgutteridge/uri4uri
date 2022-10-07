@@ -1141,13 +1141,13 @@ class HostTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:TopLevelDomain');
     
     $tlds = get_tlds();
-    if(isset($tlds['#source']))
-    {
-      $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $tlds['#source']);
-      $graph->addCompressedTriple($tlds['#source'], 'rdf:type', 'foaf:Document');
-    }
     if($domain_idn !== false && isset($tlds[$domain_idn]))
     {
+      if(isset($tlds['#source']))
+      {
+        $graph->addCompressedTriple($subject, 'prov:wasDerivedFrom', $tlds['#source']);
+        $graph->addCompressedTriple($tlds['#source'], 'rdf:type', 'foaf:Document');
+      }
       $tld = $tlds[$domain_idn];
       $graph->addCompressedTriple($subject, 'uriv:delegationRecordPage', "http://www.iana.org$tld[url]");
       $graph->addCompressedTriple($subject, 'vs:moreinfo', "http://www.iana.org$tld[url]");
