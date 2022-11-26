@@ -669,6 +669,11 @@ class URIPartTriples extends Triples
   {
     return array('' => array());
   }
+  
+  protected function normalizeId($id)
+  {
+    return $id;
+  }
 
   protected function add($graph, $part, $queries = false)
   {
@@ -1264,6 +1269,16 @@ class MIMETriples extends Triples
   protected function source()
   {
     return get_mime_types();
+  }
+  
+  protected function normalizeId($mime)
+  {
+    $param_split = explode(';', $mime, 2);
+    if(count($param_split) >= 2)
+    {
+      return parent::normalizeId($param_split[0]).';'.normalizeEntityId('part', $param_split[1]);
+    }
+    return parent::normalizeId($mime);
   }
   
   protected function add($graph, $mime, $queries = false)
