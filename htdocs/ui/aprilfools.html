@@ -62,7 +62,7 @@ $(document).ready( function() {
 		{
 			uri4uri = "/fragment/"+encodeURIComponent(uri.val());
 		}
-		$('#result').html("<a href='"+uri4uri+"'>http://purl.org/uri4uri"+uri4uri+"</a>" );
+		$('#result').html("<a href='"+uri4uri+"'>https://w3id.org/uri4uri"+uri4uri+"</a>" );
 		$('#resultBlock').show();
 	}
 	uri.blur( blur );
@@ -118,18 +118,18 @@ Figure 1. Comparison in size between uri4uri &amp; conventional linked data
 <h3>What is included</h3>
 <p>URIs, URI fragment identifiers, Internet Domains, Mime Types, File Suffixes, URI Schemes.</p>
 <h3>How do I find the URI4URI which identifies the URL of a page I'm viewing?</h3>
-<p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://purl.org/uri4uri/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
+<p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "https://w3id.org/uri4uri/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
 <h3>What parts of a URI are supported?</h3>
 <p>The majority of the effort has gone into calculating the components of 
 <a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2'>http://foo:bar@bbc.co.uk:80/index.html?a=1&b=2</a>, however other URI schemes are supported, eg.
 <a href='/uri/tel:+2035989395'>tel:</a> or 
 <a href='/uri/secondlife://Ancient%20Ireland/167/153'>secondlife:</a>.</p>
 <h3>Why are URIs with a fragment handled differently?</h3>
-<p>By definition nothing in a URI after a '#' is sent to the server. To make a resolvable URI about a URI with a # it must be encoded. We took the decision to use standard URL encoding on URIs placed after http://purl.org/uri4uri/fragment/ but not http://purl.org/uri4uri/uri/. While this is a little inconsistent, it does mean that the majority of uri4uri URIs can be written without encoding, eg. a youtube video URL with no "#" would just be identified by 
-<a href="/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ">http://purl.org/uri4uri/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ</a> but the URI for http://www.w3.org/2004/02/skos/core#notation will be written as <a href='/fragment/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation'>http://purl.org/uri4uri/fragment/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation</a>.</p>
+<p>By definition nothing in a URI after a '#' is sent to the server. To make a resolvable URI about a URI with a # it must be encoded. We took the decision to use standard URL encoding on URIs placed after https://w3id.org/uri4uri/fragment/ but not https://w3id.org/uri4uri/uri/. While this is a little inconsistent, it does mean that the majority of uri4uri URIs can be written without encoding, eg. a youtube video URL with no "#" would just be identified by 
+<a href="/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ">https://w3id.org/uri4uri/uri/http://www.youtube.com/watch?v=dQw4w9WgXcQ</a> but the URI for http://www.w3.org/2004/02/skos/core#notation will be written as <a href='/fragment/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation'>https://w3id.org/uri4uri/fragment/http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23notation</a>.</p>
 <h3>Is it recursive?</h3>
 <p>Yes, you can look-up uri4uri URIs in uri4uri: 
-<a href='/uri/http://purl.org/uri4uri/uri/http://purl.org/uri4uri/'>http://purl.org/uri4uri/uri/http://purl.org/uri4uri/uri/http://purl.org/uri4uri/</a>, but only to a depth of 64, for obvious reasons.</p>
+<a href='/uri/https://w3id.org/uri4uri/uri/https://w3id.org/uri4uri/'>https://w3id.org/uri4uri/uri/https://w3id.org/uri4uri/uri/https://w3id.org/uri4uri/</a>, but only to a depth of 64, for obvious reasons.</p>
 <h3>Uncool URIs</h3>
 <p>Sir Professor TimBL has said to you "<a href='//www.w3.org/Provider/Style/URI'>Cool URIs don't change</a>". This implies a sad corollary; "Uncool URIs do sometimes change". You may use the uri4uri URIs to describe your own metadata about a URI, including where, why and by whom it was assigned, and what it was the sameAs at a given moment or interval throughout its existence.</p>
 <p>A good example of this is the <a href='//en.wikipedia.org/wiki/Paris'>Paris</a> article on the English Wikipedia. Initially this described Paris in Texas, but in 2006 this was changed to describe Paris in France to calm some complaints from Europe. This means that the meaning of the DBPedia URI 
@@ -137,17 +137,17 @@ Figure 1. Comparison in size between uri4uri &amp; conventional linked data
 will have altered at that time. This can be expressed with a simple reified URI description:</p>
 
 <pre>&lt;http://dpbedia.org/resource/Paris&gt; 
-	uriv:identifiedBy &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; .
+	uriv:identifiedBy &lt;https://w3id.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; .
 
-&lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; 
+&lt;https://w3id.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; 
 	a uriv:URI .
 	uriv:assignedBy &lt;http://dbpedia.org/resource/DBpedia&gt; .
 
 _:b1
 	a uriv:Statement ;
-	uriv:subject &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; ;
-	uriv:predicate &lt;http://purl.org/uri4uri/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
-	uriv:object &lt;http://purl.org/uri4uri/uri/sws.geonames.org/7174050/&gt; ;
+	uriv:subject &lt;https://w3id.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; ;
+	uriv:predicate &lt;https://w3id.org/uri4uri/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
+	uriv:object &lt;https://w3id.org/uri4uri/uri/sws.geonames.org/7174050/&gt; ;
 	uriv:trueAt _:b3 .
 
 _:b3
@@ -156,9 +156,9 @@ _:b3
 
 _:b2
 	a uriv:Statement ;
-	uriv:subject &lt;http://purl.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; ;
-	uriv:predicate &lt;http://purl.org/uri4uri/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
-	uriv:object &lt;http://purl.org/uri4uri/uri/sws.geonames.org/2988507/&gt; ;
+	uriv:subject &lt;https://w3id.org/uri4uri/uri/http://dpbedia.org/resource/Paris&gt; ;
+	uriv:predicate &lt;https://w3id.org/uri4uri/fragment.html/http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs&gt; ;
+	uriv:object &lt;https://w3id.org/uri4uri/uri/sws.geonames.org/2988507/&gt; ;
 	uriv:trueAt _:b4 .
 
 _:b4

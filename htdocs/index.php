@@ -10,7 +10,7 @@ require_once(".render.php");
 
 $filepath = __DIR__."/data";
 $BASE = '';
-$PREFIX = 'http://purl.org/uri4uri';
+$PREFIX = 'https://w3id.org/uri4uri';
 $PREFIX_OLD = 'http://uri4uri.net';
 $ARCHIVE_BASE = '//web.archive.org/web/20220000000000/';
 

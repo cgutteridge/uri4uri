@@ -132,20 +132,20 @@
 <section>
 <h3>URIs</h3>
 <p>The URIs on this site are in the format:</p>
-<p><code>http://purl.org/uri4uri/&lt;type&gt;/&lt;identifier&gt;</code></p>
+<p><code>https://w3id.org/uri4uri/&lt;type&gt;/&lt;identifier&gt;</code></p>
 <p>...where <code>&lt;type&gt;</code> is one of <code>uri</code>, <code>scheme</code>, <code>host</code>, <code>part</code>, <code>mime</code>, <code>suffix</code>, <code>urn</code>, <code>well-known</code>, <code>port</code>, <code>protocol</code>, <code>service</code>. Percent-encoding <code>&lt;identifier&gt;</code> is necessary only for <code>?</code> and <code>#</code> and the usual invalid characters.</p>
 <p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF/XML, JSON-LD or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: <code>ttl</code>, <code>rdf</code>, <code>jsonld</code>, <code>nt</code>, <code>html</code>. These have URLs in the following formats:</p>
-<p><code>http://purl.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</code></p>
+<p><code>https://w3id.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</code></p>
 <p>Examples:</p>
-<p><code><a href='/uri/http://xkcd.com/123/'>http://purl.org/uri4uri/uri/http://xkcd.com/123/</a></code> - URI for  "http://xkcd.com/123/"<br>
-<code><a href='/host/totl.net'>http://purl.org/uri4uri/host/totl.net</a></code> - URI for the domain "totl.net"<br>
-<code><a href='/suffix/pdf'>http://purl.org/uri4uri/suffix/pdf</a></code> - URI for the suffix ".pdf"<br>
-<code><a href='/scheme/ftp'>http://purl.org/uri4uri/scheme/ftp</a></code> - URI for the URI scheme "ftp"<br>
-<code><a href='/mime/text/plain'>http://purl.org/uri4uri/mime/text/plain</a></code> - URI for the MIME Type "text/plain"<br>
-<code><a href='/urn/uuid'>http://purl.org/uri4uri/urn/uuid</a></code> - URI for the "urn:uuid:" Namespace<br>
-<code><a href='/well-known/genid'>http://purl.org/uri4uri/well-known/void</a></code> - URI for the "/.well-known/void" Service<br>
-<code><a href='/port/80'>http://purl.org/uri4uri/port/80</a></code> - URI for the port 80<br>
-<code><a href='/protocol/tcp'>http://purl.org/uri4uri/protocol/tcp</a></code> - URI for the TCP protocol
+<p><code><a href='/uri/http://xkcd.com/123/'>https://w3id.org/uri4uri/uri/http://xkcd.com/123/</a></code> - URI for  "http://xkcd.com/123/"<br>
+<code><a href='/host/totl.net'>https://w3id.org/uri4uri/host/totl.net</a></code> - URI for the domain "totl.net"<br>
+<code><a href='/suffix/pdf'>https://w3id.org/uri4uri/suffix/pdf</a></code> - URI for the suffix ".pdf"<br>
+<code><a href='/scheme/ftp'>https://w3id.org/uri4uri/scheme/ftp</a></code> - URI for the URI scheme "ftp"<br>
+<code><a href='/mime/text/plain'>https://w3id.org/uri4uri/mime/text/plain</a></code> - URI for the MIME Type "text/plain"<br>
+<code><a href='/urn/uuid'>https://w3id.org/uri4uri/urn/uuid</a></code> - URI for the "urn:uuid:" Namespace<br>
+<code><a href='/well-known/genid'>https://w3id.org/uri4uri/well-known/void</a></code> - URI for the "/.well-known/void" Service<br>
+<code><a href='/port/80'>https://w3id.org/uri4uri/port/80</a></code> - URI for the port 80<br>
+<code><a href='/protocol/tcp'>https://w3id.org/uri4uri/protocol/tcp</a></code> - URI for the TCP protocol
 </p>
 <p>Each identifier is normalized before a description is generated. All identifiers except for URIs are converted to lowercase. Domain names are converted to their Unicode-based variants. Invalid characters in URIs are percent-encoded.</p>
 </section>
@@ -162,7 +162,7 @@
 
 <section>
 <h3>How do I find the URI4URI which identifies the URL of a page I'm viewing?</h3>
-<p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "http://purl.org/uri4uri/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
+<p>Simple, just drag this handy "bookmarklette" into your browser tool bar: <a class='bookmarklet' href='javascript:window.location = "https://w3id.org/uri4uri/?uri="+encodeURIComponent(window.location.href);'>URI4URI</a> when you click it, it runs a teeny tiny bit of javascript which takes you to a page telling you about the URL and it's uri4uri.</p> 
 <h3>What parts of a URI are supported?</h3>
 <p>The majority of the effort has gone into calculating the components of 
 <a href='/scheme/http'>http</a> and <a href='/scheme/https'>https</a> URIs. An example showing off all the parts of a URI would be <a href='/uri/http://foo:bar@bbc.co.uk:80/index.html%3Fa=1&amp;b=2%23fragment'>http://foo:bar@bbc.co.uk:80/index.html?a=1&amp;b=2#fragment</a>, however other URI schemes are supported, e.g.
