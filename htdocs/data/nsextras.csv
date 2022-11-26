@@ -47,7 +47,7 @@ skos:altLabel,p,alternative label
 
 dcterms:description,p,description
 dcterms:replaces,p,replaces
-dcterms:isReplacedBy,p,replaced by
+dcterms:isReplacedBy,p,replacement
 dcterms:hasPart,p,part
 dcterms:date,p,date
 dcterms:created,p,created
