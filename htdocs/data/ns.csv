@@ -71,6 +71,7 @@ ServiceDatatype,d,new,Named Service Identifier
 
 Mimetype,c,old,MIME Type
 MimetypeDatatype,d,old,MIME Type Identifier
+mimeParams,p,new,MIME parameters
 
 Suffix,c,old,Filename Suffix
 SuffixDatatype,d,old,Filename Suffix Identifier

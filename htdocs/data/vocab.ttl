@@ -366,6 +366,13 @@
   dcterms:description "The identifier of a MIME type."@en .
 
 
+:mimeParams
+  a owl:ObjectProperty ;
+  schema:domainIncludes :Mimetype ;
+  rdfs:range :URIPart ;
+  dcterms:description "Specifies the parameters of a MIME type."@en .
+
+
 # Suffix
 
 :Suffix

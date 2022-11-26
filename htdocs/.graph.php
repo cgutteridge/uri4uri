@@ -1278,10 +1278,17 @@ class MIMETriples extends Triples
     $graph->addCompressedTriple($subject, 'rdfs:label', $mime, 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $mime, 'uriv:MimetypeDatatype');
     
-    $mime_types = get_mime_types();
-    addIanaRecord($graph, $subject, $mime_types, $mime);
-      
-    @list(, $suffix_type) = explode("+", $mime, 2);
+    @list($bare_mime, $param_part) = explode(';', $mime, 2);
+    if(!empty($param_part))
+    {
+      $graph->addCompressedTriple($subject, 'skos:broader', self::addForType('mime', $graph, $bare_mime));
+      $graph->addCompressedTriple($subject, 'uriv:mimeParams', self::addForType('part', $graph, $param_part));
+    }else{
+      $mime_types = get_mime_types();
+      addIanaRecord($graph, $subject, $mime_types, $bare_mime);
+    }
+    
+    @list(, $suffix_type) = explode('+', $bare_mime, 2);
     if(!empty($suffix_type))
     {
       static $suffix_map = array(
