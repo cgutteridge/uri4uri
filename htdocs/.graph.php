@@ -510,7 +510,7 @@ class URITriples extends Triples
       $host_subject = self::addForType('host', $graph, $host);
       $graph->addCompressedTriple($subject, 'uriv:host', $host_subject);
       
-      static $purl_hosts = array('purl.org', 'purl.com', 'purl.net');
+      static $purl_hosts = array('purl.org', 'purl.com', 'purl.net', 'w3id.org');
       if(in_array($host, $purl_hosts))
       {
         $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:PURL');
