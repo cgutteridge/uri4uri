@@ -1538,6 +1538,11 @@ class PortTriples extends Triples
     return is_numeric($id) ? $id : null;
   }
   
+  protected function normalizeId($id)
+  {
+    return is_numeric($id) ? (string)(0+$id) : parent::normalizeId($id);
+  }
+  
   protected function add($graph, $port, $queries = false)
   {
     $subject = 'port:'.encodeIdentifier($port);
