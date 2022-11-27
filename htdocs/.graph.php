@@ -1609,7 +1609,7 @@ class PortTriples extends Triples
 CONSTRUCT {
   ?technology dbp:ports ?subject .
   ?subject a uriv:Port .
-  ?subject rdfs:label "{$this->STR($port)}" .
+  ?subject rdfs:label ?protocol_label .
   ?subject skos:notation "{$this->STR($port)}"^^xsd:unsignedShort .
   $subject_node skos:narrower ?subject .
   ?protocol_node dcterms:hasPart ?subject .
@@ -1625,6 +1625,7 @@ CONSTRUCT {
   VALUES ?protocol_lower { $protocol_values }
   BIND(UCASE(?protocol_lower) AS ?protocol_upper)
   { ?protocol ?protocol_label_prop ?protocol_lower . } UNION { ?protocol ?protocol_label_prop ?protocol_upper . }
+  BIND(CONCAT("{$this->STR($port)} (", ?protocol_upper, ")") AS ?protocol_label)
   BIND(URI(CONCAT("{$this->STR($this->URI($graph->expandURI($subject)))}#", ?protocol_lower)) AS ?subject)
   BIND(URI(CONCAT("{$this->STR($this->URI($graph->expandURI('protocol:')))}", ?protocol_lower)) AS ?protocol_node)
   # IANA service name
