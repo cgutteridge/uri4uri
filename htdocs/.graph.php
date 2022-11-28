@@ -120,6 +120,7 @@ abstract class Triples
     global $BASE;
     $triples = self::map()[$type];
     $link_old = $triples->link_old;
+    $id = $triples->normalizeId($id);
     $subject = $triples->add($graph, $id, $queries);
     $graph->addCompressedTriple($subject, 'void:inDataset', "$BASE/void#$type");
     return $subject;
