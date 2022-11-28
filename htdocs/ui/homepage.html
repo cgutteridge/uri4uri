@@ -131,10 +131,10 @@
 
 <section>
 <h3>URIs</h3>
-<p>The URIs on this site are in the format:</p>
+<p>The resources hosted by this site use URIs in the format:</p>
 <p><code>https://w3id.org/uri4uri/&lt;type&gt;/&lt;identifier&gt;</code></p>
-<p>...where <code>&lt;type&gt;</code> is one of <code>uri</code>, <code>scheme</code>, <code>host</code>, <code>part</code>, <code>mime</code>, <code>suffix</code>, <code>urn</code>, <code>well-known</code>, <code>port</code>, <code>protocol</code>, <code>service</code>. Percent-encoding <code>&lt;identifier&gt;</code> is necessary only for <code>?</code> and <code>#</code> and the usual invalid characters.</p>
-<p>Resolving a URI will invoke content negotiation to pick on of Turtle, RDF/XML, JSON-LD or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: <code>ttl</code>, <code>rdf</code>, <code>jsonld</code>, <code>nt</code>, <code>html</code>. These have URLs in the following formats:</p>
+<p>...where <code>&lt;type&gt;</code> is one of <code>uri</code>, <code>scheme</code>, <code>host</code>, <code>part</code>, <code>mime</code>, <code>suffix</code>, <code>urn</code>, <code>well-known</code>, <code>port</code>, <code>protocol</code>, <code>service</code>. Percent-encoding <code>&lt;identifier&gt;</code> is necessary only for <code>?</code> and <code>#</code> and the usual invalid characters. Note that due to the limitations of <a href="https://w3id.org">w3id.org</a>, you should always use <code>https://</code> and never escape <code>/</code> (in <code>/uri/</code>, escaped <code>/</code> in the described URI is encoded as <code>%252F</code>).</p>
+<p>Resolving a URI will invoke content negotiation to pick one of Turtle, RDF/XML, JSON-LD or HTML and a 303 redirect to the relevant document. Each URI has an associated set of documents: <code>ttl</code>, <code>rdf</code>, <code>jsonld</code>, <code>nt</code>, <code>html</code>. These have URLs in the following formats:</p>
 <p><code>https://w3id.org/uri4uri/&lt;type&gt;.&lt;format&gt;/&lt;identifier&gt;</code></p>
 <p>Examples:</p>
 <p><code><a href='/uri/http://xkcd.com/123/'>https://w3id.org/uri4uri/uri/http://xkcd.com/123/</a></code> - URI for  "http://xkcd.com/123/"<br>
