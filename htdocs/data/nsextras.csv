@@ -100,6 +100,26 @@ void:entities,p,number of entities
 void:inDataset,p,dataset
 void:exampleResource,p,example
 
+hydra:Collection,c,Collection
+hydra:IriTemplate,c,URI Template
+hydra:IriTemplateMapping,c,URI Template Mapping
+hydra:view,p,view
+hydra:memberAssertion,p,member assertion
+hydra:subject,p,subject
+hydra:property,p,property
+hydra:object,p,object
+hydra:totalItems,p,total items
+hydra:search,p,search
+hydra:template,p,template
+hydra:mapping,p,mapping
+hydra:variableRepresentation,p,variable representation
+hydra:variable,p,variable
+hydra:required,p,required
+hydra:member,p,member
+hydra:Rfc6570Template,d,RFC 6570
+hydra:BasicRepresentation,,basic
+hydra:ExplicitRepresentation,,explicit
+
 vs:term_status,p,term status
 vs:moreinfo,p,status info
 

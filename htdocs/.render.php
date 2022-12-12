@@ -130,6 +130,7 @@ function renderResource($graph, $resource, &$visited_nodes, $parent = null, $fol
     'http://www.w3.org/ns/prov#wasDerivedFrom #inverseRelation' => true,
     'http://www.w3.org/2003/06/sw-vocab-status/ns#moreinfo #inverseRelation' => true,
     'http://rdfs.org/ns/void#inDataset #relation' => true,
+    'http://www.w3.org/ns/hydra/core#member #inverseRelation' => true,
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#first #inverseRelation' => true,
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest #inverseRelation' => true
   );

@@ -36,6 +36,7 @@ function initGraph()
   $graph->ns('vann', 'http://purl.org/vocab/vann/');
   $graph->ns('schema', 'http://schema.org/');
   $graph->ns('void', 'http://rdfs.org/ns/void#');
+  $graph->ns('hydra', 'http://www.w3.org/ns/hydra/core#');
   $graph->ns('wd', 'http://www.wikidata.org/entity/');
   $graph->ns('wdt', 'http://www.wikidata.org/prop/direct/');
   $graph->ns('rfc', 'https://www.rfc-editor.org/info/rfc');
@@ -127,7 +128,9 @@ abstract class Triples
     $link_old = $triples->link_old;
     $id = $triples->normalizeId($id);
     $subject = $triples->add($graph, $id, $queries);
-    $graph->addCompressedTriple($subject, 'void:inDataset', "$BASE/void#$type");
+    $dataset = "$BASE/void#$type";
+    $graph->addCompressedTriple($subject, 'void:inDataset', $dataset);
+    $graph->addCompressedTriple($dataset, 'hydra:member', $subject);
     return $subject;
   }
   
@@ -164,6 +167,7 @@ abstract class Triples
   {
     global $BASE;
     global $PREFIX;
+    $total_count = 0;
     foreach(self::map() as $type => $triples)
     {
       $records = $triples->source();
@@ -173,12 +177,19 @@ abstract class Triples
         if(empty($triples->entity_type))
         {
           $graph->addCompressedTriple($subject, 'void:subset', $subset);
+          $graph->addCompressedTriple($subject, 'hydra:view', $subset);
         }else{
           $graph->addCompressedTriple($subject, 'void:classPartition', $subset);
           $graph->addCompressedTriple($subset, 'void:class', $triples->entity_type);
+          $graph->addCompressedTriple($subject, 'hydra:view', $subset);
+          $assertion = $subset.'-class';
+          $graph->addCompressedTriple($subset, 'hydra:memberAssertion', $assertion);
+          $graph->addCompressedTriple($assertion, 'hydra:property', 'rdf:type');
+          $graph->addCompressedTriple($assertion, 'hydra:object', $triples->entity_type);
         }
         
         $graph->addCompressedTriple($subset, 'rdf:type', 'void:Dataset');
+        $graph->addCompressedTriple($subset, 'rdf:type', 'hydra:Collection');
         $graph->addCompressedTriple($subset, 'dcterms:source', $records['#source']);
         foreach(array_rand($records, 2) as $id)
         {
@@ -191,11 +202,22 @@ abstract class Triples
         }
         $graph->addCompressedTriple($subset, 'void:dataDump', "$BASE/$type");
         $graph->addCompressedTriple($subset, 'void:rootResource', "$PREFIX/$type/");
-        $graph->addCompressedTriple($subset, 'void:entities', count($records), 'xsd:integer');
+        $count = count($records);
+        $total_count += $count;
+        $graph->addCompressedTriple($subset, 'void:entities', $count, 'xsd:integer');
+        $graph->addCompressedTriple($subset, 'hydra:totalItems', $count, 'xsd:integer');
         $graph->addCompressedTriple($subset, 'void:uriSpace', "$PREFIX/$type/", 'literal');
         $graph->addCompressedTriple($subset, 'void:uriRegexPattern', '^'.addcslashes($PREFIX, "\\.")."/$type/", 'literal');
+        $template = $subset.'-notation';
+        $graph->addCompressedTriple($subset, 'hydra:search', $template);
+        $graph->addCompressedTriple($template, 'rdf:type', 'hydra:IriTemplate');
+        $graph->addCompressedTriple($template, 'hydra:template', "$BASE/$type{/notation}", 'hydra:Rfc6570Template');
+        $graph->addCompressedTriple($template, 'hydra:variableRepresentation', 'hydra:BasicRepresentation');
+        $mapping = $template.'-var';
+        $graph->addCompressedTriple($template, 'hydra:mapping', "$subject#notation");
       }
     }
+    return $total_count;
   }
   
   public static function normalizeEntityId($type, $id)
@@ -373,6 +395,7 @@ function graphVoid($id)
   $document = addBoilerplateTriples($graph, $subject, "VoID Dataset", false);
   $graph->addCompressedTriple($document, 'rdf:type', 'void:DatasetDescription');
   $graph->addCompressedTriple($subject, 'rdf:type', 'void:Dataset');
+  $graph->addCompressedTriple($subject, 'rdf:type', 'hydra:Collection');
   $graph->addCompressedTriple($subject, 'foaf:homepage', '/');
   $graph->addCompressedTriple($subject, 'dcterms:title', "The uri4uri Dataset", 'literal', 'en');
   $graph->addCompressedTriple($subject, 'dcterms:publisher', 'http://my.data.is4.site/people/is4');
@@ -383,7 +406,14 @@ function graphVoid($id)
   $graph->addCompressedTriple($subject, 'void:feature', 'http://www.w3.org/ns/formats/JSON-LD');
   $graph->addCompressedTriple($subject, 'void:uriSpace', "$PREFIX/", 'literal');
   $graph->addCompressedTriple($subject, 'void:uriRegexPattern', '^'.addcslashes($PREFIX, "\\.").'/\w+/', 'literal');
-  Triples::addSources($graph, $subject);
+  $mapping = "$subject#notation";
+  $graph->addCompressedTriple($mapping, 'rdf:type', 'hydra:IriTemplateMapping');
+  $graph->addCompressedTriple($mapping, 'hydra:variable', "notation", 'literal');
+  $graph->addCompressedTriple($mapping, 'hydra:property', 'skos:notation');
+  $graph->addCompressedTriple($mapping, 'hydra:required', 'true', 'xsd:boolean');
+  $count = Triples::addSources($graph, $subject);
+  $graph->addCompressedTriple($subject, 'void:entities', $count, 'xsd:integer');
+  $graph->addCompressedTriple($subject, 'hydra:totalItems', $count, 'xsd:integer');
 
   return $graph;
 }
