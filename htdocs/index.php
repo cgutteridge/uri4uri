@@ -9,7 +9,8 @@ require_once(".graph.php");
 require_once(".render.php");
 
 $filepath = __DIR__."/data";
-$BASE = '';
+$BASE_PATH = '';
+$BASE = (@$_SERVER['HTTPS'] === 'on' ? "https" : "http")."://$_SERVER[HTTP_HOST]";
 $PREFIX = 'https://w3id.org/uri4uri';
 $PREFIX_OLD = 'http://uri4uri.net';
 $ARCHIVE_BASE = '//web.archive.org/web/20220000000000/';
@@ -19,7 +20,7 @@ $path = substr($_SERVER['REQUEST_URI'], 0);
 if($path === '')
 {
   http_response_code(301);
-  header("Location: $BASE/");
+  header("Location: $BASE_PATH/");
   exit;
 }
 
@@ -34,7 +35,7 @@ if($path === "/robots.txt")
 if($path === '/.well-known/void')
 {
   http_response_code(302);
-  header("Location: $BASE/void");
+  header("Location: $BASE_PATH/void");
   exit;
 }
 
@@ -42,7 +43,7 @@ if(str_starts_with($path, '/?') && count($_GET) === 1)
 {
   foreach($_GET as $key => $value)
   {
-    $target_uri = "$BASE/$key/".urlencode_minimal($value);
+    $target_uri = "$BASE_PATH/$key/".urlencode_minimal($value);
     header("Location: $target_uri");
     break;
   }
@@ -83,9 +84,9 @@ if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id) || (empty($separator) &
   http_response_code(301);
   if(empty($format))
   {
-    header("Location: $BASE/$type/$reencoded_id$query");
+    header("Location: $BASE_PATH/$type/$reencoded_id$query");
   }else{
-    header("Location: $BASE/$type.$format/$reencoded_id$query");
+    header("Location: $BASE_PATH/$type.$format/$reencoded_id$query");
   }
   exit;
 }
@@ -100,9 +101,9 @@ if($type === 'vocab' || $type === 'void')
     http_response_code(301);
     if(empty($format))
     {
-      header("Location: $BASE/$type$query$id");
+      header("Location: $BASE_PATH/$type$query$id");
     }else{
-      header("Location: $BASE/$type.$format$query$id");
+      header("Location: $BASE_PATH/$type.$format$query$id");
     }
     exit;
   }
@@ -171,7 +172,7 @@ if(empty($format))
   {
     $reencoded_id = "/$reencoded_id";
   }
-  header("Location: $BASE/$type.$format$reencoded_id$query");
+  header("Location: $BASE_PATH/$type.$format$reencoded_id$query");
   exit;
 }
 
@@ -193,13 +194,13 @@ if($format == 'html')
   ob_start();
   echo "<nav><span style='font-weight:bold'>Download data:</span> ";
   $id_href = htmlspecialchars($reencoded_id);
-  echo "<a href='$BASE/$type.ttl/$id_href'>Turtle</a>";
+  echo "<a href='$BASE_PATH/$type.ttl/$id_href'>Turtle</a>";
   echo " &bull; ";
-  echo "<a href='$BASE/$type.nt/$id_href'>N-Triples</a>";
+  echo "<a href='$BASE_PATH/$type.nt/$id_href'>N-Triples</a>";
   echo " &bull; ";
-  echo "<a href='$BASE/$type.rdf/$id_href'>RDF/XML</a>";
+  echo "<a href='$BASE_PATH/$type.rdf/$id_href'>RDF/XML</a>";
   echo " &bull; ";
-  echo "<a href='$BASE/$type.jsonld/$id_href'>JSON-LD</a>";
+  echo "<a href='$BASE_PATH/$type.jsonld/$id_href'>JSON-LD</a>";
   echo "</nav>";
 
   $visited = array();
