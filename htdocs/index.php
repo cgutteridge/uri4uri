@@ -69,7 +69,7 @@ if($path == "/")
   require_once("ui/template.php");
   exit;
 }
-if(!preg_match('/^\/(vocab|void|'.implode('|', Triples::types()).')(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:(\/)([^\?]*))?(\?.*)?$/', $path, $b))
+if(!preg_match('/^\/(vocab|void|triples|'.implode('|', Triples::types()).')(?:\.(rdf|debug|ttl|html|nt|jsonld))?(?:(\/)([^\?]*))?(\?.*)?$/', $path, $b))
 {
   serve404();
   exit;
@@ -79,7 +79,7 @@ if(!preg_match('/^\/(vocab|void|'.implode('|', Triples::types()).')(?:\.(rdf|deb
 $decoded_id = rawurldecode($id);
 $decoded_id = normalizeEntityId($type, $decoded_id);
 $reencoded_id = urlencode_minimal($decoded_id);
-if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id) || (empty($separator) && $type !== 'vocab' && $type !== 'void'))
+if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id) || (empty($separator) && $type !== 'vocab' && $type !== 'void' && $type !== 'triples'))
 {
   http_response_code(301);
   if(empty($format))
@@ -90,7 +90,7 @@ if(urlencode_utf8($id) !== urlencode_utf8($reencoded_id) || (empty($separator) &
   }
   exit;
 }
-if($type === 'vocab' || $type === 'void')
+if($type === 'vocab' || $type === 'void' || $type === 'triples')
 {
   if(!empty($id))
   {
@@ -178,6 +178,7 @@ if(empty($format))
 
 if($type === 'vocab') $graph = graphVocab($id);
 else if($type === 'void') $graph = graphVoid($id);
+else if($type === 'triples') $graph = graphTriples(@$_GET['subject'], @$_GET['predicate'], @$_GET['object']);
 elseif($id === '') $graph = graphAll($type);
 else $graph = graphEntity($type, $id);
 
@@ -204,10 +205,8 @@ if($format == 'html')
   echo "</nav>";
 
   $visited = array();
-  if($type == 'vocab')
+  if($type === 'vocab' || $type === 'triples')
   {
-    $title = "uri4uri Vocabulary";
-
     $sections = array(
       array("Classes", 'rdfs:Class', 'classes'),
       array("Properties", 'rdf:Property', 'properties'),
@@ -221,24 +220,41 @@ if($format == 'html')
       $l[$s[2]] = $graph->allOfType($s[1]);
       $skips []= "<a href='#".$s[2]."'>".$s[0]."</a>";
     }
-    addExtraVocabTriples($graph);
-    echo "<nav><strong style='font-weight:bold'>Jump to:</strong> ".join(" &bull; ", $skips)."</nav>";
-    $prefix_length = strlen("$PREFIX/vocab#");
+    if($type === 'vocab')
+    {
+      addExtraVocabTriples($graph);
+      echo "<nav><strong style='font-weight:bold'>Jump to:</strong> ".join(" &bull; ", $skips)."</nav>";
+      $prefix_length = strlen("$PREFIX/vocab#");
+    }else if($type === 'triples')
+    {
+      ?><figure>
+<figcaption>Search</figcaption>
+<p>Specify a <a href="https://www.hydra-cg.com/spec/latest/core/#templated-links">triple pattern</a> to retrieve the available resources, or use <a href="http://client.linkeddatafragments.org/#datasources=<?=rawurlencode("$BASE/void")?>&query=CONSTRUCT%20WHERE%20%7B%0A%20%20%3Fs%20skos%3Anotation%20%2280%22%5E%5Exsd%3AunsignedShort.%0A%7D%0A">SPARQL</a>.</p>
+<form>
+<label>Subject: <input autocomplete="off" spellcheck="false" type="url" style='padding:2px;width:90%;border-radius:5px' name='subject' id='subject' value="<?=htmlspecialchars(@$_GET['subject'])?>"></label><br>
+<label>Predicate: <input autocomplete="off" spellcheck="false" type="url" placeholder="skos:notation" style='padding:2px;width:90%;border-radius:5px' name='predicate' id='predicate' value="<?=htmlspecialchars(@$_GET['predicate'])?>"></label><br>
+<label>Object: <input autocomplete="off" spellcheck="false" placeholder="&quot;80&quot;^^xsd:unsignedShort" style='padding:2px;width:90%;border-radius:5px' name='object' id='object' value="<?=htmlspecialchars(@$_GET['object'])?>"></label><br>
+<button type="submit">Search!</button>
+</form>
+</figure><?php
+      $prefix_length = 0;
+    }
     foreach($sections as $s)
     {
-      echo "<figure>";
       $resources = array();
       foreach($l[$s[2]] as $resource) 
       { 
         $resources[$resource->toString()] = $resource; 
       }
+      if(count($resources) == 0) continue;
       ksort($resources);
+      echo "<figure>";
       echo "<figcaption id='".$s[2]."'>$s[0]</figcaption>";
       foreach($resources as $resource) 
       { 
         echo "<div id='".substr($resource->toString(),$prefix_length)."'>";
         renderResource($graph, $resource, $visited); 
-        echo "</div>";
+        echo "</div>\n";
       }
       echo "</figure>";
     }

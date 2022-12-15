@@ -4,3 +4,4 @@ RewriteCond %{REQUEST_FILENAME} !-l
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule .* index.php [L,QSA]
+Header set Access-Control-Allow-Origin "*"
