@@ -1003,7 +1003,7 @@ class URIPartTriples extends Triples
     unescaped_parsed($value);
     if(!$root && is_numeric($key))
     {
-      $field = "rdf:_$key";
+      $field = 'rdf:_'.($key+1);
     }else{
       $field = self::addForType('field', $graph, $key);
     }
