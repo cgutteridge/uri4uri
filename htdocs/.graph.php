@@ -40,6 +40,7 @@ function initGraph()
   $graph->ns('wd', 'http://www.wikidata.org/entity/');
   $graph->ns('wdt', 'http://www.wikidata.org/prop/direct/');
   $graph->ns('rfc', 'https://www.rfc-editor.org/info/rfc');
+  $graph->ns('xyz', 'http://sparql.xyz/facade-x/data/');
   
   return $graph;
 }
@@ -1037,6 +1038,7 @@ class FieldTriples extends Triples
     $graph->addCompressedTriple($subject, 'rdfs:label', $this->label($field), 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $field, 'uriv:URIFieldDatatype');   
     $graph->addCompressedTriple($subject, 'schema:propertyID', $field, 'literal');
+    $graph->addCompressedTriple($subject, 'skos:closeMatch', 'xyz:'.encodeIdentifier($field));
     
     return $subject;
   }
