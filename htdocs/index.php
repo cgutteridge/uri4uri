@@ -26,7 +26,7 @@ if($path === '')
 
 if($path === "/robots.txt")
 {
-  header("Content-type: text/plain");
+  header("Content-Type: text/plain");
   echo "User-agent: *\n";
   echo "Allow: /\n"; 
   exit;
@@ -282,31 +282,36 @@ if($format == 'html')
 elseif($format == 'rdf')
 {
   http_response_code(200);
-  header("Content-type: application/rdf+xml");
+  header("Content-Type: application/rdf+xml");
+  header("Content-Disposition: inline; filename=\"$id.rdf\"");
   echo $graph->serialize('RDFXML');
 }
 elseif($format == 'nt')
 {
   http_response_code(200);
-  header("Content-type: application/n-triples");
+  header("Content-Type: application/n-triples");
+  header("Content-Disposition: inline; filename=\"$id.nt\"");
   echo $graph->serialize('NTriples');
 }
 elseif($format == 'ttl')
 {
   http_response_code(200);
-  header("Content-type: text/turtle");
+  header("Content-Type: text/turtle");
+  header("Content-Disposition: inline; filename=\"$id.ttl\"");
   echo $graph->serialize('Turtle');
 }
 elseif($format == 'jsonld')
 {
   http_response_code(200);
-  header("Content-type: application/ld+json");
+  header("Content-Type: application/ld+json");
+  header("Content-Disposition: inline; filename=\"$id.jsonld\"");
   echo $graph->serialize('JSONLD');
 }
 elseif($format == 'debug')
 {
   http_response_code(200);
-  header("Content-type: text/plain");
+  header("Content-Type: text/plain");
+  header("Content-Disposition: inline; filename=\"$id.txt\"");
   print_r($graph->toArcTriples());
 }
 else
