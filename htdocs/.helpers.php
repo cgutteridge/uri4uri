@@ -96,9 +96,9 @@ function is_valid_qname($name)
 
 function parse_str_raw($str)
 {
-  static $find = array(';', "\e", '.', ' ', '%2E', '%2e', '%20');
+  static $find = array('/"[^"]*"(*SKIP)(*F)|;/', "/\e/", '/\./', '/ /', '/%2E/', '/%2e/', '/%20/');
   static $replace = array('&', "\e1B", "\e2E", "\e20", "\e2E", "\e2E", "\e20");
-  parse_str(str_replace($find, $replace, $str), $fields);
+  parse_str(preg_replace($find, $replace, $str), $fields);
   return $fields;
 }
 

@@ -945,7 +945,7 @@ class URIPartTriples extends Triples
     {
       $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:URIPart-XPointer');
     }else{
-      $parts = preg_split('/[;&]/', $part);
+      $parts = preg_split('/"[^"]*"(*SKIP)(*F)|[;&]/', $part);
       if(!empty($parts))
       {
         if(count($parts) === 1)
@@ -955,7 +955,7 @@ class URIPartTriples extends Triples
           {
             list($key, $value) = explode('=', $kv, 2);
             $graph->addCompressedTriple($subject, 'schema:propertyID', urldecode($key), 'literal');
-            $graph->addCompressedTriple($subject, 'schema:value', urldecode($value), 'literal');
+            $graph->addCompressedTriple($subject, 'schema:value', urldecode(trim($value, '"')), 'literal');
           }else{
             $graph->addCompressedTriple($subject, 'schema:propertyID', urldecode($kv), 'literal');
           }
@@ -974,7 +974,7 @@ class URIPartTriples extends Triples
           {
             list($key, $value) = explode('=', $kv, 2);
             $graph->addCompressedTriple($field_subject, 'schema:propertyID', urldecode($key), 'literal');
-            $graph->addCompressedTriple($field_subject, 'schema:value', urldecode($value), 'literal');
+            $graph->addCompressedTriple($field_subject, 'schema:value', urldecode(trim($value, '"')), 'literal');
           }else{
             $graph->addCompressedTriple($field_subject, 'schema:propertyID', urldecode($kv), 'literal');
           }
@@ -1017,7 +1017,7 @@ class URIPartTriples extends Triples
         self::addComplexField($graph, $inner, $subject_inner, false, $key2, $value2);
       }
     }else{
-      $graph->addCompressedTriple($subject, $field, $value, 'literal');
+      $graph->addCompressedTriple($subject, $field, trim($value, '"'), 'literal');
     }
   }
 }
