@@ -39,6 +39,31 @@ if($path !== ($path = preg_replace('/^\/\.well-known\/void($|\?)/', '/void$1', $
   exit;
 }
 
+if(preg_match('/^\/sparql\/?(?:$|\?)/', $path))
+{
+  if($_SERVER['REQUEST_METHOD'] === 'POST')
+  {
+    if($_SERVER['CONTENT_TYPE'] == 'application/sparql-query')
+    {
+      $query = file_get_contents('php://input');
+    }else{
+      $query = @$_POST['query'];
+    }
+  }else{
+    $query = @$_GET['query'];
+  }
+  if(empty($query))
+  {
+    http_response_code(400);
+    exit;
+  }
+  $dataset = rawurlencode("$BASE$BASE_PATH/void");
+  $query = rawurlencode($query);
+  http_response_code(303);
+  header("Location: http://client.linkeddatafragments.org/#datasources=$dataset&query=$query");
+  exit;
+}
+
 if(str_starts_with($path, '/?') && count($_GET) === 1)
 {
   foreach($_GET as $key => $value)
