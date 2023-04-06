@@ -32,10 +32,10 @@ if($path === "/robots.txt")
   exit;
 }
 
-if($path === '/.well-known/void')
+if($path !== ($path = preg_replace('/^\/\.well-known\/void($|\?)/', '/void$1', $path)))
 {
   http_response_code(302);
-  header("Location: $BASE_PATH/void");
+  header("Location: $BASE_PATH$path");
   exit;
 }
 
