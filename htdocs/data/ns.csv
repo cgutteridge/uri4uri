@@ -70,6 +70,11 @@ Service,c,new,Named Service
 ServiceDatatype,d,new,Named Service Identifier
 
 Mimetype,c,old,MIME Type
+Mimetype-Discrete,c,new,Discrete MIME Type
+Mimetype-Multipart,c,new,Multipart MIME Type
+Mimetype-Structured,c,new,Structured MIME Type
+Mimetype-Parametrized,c,new,Parametrized MIME Type
+Mimetype-Implied,c,new,Implied MIME Type
 MimetypeDatatype,d,old,MIME Type Identifier
 mimeParams,p,new,MIME parameters
 

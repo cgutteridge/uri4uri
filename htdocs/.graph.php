@@ -1514,7 +1514,7 @@ class MIMETriples extends Triples
 {
   public $link_old = true;
   protected $entity_type = 'uriv:Mimetype';
-  protected $entity_types = array('uriv:Mimetype');
+  protected $entity_types = array('uriv:Mimetype', 'uriv:Mimetype-Discrete', 'uriv:Mimetype-Multipart', 'uriv:Mimetype-Structured', 'uriv:Mimetype-Parametrized', 'uriv:Mimetype-Implied');
   protected $entity_notation_types = array('uriv:MimetypeDatatype');
   
   protected function source()
@@ -1539,14 +1539,31 @@ class MIMETriples extends Triples
     
     $this->addBaseTypes($graph, $subject);
     $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Mimetype');
+    
+    if(str_starts_with($mime, 'message/') || str_starts_with($mime, 'multipart/'))
+    {
+      $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Mimetype-Multipart');
+    }else{
+      $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Mimetype-Discrete');
+    }
+    
     $graph->addCompressedTriple($subject, 'rdfs:label', $this->label($mime), 'xsd:string');
     $graph->addCompressedTriple($subject, 'skos:notation', $mime, 'uriv:MimetypeDatatype');
     
+    $implied = false;
     @list($bare_mime, $param_part) = explode(';', $mime, 2);
     if(!empty($param_part))
     {
-      $graph->addCompressedTriple($subject, 'skos:broader', self::addForType('mime', $graph, $bare_mime));
-      $graph->addCompressedTriple($subject, 'uriv:mimeParams', self::addForType('part', $graph, $param_part));
+      $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Mimetype-Parametrized');
+      if(str_starts_with($mime, "application/prs.implied-"))
+      {
+        $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Mimetype-Implied');
+        $implied = true;
+      }else{
+        $graph->addCompressedTriple($subject, 'skos:broader', self::addForType('mime', $graph, $bare_mime));
+      }
+      $mime_params = self::addForType('part', $graph, $param_part);
+      $graph->addCompressedTriple($subject, 'uriv:mimeParams', $mime_params);
     }else{
       $mime_types = get_mime_types();
       addIanaRecord($graph, $subject, $mime_types, $bare_mime);
@@ -1555,6 +1572,7 @@ class MIMETriples extends Triples
     @list(, $suffix_type) = explode('+', $bare_mime, 2);
     if(!empty($suffix_type))
     {
+      $graph->addCompressedTriple($subject, 'rdf:type', 'uriv:Mimetype-Structured');
       static $suffix_map = array(
         'ber' => 'application/ber-stream',
         'der' => 'application/der-stream',
@@ -1570,7 +1588,163 @@ class MIMETriples extends Triples
     $subject_node = "<{$this->URI($graph->expandURI($subject))}>";
     
     $filter_query = '';
-    if($mime === 'text/plain' || $mime === 'application/octet-stream')
+    $construct_query = '';
+    if($implied)
+    {
+      $params = $graph->resource($mime_params);
+      if(str_starts_with($mime, 'application/prs.implied-document+xml;'))
+      {
+        foreach($params->all('field:ns') as $ns)
+        {
+          $ns = (string)$ns;
+          break;
+        }
+        foreach($params->all('field:public') as $public)
+        {
+          $public = (string)$public;
+          break;
+        }
+        if(isset($ns))
+        {
+          $filter_query .= <<<EOF
+  # XML namespace URL
+  ?format wdt:P7510 <{$this->URI($ns)}> .
+EOF;
+          
+        }
+        if(isset($public))
+        {
+          $filter_query .= <<<EOF
+  # Formal Public Identifier
+  ?format wdt:P4506 "{$this->STR($public)}" .
+EOF;
+        }
+      }else if(str_starts_with($mime, 'application/prs.implied-structure;'))
+      {
+        foreach($params->all('field:signature') as $signature)
+        {
+          $signature = (string)$signature;
+          break;
+        }
+        $offset = 0;
+        foreach($params->all('field:offset') as $offset)
+        {
+          $offset = intval((string)$offset);
+          break;
+        }
+        if(isset($signature))
+        {
+          $sig_hex = bin2hex($signature);
+          $sig_hex_up = strtoupper($sig_hex);
+          if($offset >= 0)
+          {
+            // beginning of file
+            $rel_pos = 'wd:Q35436009';
+          }else{
+            // end of file
+            $rel_pos = 'wd:Q1148480';
+            $offset = -($offset + strlen($signature));
+          }
+          if($sig_hex == $sig_hex_up)
+          {
+            $filter_query .= <<<EOF
+  VALUES (?pattern ?pattern_encoding) {
+    # ASCII
+    ("{$this->STR($signature)}" wd:Q8815)
+    # hexadecimal
+    ("{$this->STR($sig_hex)}" wd:Q82828)
+  }
+EOF;
+          }else{
+            $filter_query .= <<<EOF
+  VALUES (?pattern ?pattern_encoding) {
+    # ASCII
+    ("{$this->STR($signature)}" wd:Q8815)
+    # hexadecimal
+    ("{$this->STR($sig_hex)}" wd:Q82828)
+    ("{$this->STR($sig_hex_up)}" wd:Q82828)
+  }
+EOF;
+          }
+          $filter_query .= <<<EOF
+  # file format identification pattern
+  ?pattern_prop ps:P4152 ?pattern .
+  # encoding
+  ?pattern_prop pq:P3294 ?pattern_encoding .
+  # relative to
+  ?pattern_prop pq:P2210 $rel_pos .
+  OPTIONAL {
+    # offset
+    ?pattern_prop pq:P4153 ?pattern_offset .
+  }
+  FILTER (COALESCE(?pattern_offset, 0) = $offset)
+  ?format p:P4152 ?pattern_prop .
+EOF;
+        }
+      }else if(str_starts_with($mime, 'application/prs.implied-executable;'))
+      {
+        foreach($params->all('field:interpreter') as $interpreter)
+        {
+          $interpreter = (string)$interpreter;
+          break;
+        }
+        if(isset($interpreter))
+        {
+          $filter_query .= <<<EOF
+  ?exec ?exec_claim "{$this->STR($interpreter)}" .
+  ?package_prop wikibase:directClaim ?exec_claim .
+  # instance of Wikidata property to identify packages in an operating-system-specific repository
+  ?package_prop wdt:P31 wd:Q115268993 .
+  {
+    # readable file format
+    ?exec wdt:P1072 ?format .
+  } UNION {
+    # instance of
+    ?exec p:P31 ?exec_instance_prop .
+    VALUES ?of_type {
+      # interpreter
+      wd:Q183065
+      # compiler
+      wd:Q47506
+    }
+    ?exec_instance_prop ps:P31 ?of_type .
+    # of
+    ?exec_instance_prop pq:P642 ?format .
+  } UNION {
+    VALUES ?inst_type {
+      # programming language
+      wd:Q9143
+      # scripting language
+      wd:Q187432
+      # interpreted language
+      wd:Q1993334
+    }
+    # instance of
+    ?exec wdt:P31 ?inst_type .
+    ?exec owl:sameAs? ?format .
+  }
+EOF;
+        }
+      }
+      if(!empty($filter_query))
+      {
+        $filter_query .= <<<EOF
+  OPTIONAL {
+    ?format wdt:P1163 ?mime_str .
+    FILTER (isLiteral(?mime_str) && STR(?mime_str) != "application/octet-stream")
+    BIND(STRDT(?mime_str, uriv:MimetypeDatatype) AS ?mime_notation)
+    BIND(URI(CONCAT("{$this->STR($this->URI($graph->expandURI("mime:")))}", ?mime_str)) AS ?mime)
+  }
+EOF;
+      }
+      $construct_query = <<<EOF
+  ?mime a uriv:Mimetype .
+  ?mime skos:broader $subject_node .
+  ?mime rdfs:label ?mime_str .
+  ?mime skos:notation ?mime_notation .
+  ?format dbp:mime ?mime .
+EOF;
+    }else if($mime === 'text/plain' || $mime === 'application/octet-stream')
     {
       $filter_query = <<<EOF
     # MIME type
@@ -1589,9 +1763,10 @@ EOF;
 EOF;
     }
     
+    if(empty($filter_query)) return $subject;
+    
     $query = <<<EOF
 CONSTRUCT {
-  ?format dbp:mime $subject_node .
   ?format a uriv:Format .
   {$this->CONSTRUCT_LABEL('?format')}
   {$this->CONSTRUCT_PAGE('?format')}
@@ -1599,6 +1774,8 @@ CONSTRUCT {
   ?suffix a uriv:Suffix .
   ?suffix rdfs:label ?suffix_label .
   ?suffix skos:notation ?suffix_notation .
+  $construct_query
+  ?format dbp:mime $subject_node .
 } WHERE {
   $filter_query
   {$this->MATCH_PAGE('?format')}

@@ -361,6 +361,30 @@
   foaf:page rfc:2046 ;
   skos:exactMatch wd:Q1667978 , dbr:Media_type .
 
+:Mimetype-Discrete
+  rdfs:subClassOf :Mimetype ;
+  dcterms:description "A media type that represents a single file or medium."@en ;
+  owl:disjointWith :Mimetype-Multipart .
+
+:Mimetype-Multipart
+  rdfs:subClassOf :Mimetype ;
+  dcterms:description "A media type that contains multiple media or parts."@en ;
+  owl:disjointWith :Mimetype-Discrete .
+
+:Mimetype-Structured
+  rdfs:subClassOf :Mimetype ;
+  dcterms:description "A media type that uses a structured suffix to indicate a more specific type."@en ;
+  foaf:page <https://www.iana.org/assignments/media-type-structured-suffix/media-type-structured-suffix.xhtml> ;
+  foaf:page rfc:6839 .
+
+:Mimetype-Parametrized
+  rdfs:subClassOf :Mimetype ;
+  dcterms:description "A media type with additional parameters."@en .
+
+:Mimetype-Implied
+  rdfs:subClassOf :Mimetype ;
+  dcterms:description "A media type implied from the structure of a file or medium."@en .
+
 
 :MimetypeDatatype
   dcterms:description "The identifier of a MIME type."@en .
@@ -368,7 +392,7 @@
 
 :mimeParams
   a owl:ObjectProperty ;
-  schema:domainIncludes :Mimetype ;
+  schema:domainIncludes :Mimetype-Parametrized ;
   rdfs:range :URIPart ;
   dcterms:description "Specifies the parameters of a MIME type."@en .
 
