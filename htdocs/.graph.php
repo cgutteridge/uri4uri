@@ -1634,6 +1634,17 @@ EOF;
         }
         if(isset($signature))
         {
+          if(strlen($signature) > 1)
+          {
+            $base_signature = substr($signature, 0, -1);
+            $base_structure_mime = "application/prs.implied-structure;signature=$base_signature";
+            if(!empty($offset))
+            {
+              $base_structure_mime .= ";offset=$offset";
+            }
+            $graph->addCompressedTriple($subject, 'skos:broader', self::addForType('mime', $graph, $base_structure_mime));
+          }
+          
           $sig_hex = bin2hex($signature);
           $sig_hex_up = strtoupper($sig_hex);
           if($offset >= 0)
