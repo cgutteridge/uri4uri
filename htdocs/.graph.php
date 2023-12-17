@@ -1109,9 +1109,20 @@ function addIanaRecord($graph, $subject, $records, $key)
     $graph->addCompressedTriple($records['#source'], 'rdf:type', 'foaf:Document');
     if(isset($info['registry']))
     {
-      $registry = $records['#source'].'#table-'.$info['registry'];
-      $graph->addCompressedTriple($subject, 'vs:moreinfo', $registry);
-      $graph->addCompressedTriple($registry, 'rdf:type', 'foaf:Document');
+      $registry_id = $info['registry'];
+      if(is_string($registry_id))
+      {
+        $registry_name = $registry_id;
+      }else if(isset($records['#registry']))
+      {
+        $registry_name = $records['#registry'][$registry_id];
+      }
+      if(!empty($registry_name))
+      {
+        $registry = $records['#source'].'#table-'.$registry_name;
+        $graph->addCompressedTriple($subject, 'vs:moreinfo', $registry);
+        $graph->addCompressedTriple($registry, 'rdf:type', 'foaf:Document');
+      }
     }
   }
   

@@ -143,6 +143,8 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
   }
   
   $records = array();
+  $registry_list = array();
+  $registry_map = array();
   foreach($xpath->query('//reg:record') as $record)
   {
     foreach($xpath->query("reg:$id_element/text()", $record) as $id_item)
@@ -160,7 +162,14 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
       }
       foreach($xpath->query("ancestor::reg:registry[position() = 1]/@id", $record) as $item)
       {
-        $record_data['registry'] = $item->nodeValue;
+        $registry_name = $item->nodeValue;
+        if(!isset($registry_map[$registry_name]))
+        {
+          $registry_id = count($registry_list);
+          $registry_list[] = $registry_name;
+          $registry_map[$registry_name] = $registry_id;
+        }
+        $record_data['registry'] = $registry_map[$registry_name];
         break;
       }
       foreach($xpath->query('@date', $record) as $item)
@@ -262,6 +271,7 @@ function update_iana_records($file, $assignments, $id_element, $combine_id)
   ksort($records);
   
   $records['#source'] = $source;
+  $records['#registry'] = $registry_list;
   
   if(file_exists($file))
   {
