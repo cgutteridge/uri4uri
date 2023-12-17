@@ -442,6 +442,94 @@ function get_purls()
   });
 }
 
+function on_hsts_record($line, &$records)
+{
+  $record = json_decode($line, true);
+  $name = $record['name'];
+  $table = &$records;
+  $parts = explode('.', $name);
+  $len = count($parts);
+  for($i = $len - 1; $i >= 0; $i--)
+  {
+    $key = $parts[$i];
+    if(!isset($table[$key]))
+    {
+      $table[$key] = array();
+    }
+    $table = &$table[$key];
+  }
+  
+  $flags = 0;
+  if(@$record['include_subdomains'])
+  {
+    $flags |= 1;
+  }
+  if(@$record['mode'] == 'force-https')
+  {
+    $flags |= 2;
+  }
+  if($flags !== 0)
+  {
+    $table[''] = $flags;
+  }
+}
+
+function get_hsts_domains()
+{
+  return get_json_source(__DIR__.'/data/hsts.json', function($cache_file)
+  {
+    $source = 'https://chromium.googlesource.com/chromium/src/+/main/net/http/transport_security_state_static.json?format=TEXT';
+    
+    $records = array();
+    
+    $fp = fopen($source, 'r', false, get_stream_context());
+    stream_filter_append($fp, 'convert.base64-decode');
+    
+    $entries = false;
+    
+    $multiline = array();
+    
+    while(($l = fgets($fp)) !== false)
+    {
+      $line = trim($l);
+      $ncline = rtrim($line, ',');
+      if(str_starts_with($line, '//')) continue;
+      if(!$entries)
+      {
+        if($line == '{') $entries = true;
+        continue;
+      }
+      if(str_starts_with($line, '{'))
+      {
+        if(str_ends_with($ncline, '}'))
+        {
+          on_hsts_record($ncline, $records);
+        }else{
+          $multiline = array($line);
+        }
+      }else if(!empty($multiline))
+      {
+        if(str_ends_with($ncline, '}'))
+        {
+          $multiline[] = $ncline;
+          on_hsts_record(implode(' ', $multiline), $records);
+          $multiline = array();
+        }else{
+          $multiline[] = $line;
+        }
+      }
+    }
+    
+    fclose($fp);
+    
+    if(file_exists($cache_file))
+    {
+      file_put_contents($cache_file, json_encode($records, JSON_UNESCAPED_SLASHES));
+    }
+    return $records;
+  });
+}
+
 function get_rdap_record($type, $object)
 {
   $url = "https://rdap.org/$type/$object";

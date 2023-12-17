@@ -1325,6 +1325,59 @@ class HostTriples extends Triples
     
     return $subject;
   }
+  
+  protected function addDomainHsts($graph, $subject, $domain, $domain_idn, $queries)
+  {
+    if($domain_idn !== false)
+    {
+      $domain_keys = explode('.', $domain_idn);
+      $hsts = get_hsts_domains();
+      $keys_len = count($domain_keys);
+      $hsts_inherited_flags = 0;
+      $hsts_flags = 0;
+      for($i = $keys_len - 1; $i >= 0; $i--)
+      {
+        $domain_key = $domain_keys[$i];
+        if(!isset($hsts[$domain_key]))
+        {
+          $hsts = null;
+          $hsts_flags = 0;
+          break;
+        }
+        $hsts = &$hsts[$domain_key];
+        if(isset($hsts['']))
+        {
+          $hsts_flags = $hsts[''];
+          if(($hsts_flags & 1) !== 0) // include_subdomains
+          {
+            $hsts_inherited_flags |= $hsts_flags;
+          }
+        }else{
+          $hsts_flags = 0;
+        }
+      }
+      $hsts_flags |= $hsts_inherited_flags;
+      if(!empty($hsts) && $queries)
+      {
+        $subdomains = array_keys($hsts);
+        shuffle($subdomains);
+        $count = 0;
+        $max_count = rand(200, 400);
+        foreach($subdomains as $subdomain)
+        {
+          if($subdomain !== '')
+          {
+            if(++$count >= $max_count)
+            {
+              break;
+            }
+            $inner_subject = 'host:'.encodeIdentifier($this->normalizeId("$subdomain.$domain_idn"));
+            $graph->addCompressedTriple($subject, 'uriv:subDom', $inner_subject);
+          }
+        }
+      }
+    }
+  }
     
   protected function addDomain($graph, $subject, $domain, $domain_idn, $queries = false, &$special_type = null)
   {
@@ -1384,13 +1437,16 @@ class HostTriples extends Triples
         $this->queryRdap($graph, $subject, 'domain', $domain_idn);
       }
       
-      list($domain_name, $domain) = explode(".", $domain, 2);
+      list($domain_name, $domain) = explode('.', $domain, 2);
       $inner_subject = $this->add($graph, $domain, false, $special_type, true);
       $graph->addCompressedTriple($inner_subject, 'uriv:subDom', $subject);
       if(!empty($special_type))
       {
         $graph->addCompressedTriple($subject, 'rdf:type', $special_type);
       }
+      
+      $this->addDomainHsts($graph, $subject, $domain, $domain_idn, $queries);
+      
       return $subject;
     }
     if(!empty($special_type))
@@ -1421,6 +1477,8 @@ class HostTriples extends Triples
       $graph->addCompressedTriple("$subject#sponsor", 'rdf:type', 'foaf:Organization');
       $graph->addCompressedTriple("$subject#sponsor", 'rdfs:label', $tld['sponsor'], 'xsd:string');
     }
+    
+    $this->addDomainHsts($graph, $subject, $domain, $domain_idn, $queries);
     
     if(!$queries || $domain_idn === false) return $subject;
     
